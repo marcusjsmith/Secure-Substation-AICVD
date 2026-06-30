@@ -14,3 +14,7 @@ View the interactive guide on GitHub Pages:
 - `architecture-diagram-cybervision 1.1.html` - base Cyber Vision architecture diagram reference.
 
 Open the main HTML file locally in a browser to view the interactive guide.
+
+License
+
+Cisco brand assets remain subject to Cisco trademark and brand guidelines. Use this diagram for internal architecture reference and customer-facing CVD discussions in accordance with your organization's Cisco content policies.
