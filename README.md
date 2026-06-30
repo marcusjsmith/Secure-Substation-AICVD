@@ -2,6 +2,12 @@
 
 Interactive HTML reference for the Secure Substation CVD.
 
+## GitHub Pages
+
+View the interactive guide on GitHub Pages:
+
+[Secure Substation AICVD](https://marcusjsmith.github.io/Secure-Substation-AICVD/secure%20substation%20diagram-static-flows.html)
+
 ## Contents
 
 - `secure substation diagram-static-flows.html` - main interactive CVD experience with Overview, Architecture, Design Guide, and Implementation Guide sections.
