@@ -1,0 +1,10 @@
+# Secure Substation AICVD
+
+Interactive HTML reference for the Secure Substation CVD.
+
+## Contents
+
+- `secure substation diagram-static-flows.html` - main interactive CVD experience with Overview, Architecture, Design Guide, and Implementation Guide sections.
+- `architecture-diagram-cybervision 1.1.html` - base Cyber Vision architecture diagram reference.
+
+Open the main HTML file locally in a browser to view the interactive guide.
