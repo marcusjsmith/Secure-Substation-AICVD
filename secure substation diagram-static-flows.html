@@ -99,7 +99,8 @@
       margin-right: 8px;
       vertical-align: middle;
     }
-    .architecture-subnav {
+    .architecture-subnav,
+    .design-subnav {
       display: none;
       flex-direction: column;
       gap: 6px;
@@ -107,17 +108,22 @@
       padding: 8px 0 8px 10px;
       border-left: 1px solid var(--border);
     }
-    .architecture-subnav .panel-title {
+    .architecture-subnav .panel-title,
+    .design-subnav .panel-title {
       margin: 0 4px 2px;
       font-size: 10px;
     }
-    .architecture-subnav label {
+    .architecture-subnav label,
+    .design-subnav label {
       padding: 10px 12px;
       border-radius: 6px;
     }
     body:has(#view-architecture:checked) .architecture-subnav { display: flex; }
+    body:has(#view-design-guide:checked) .design-subnav { display: flex; }
     body:has(#view-architecture:checked):has(#arch-page-diagram:checked) .architecture-subnav label[for="arch-page-diagram"],
-    body:has(#view-architecture:checked):has(#arch-page-planning:checked) .architecture-subnav label[for="arch-page-planning"] {
+    body:has(#view-architecture:checked):has(#arch-page-planning:checked) .architecture-subnav label[for="arch-page-planning"],
+    body:has(#view-design-guide:checked):has(#design-page-zoning:checked) .design-subnav label[for="design-page-zoning"],
+    body:has(#view-design-guide:checked):has(#design-page-policy:checked) .design-subnav label[for="design-page-policy"] {
       border-color: var(--mgmt);
       background: color-mix(in srgb, var(--mgmt) 12%, transparent);
     }
@@ -283,19 +289,19 @@
     }
     body:has(#view-architecture:checked):has(#arch-page-diagram:checked) .flow-menu { display: flex; }
     body:has(#view-architecture:checked):has(#arch-page-diagram:checked):has(#flow-cybervision:checked) aside.cv-ports-panel { display: flex; }
-    body:has(#view-design-guide:checked) .view-diagram {
+    body:has(#view-design-guide:checked):has(#design-page-zoning:checked) .view-diagram {
       display: flex;
       margin-bottom: 24px;
       order: 1;
     }
-    body:has(#view-design-guide:checked) .view-security-policies {
+    body:has(#view-design-guide:checked):has(#design-page-policy:checked) .view-security-policies {
       display: block;
-      order: 2;
+      order: 1;
     }
     body:has(#view-design-guide:checked) .view-diagram .architecture-section-head { display: none; }
-    body:has(#view-design-guide:checked) .view-diagram .design-section-head,
-    body:has(#view-design-guide:checked) .view-security-policies .design-section-head { display: block; }
-    body:has(#view-design-guide:checked) .cip-menu { display: flex; }
+    body:has(#view-design-guide:checked):has(#design-page-zoning:checked) .view-diagram .design-section-head,
+    body:has(#view-design-guide:checked):has(#design-page-policy:checked) .view-security-policies .design-section-head { display: block; }
+    body:has(#view-design-guide:checked):has(#design-page-zoning:checked) .cip-menu { display: flex; }
     body:has(#view-implementation-guide:checked) main { display: none; }
     body:has(#view-implementation-guide:checked) aside.datasheet-panel {
       display: flex;
@@ -1937,6 +1943,8 @@
       <input type="radio" name="view" id="view-implementation-guide">
       <input type="radio" name="arch-page" id="arch-page-diagram" checked>
       <input type="radio" name="arch-page" id="arch-page-planning">
+      <input type="radio" name="design-page" id="design-page-zoning" checked>
+      <input type="radio" name="design-page" id="design-page-policy">
       <input type="radio" name="cip" id="cip-medium" checked>
       <input type="radio" name="cip" id="cip-low">
       <input type="radio" name="cip" id="cip-nonbes">
@@ -1988,6 +1996,11 @@
         <label for="arch-page-planning"><span class="name">Traffic profiles</span><span class="desc">Traffic types and bandwidth profiles</span></label>
       </div>
       <label for="view-design-guide"><span class="name">Design Guide</span><span class="desc">NERC CIP zoning, Snort IPS, NBAR, and NGFW policy design</span></label>
+      <div class="design-subnav" aria-label="Design Guide sections">
+        <div class="panel-title">Design guide pages</div>
+        <label for="design-page-zoning"><span class="name">NERC CIP zoning</span><span class="desc">Impact mapping and substation zone highlights</span></label>
+        <label for="design-page-policy"><span class="name">NBAR / Snort policy</span><span class="desc">Application recognition, IPS, and NGFW flow design</span></label>
+      </div>
       <label for="view-implementation-guide"><span class="name">Implementation Guide</span><span class="desc">Product references and configuration steps</span></label>
 
       <div class="cip-menu">
