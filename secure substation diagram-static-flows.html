@@ -2290,9 +2290,9 @@
         <div class="panel-title">Architecture use cases</div>
         <p class="flow-menu-hint">Select a topology overlay or telemetry use case. Traffic detail panels appear on the diagram; use <strong>×</strong> to dismiss after reading, or <strong>Show details</strong> to bring them back.</p>
         <label for="flow-none"><span class="name">Diagram only</span><span class="desc">Static topology — no flow overlay</span></label>
-        <label for="flow-scada"><span class="dot" style="background:var(--scada)"></span><span class="name">SCADA → SCADA</span><span class="desc">Large, medium & small substations (all paths)</span></label>
-        <label for="flow-mgmt"><span class="dot" style="background:var(--mgmt)"></span><span class="name">Mgmt → Mgmt</span><span class="desc">Management plane across all sites</span></label>
-        <label for="flow-multi"><span class="dot" style="background:var(--multi)"></span><span class="name">MultiService → MultiService</span><span class="desc">Corporate VRF traffic across all sites</span></label>
+        <label for="flow-scada"><span class="dot" style="background:var(--scada)"></span><span class="name">SCADA Traffic</span><span class="desc">Large, medium & small substations (all paths)</span></label>
+        <label for="flow-mgmt"><span class="dot" style="background:var(--mgmt)"></span><span class="name">Management Traffic</span><span class="desc">Management plane across all sites</span></label>
+        <label for="flow-multi"><span class="dot" style="background:var(--multi)"></span><span class="name">MultiService Traffic</span><span class="desc">Corporate VRF traffic across all sites</span></label>
         <label for="flow-controller"><span class="dot" style="background:var(--fabric)"></span><span class="name">Controller overlay (TLS)</span><span class="desc">Every SD-WAN router → controllers</span></label>
         <label for="flow-ipsec"><span class="dot" style="background:var(--ipsec)"></span><span class="name">IPsec Hub &amp; Spoke</span><span class="desc">Site IR8340 / IR1101 routers → Headend 1 &amp; 2</span></label>
         <label for="flow-cybervision"><span class="dot" style="background:var(--cybervision)"></span><span class="name">Cyber Vision telemetry</span><span class="desc">Embedded sensors → Cyber Vision Center</span></label>
@@ -3248,7 +3248,7 @@
           <ul>
             <li><strong>Zone-based firewall:</strong> On-router ZBFW between SCADA, process, and WAN zones (see configuration dialogs on IR8340/IR1101 in the traffic-flow diagram).</li>
             <li><strong>Service VPNs:</strong> SCADA, MultiService, and Management VRFs/VPNs limit where NGFW policies must be applied—scope Snort and NBAR rules to the correct overlay.</li>
-            <li><strong>Traffic flows view:</strong> Use <em>SCADA → SCADA</em> and management overlays to visualize paths that security policies protect.</li>
+            <li><strong>Traffic flows view:</strong> Use <em>SCADA Traffic</em> and management overlays to visualize paths that security policies protect.</li>
           </ul>
         </div>
       </section>
