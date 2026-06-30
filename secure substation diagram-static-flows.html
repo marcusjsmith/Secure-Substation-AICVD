@@ -122,6 +122,7 @@
     body:has(#view-design-guide:checked) .design-subnav { display: flex; }
     body:has(#view-architecture:checked):has(#arch-page-diagram:checked) .architecture-subnav label[for="arch-page-diagram"],
     body:has(#view-architecture:checked):has(#arch-page-planning:checked) .architecture-subnav label[for="arch-page-planning"],
+    body:has(#view-design-guide:checked):has(#design-page-sdwan:checked) .design-subnav label[for="design-page-sdwan"],
     body:has(#view-design-guide:checked):has(#design-page-zoning:checked) .design-subnav label[for="design-page-zoning"],
     body:has(#view-design-guide:checked):has(#design-page-policy:checked) .design-subnav label[for="design-page-policy"] {
       border-color: var(--mgmt);
@@ -210,6 +211,7 @@
       flex: 1;
       width: 100%;
     }
+    .view-sdwan-design,
     .view-security-policies {
       display: none;
       max-width: 1180px;
@@ -294,11 +296,16 @@
       margin-bottom: 24px;
       order: 1;
     }
+    body:has(#view-design-guide:checked):has(#design-page-sdwan:checked) .view-sdwan-design {
+      display: block;
+      order: 1;
+    }
     body:has(#view-design-guide:checked):has(#design-page-policy:checked) .view-security-policies {
       display: block;
       order: 1;
     }
     body:has(#view-design-guide:checked) .view-diagram .architecture-section-head { display: none; }
+    body:has(#view-design-guide:checked):has(#design-page-sdwan:checked) .view-sdwan-design .design-section-head,
     body:has(#view-design-guide:checked):has(#design-page-zoning:checked) .view-diagram .design-section-head,
     body:has(#view-design-guide:checked):has(#design-page-policy:checked) .view-security-policies .design-section-head { display: block; }
     body:has(#view-design-guide:checked):has(#design-page-zoning:checked) .cip-menu { display: flex; }
@@ -1159,6 +1166,9 @@
     .policy-card.snort { border-top: 3px solid var(--security); }
     .policy-card.nbar { border-top: 3px solid var(--mgmt); }
     .policy-card.ngfw { border-top: 3px solid var(--fabric); grid-column: 1 / -1; }
+    .policy-card.firewall { border-top: 3px solid var(--fabric); }
+    .policy-card.idsips { border-top: 3px solid var(--security); }
+    .policy-card.segmentation { border-top: 3px solid var(--multi); }
     @media (max-width: 900px) {
       .policy-card.ngfw { grid-column: auto; }
     }
@@ -1193,6 +1203,18 @@
       color: var(--fabric);
       background: color-mix(in srgb, var(--fabric) 14%, transparent);
     }
+    .policy-card.firewall .policy-tag {
+      color: var(--fabric);
+      background: color-mix(in srgb, var(--fabric) 14%, transparent);
+    }
+    .policy-card.idsips .policy-tag {
+      color: var(--security);
+      background: color-mix(in srgb, var(--security) 18%, transparent);
+    }
+    .policy-card.segmentation .policy-tag {
+      color: var(--multi);
+      background: color-mix(in srgb, var(--multi) 16%, transparent);
+    }
     .policy-body {
       padding: 12px 14px 14px;
       font-size: 11px;
@@ -1220,6 +1242,9 @@
     .policy-card.snort .policy-example { border-left-color: var(--security); }
     .policy-card.nbar .policy-example { border-left-color: var(--mgmt); }
     .policy-card.ngfw .policy-example { border-left-color: var(--fabric); }
+    .policy-card.firewall .policy-example { border-left-color: var(--fabric); }
+    .policy-card.idsips .policy-example { border-left-color: var(--security); }
+    .policy-card.segmentation .policy-example { border-left-color: var(--multi); }
     .policy-example .ex-title {
       display: block;
       font-weight: 600;
@@ -1227,6 +1252,156 @@
       margin-bottom: 4px;
       font-size: 10px;
     }
+    .sdwan-design-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.75fr);
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1020px) {
+      .sdwan-design-grid { grid-template-columns: 1fr; }
+    }
+    .sdwan-design-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+    .sdwan-design-panel h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .sdwan-design-panel p {
+      margin: 0 0 12px;
+      color: var(--text2);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .sdwan-design-panel p:last-child { margin-bottom: 0; }
+    .sdwan-design-panel strong { color: var(--text); }
+    .sdwan-service-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .sdwan-service-item {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--fabric);
+      border-radius: 0 6px 6px 0;
+      background: rgba(0, 0, 0, 0.14);
+      color: var(--text2);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .sdwan-service-item strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 12px;
+    }
+    .sdwan-controller-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 980px) {
+      .sdwan-controller-grid { grid-template-columns: 1fr; }
+    }
+    .sdwan-controller-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--fabric);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 220px;
+    }
+    .sdwan-controller-card.manager { border-top-color: var(--mgmt); }
+    .sdwan-controller-card.validator { border-top-color: var(--multi); }
+    .sdwan-controller-card.controller { border-top-color: var(--fabric); }
+    .sdwan-controller-card .role {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text2);
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .sdwan-controller-card h3 {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .sdwan-controller-card p,
+    .sdwan-controller-card li {
+      color: var(--text2);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .sdwan-controller-card p { margin: 0 0 10px; }
+    .sdwan-controller-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .sdwan-controller-card li { margin-bottom: 6px; }
+    .sdwan-controller-card strong { color: var(--text); }
+    .sdwan-topology-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
+      margin: 16px 0 4px;
+    }
+    .sdwan-flow-node {
+      min-height: 96px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.16);
+      position: relative;
+    }
+    .sdwan-flow-node:not(:last-child)::after {
+      content: "to";
+      position: absolute;
+      left: 12px;
+      bottom: -18px;
+      color: var(--text2);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .sdwan-flow-node span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--mgmt);
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .sdwan-flow-node strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--text);
+      font-size: 13px;
+    }
+    .sdwan-flow-node p {
+      margin: 0;
+      color: var(--text2);
+      font-size: 10px;
+      line-height: 1.4;
+    }
+    .sdwan-reference-list a {
+      color: var(--fabric);
+      text-decoration: none;
+    }
+    .sdwan-reference-list a:hover { text-decoration: underline; }
     .pkt-flow-wrap {
       margin-bottom: 28px;
       background: var(--surface);
@@ -2078,7 +2253,8 @@
       <input type="radio" name="view" id="view-implementation-guide">
       <input type="radio" name="arch-page" id="arch-page-diagram" checked>
       <input type="radio" name="arch-page" id="arch-page-planning">
-      <input type="radio" name="design-page" id="design-page-zoning" checked>
+      <input type="radio" name="design-page" id="design-page-sdwan" checked>
+      <input type="radio" name="design-page" id="design-page-zoning">
       <input type="radio" name="design-page" id="design-page-policy">
       <input type="radio" name="cip" id="cip-medium" checked>
       <input type="radio" name="cip" id="cip-low">
@@ -2125,9 +2301,10 @@
         <label for="arch-page-diagram"><span class="name">Diagram &amp; use cases</span><span class="desc">Topology overlays and Cyber Vision telemetry</span></label>
         <label for="arch-page-planning"><span class="name">Traffic profiles</span><span class="desc">Traffic types and bandwidth profiles</span></label>
       </div>
-      <label for="view-design-guide"><span class="name">Design Guide</span><span class="desc">NERC CIP zoning, Snort IPS, NBAR, and NGFW policy design</span></label>
+      <label for="view-design-guide"><span class="name">Design Guide</span><span class="desc">SD-WAN architecture, NERC CIP zoning, NBAR, Snort, and NGFW policy design</span></label>
       <div class="design-subnav" aria-label="Design Guide sections">
         <div class="panel-title">Design guide pages</div>
+        <label for="design-page-sdwan"><span class="name">SD-WAN Design</span><span class="desc">Controllers, overlay architecture, and security capabilities</span></label>
         <label for="design-page-zoning"><span class="name">NERC CIP zoning</span><span class="desc">Impact mapping and substation zone highlights</span></label>
         <label for="design-page-policy"><span class="name">NBAR / Snort policy</span><span class="desc">Application recognition, IPS, and NGFW flow design</span></label>
       </div>
@@ -2683,6 +2860,200 @@
             <li><strong>Video variability:</strong> Actual camera bitrate depends on resolution, CODEC (H.264/H.265), FPS, scene motion, and whether streams are continuous or event-triggered.</li>
             <li><strong>Service VPNs:</strong> The SRD assumes segregated service VPNs (or equivalent VRF/zone paths) for SCADA, physical security, enterprise, management, and PMU as applicable.</li>
             <li><strong>Interactive diagram:</strong> The topology view maps these tiers to dual IR8340 (large TX), single IR8340 (medium DX), and IR1101 (small SD) icons—consistent with this profiling model.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="view-sdwan-design" aria-label="SD-WAN design guide">
+        <div class="design-section-head">
+          <h2>SD-WAN design</h2>
+          <p>Use this page to position Cisco Catalyst SD-WAN in the Secure Substation CVD: controller roles, overlay construction, service VPN segmentation, and the security policy capabilities applied at the rugged WAN edge.</p>
+        </div>
+
+        <div class="profiles-hero">
+          <h2>Cisco SD-WAN architecture in the Secure Substation CVD</h2>
+          <p class="lead">The SD-WAN design creates a secure overlay between substation routers and control-center headends while keeping SCADA, Management, and MultiService traffic separated. IR8340 and IR1101 routers act as substation WAN edges; the controller stack supplies orchestration, identity, route exchange, and central policy.</p>
+        </div>
+
+        <div class="sdwan-design-grid">
+          <article class="sdwan-design-panel">
+            <h3>Architecture model</h3>
+            <p><strong>Transport independence:</strong> The SD-WAN overlay runs across MPLS, private fiber, broadband, LTE, or mixed utility WAN transports. Each router authenticates into the fabric and builds encrypted tunnels to approved peers.</p>
+            <p><strong>Service segmentation:</strong> The CVD maps OT and operations traffic into separate service VPNs or VRFs. SCADA remains tightly constrained, Management is limited to approved operations systems, and MultiService carries higher-bandwidth workloads such as PMU and physical-security video.</p>
+            <p><strong>Substation fit:</strong> Large substations use resilient IR8340 edge pairs, medium substations use a single IR8340 edge, and small substations use IR1101 with IE3100/IE3500 access switching.</p>
+            <div class="sdwan-service-list">
+              <div class="sdwan-service-item"><strong>SCADA service VPN</strong> DNP3, IEC 61850 MMS, RTU/IED supervision, and control-center master traffic with strict zone firewall and QoS treatment.</div>
+              <div class="sdwan-service-item"><strong>Management service VPN</strong> Device administration, telemetry, syslog, SNMP, NetFlow/IPFIX, certificate operations, and remote support paths.</div>
+              <div class="sdwan-service-item"><strong>MultiService VPN</strong> PMU, CCTV, AMI, and approved utility applications that need bandwidth without collapsing into the SCADA zone.</div>
+            </div>
+          </article>
+
+          <article class="sdwan-design-panel">
+            <h3>Topology pattern</h3>
+            <p>The secure substation topology is hub-and-spoke by default: field routers form encrypted overlay tunnels toward redundant control-center or headend routers, while controller sessions remain separate from user traffic.</p>
+            <div class="sdwan-topology-flow" aria-label="Cisco SD-WAN substation topology pattern">
+              <div class="sdwan-flow-node">
+                <span>Field site</span>
+                <strong>IEDs / RTUs / sensors</strong>
+                <p>OT endpoints connect through IE9300, IE3100, or IE3500 switching.</p>
+              </div>
+              <div class="sdwan-flow-node">
+                <span>WAN edge</span>
+                <strong>IR8340 / IR1101</strong>
+                <p>Routes service VPNs, applies zone policy, encrypts overlay traffic.</p>
+              </div>
+              <div class="sdwan-flow-node">
+                <span>Overlay</span>
+                <strong>SD-WAN fabric</strong>
+                <p>Encrypted tunnels use approved transports and centralized policy.</p>
+              </div>
+              <div class="sdwan-flow-node">
+                <span>Headend</span>
+                <strong>IR8340 hubs</strong>
+                <p>Terminates spokes and hands traffic to control-center services.</p>
+              </div>
+              <div class="sdwan-flow-node">
+                <span>Operations</span>
+                <strong>SCADA / NMS / SOC</strong>
+                <p>Approved applications consume only the service VPNs they require.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="sdwan-controller-grid" aria-label="Cisco SD-WAN controller roles">
+          <article class="sdwan-controller-card manager">
+            <span class="role">Management plane</span>
+            <h3>SD-WAN Manager</h3>
+            <p><strong>Also known as:</strong> vManage in earlier Cisco SD-WAN naming.</p>
+            <ul>
+              <li>Central GUI and API for device onboarding, templates, policy design, monitoring, troubleshooting, and software lifecycle.</li>
+              <li>Creates and distributes feature templates for IR8340 and IR1101 routers, including VPNs, interface roles, routing, QoS, and security policy.</li>
+              <li>Provides operational views for tunnel health, alarms, application visibility, policy counters, and events that feed operations workflows.</li>
+            </ul>
+          </article>
+
+          <article class="sdwan-controller-card validator">
+            <span class="role">Identity plane</span>
+            <h3>SD-WAN Validator</h3>
+            <p><strong>Also known as:</strong> vBond in earlier Cisco SD-WAN naming.</p>
+            <ul>
+              <li>Authenticates devices and controllers during onboarding so only authorized routers join the overlay.</li>
+              <li>Helps edge routers discover the controller fabric and establish secure control-plane connectivity.</li>
+              <li>Supports certificate-based identity and serial/chassis validation, reducing the risk of unapproved edge devices joining substation services.</li>
+            </ul>
+          </article>
+
+          <article class="sdwan-controller-card controller">
+            <span class="role">Control plane</span>
+            <h3>SD-WAN Controller</h3>
+            <p><strong>Also known as:</strong> vSmart in earlier Cisco SD-WAN naming.</p>
+            <ul>
+              <li>Maintains secure control sessions to WAN edge routers and exchanges overlay routing information using OMP.</li>
+              <li>Distributes centralized control and data policies that determine segmentation, path selection, route reachability, and tunnel behavior.</li>
+              <li>Allows the CVD to enforce common topology intent across large, medium, and small substations without manually stitching every tunnel.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="policy-grid" aria-label="Cisco SD-WAN security policy capabilities">
+          <article class="policy-card segmentation">
+            <div class="policy-head">
+              <span class="policy-tag">Segmentation</span>
+              <h3>Service VPN and zone design</h3>
+              <p class="profile-meta"><strong>Role:</strong> Keep substation workloads separate before inspection policy is applied.</p>
+            </div>
+            <div class="policy-body">
+              <p>Security policy starts with the overlay model. SCADA, Management, and MultiService traffic should be isolated in separate service VPNs or VRFs, then mapped to trusted zones at the edge router.</p>
+              <ul>
+                <li>Restrict SCADA flows to known masters, RTUs, and approved protocols.</li>
+                <li>Keep management access on dedicated paths with MFA/jump-host controls upstream.</li>
+                <li>Apply QoS and path policy per service so PMU or video traffic cannot starve SCADA supervision.</li>
+              </ul>
+              <div class="policy-example">
+                <span class="ex-title">Substation pattern</span>
+                SCADA VPN to SCADA zone, Management VPN to management zone, MultiService VPN to video/PMU/application zone, with explicit inter-zone rules.
+              </div>
+            </div>
+          </article>
+
+          <article class="policy-card firewall">
+            <div class="policy-head">
+              <span class="policy-tag">Firewall</span>
+              <h3>Zone-based firewall and NGFW policy</h3>
+              <p class="profile-meta"><strong>Role:</strong> Enforce permit, deny, log, and inspect decisions between WAN, SCADA, management, and multiservice zones.</p>
+            </div>
+            <div class="policy-body">
+              <p>Cisco SD-WAN security policy can centrally define firewall behavior and push it to supported IOS XE SD-WAN edge routers. In this CVD, the firewall is the control point between overlay VPNs and local OT zones.</p>
+              <ul>
+                <li>Permit only approved source and destination pairs for DNP3, HTTPS, SSH, syslog, SNMP, NetFlow/IPFIX, PMU, and video flows.</li>
+                <li>Deny and log unknown or cross-zone traffic that does not match the substation communication baseline.</li>
+                <li>Use application-aware matches where supported so rules are not limited to static port numbers.</li>
+              </ul>
+              <div class="policy-example">
+                <span class="ex-title">Example control</span>
+                WAN SCADA zone to substation SCADA zone: permit DNP3 only from approved masters to approved RTUs, deny and log all other traffic.
+              </div>
+            </div>
+          </article>
+
+          <article class="policy-card idsips">
+            <div class="policy-head">
+              <span class="policy-tag">IDS / IPS</span>
+              <h3>Snort intrusion detection and prevention</h3>
+              <p class="profile-meta"><strong>Role:</strong> Inspect selected flows beyond 5-tuple firewall rules and detect or block protocol misuse.</p>
+            </div>
+            <div class="policy-body">
+              <p>Supported SD-WAN edge routers can use Snort-based intrusion detection and prevention through Cisco security policy. For substations, this is most useful on high-risk WAN or inter-zone paths where the firewall permits the protocol but the payload still needs inspection.</p>
+              <ul>
+                <li>Detect suspicious activity in approved flows such as DNP3, Modbus/TCP, IEC 61850 MMS, HTTPS, or management traffic.</li>
+                <li>Run in alert/monitor posture during tuning, then move selected controls to prevention where false positives are understood.</li>
+                <li>Use custom OT-focused rules when utility-specific SCADA behavior needs tighter validation than generic signatures.</li>
+              </ul>
+              <div class="policy-example">
+                <span class="ex-title">Example inspection</span>
+                Permit DNP3 between known endpoints, then inspect with Snort to alert or drop malformed frames, unexpected function codes, or traffic outside the approved master-outstation pattern.
+              </div>
+            </div>
+          </article>
+
+          <article class="policy-card nbar">
+            <div class="policy-head">
+              <span class="policy-tag">Application ID</span>
+              <h3>NBAR and application-aware policy</h3>
+              <p class="profile-meta"><strong>Role:</strong> Classify applications so firewall, QoS, and inspection decisions can use application identity.</p>
+            </div>
+            <div class="policy-body">
+              <p>NBAR provides application recognition for SD-WAN policy and visibility. In a substation, it helps distinguish expected OT protocols from generic or unknown traffic that happens to use an allowed port.</p>
+              <ul>
+                <li>Match application names or families in policy sequences where supported by the platform and release.</li>
+                <li>Align application recognition with QoS so SCADA and PMU receive predictable treatment during WAN congestion.</li>
+                <li>Use visibility data to validate the traffic profiles documented in the Architecture section.</li>
+              </ul>
+              <div class="policy-example">
+                <span class="ex-title">Example match</span>
+                Application = DNP3, source = control-center master subnet, destination = substation RTU subnet, action = allow plus inspect.
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="footnote-section">
+          <h3>Design guardrails</h3>
+          <ul>
+            <li><strong>Validate release support:</strong> Security features vary by IOS XE SD-WAN release, platform, and license. Confirm IR8340 and IR1101 support before final policy baselines.</li>
+            <li><strong>Separate control and data planes:</strong> Controller connectivity is required for overlay operation, but OT payload policy should be designed per service VPN and zone boundary.</li>
+            <li><strong>Use staged enforcement:</strong> Build policy from visibility first, then move from monitor/log to enforce/drop on carefully scoped OT paths.</li>
+            <li><strong>Coordinate with Cyber Vision:</strong> Use Cyber Vision asset and protocol visibility to refine SD-WAN application, firewall, and IDS/IPS rules.</li>
+          </ul>
+        </div>
+
+        <div class="footnote-section">
+          <h3>Reference links</h3>
+          <ul class="sdwan-reference-list">
+            <li><a href="https://www.cisco.com/c/en/us/solutions/enterprise-networks/sd-wan/index.html" target="_blank" rel="noopener">Cisco Catalyst SD-WAN overview</a></li>
+            <li><a href="https://www.cisco.com/c/en/us/support/routers/sd-wan/products-installation-and-configuration-guides-list.html" target="_blank" rel="noopener">Cisco Catalyst SD-WAN configuration guides</a></li>
+            <li><a href="https://www.cisco.com/c/en/us/td/docs/routers/sdwan/configuration/security/ios-xe-17/security-book-xe.html" target="_blank" rel="noopener">Cisco IOS XE SD-WAN security configuration guide</a></li>
           </ul>
         </div>
       </section>
