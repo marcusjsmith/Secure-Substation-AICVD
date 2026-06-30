@@ -1718,75 +1718,207 @@
       gap: 8px;
       overflow-y: auto;
     }
-    .product-tabs {
+    .impl-hero {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto 8px;
+      padding: 2px 0 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .impl-hero h2 {
+      margin: 0 0 6px;
+      font-size: clamp(20px, 2.2vw, 28px);
+      font-weight: 700;
+      letter-spacing: 0;
+      color: var(--text);
+    }
+    .impl-hero p {
+      margin: 0;
+      max-width: 880px;
+      color: var(--text2);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .impl-tier-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
     }
-    .product-tabs label {
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .product-tabs label:hover { border-color: #44445a; }
-    .ds-card {
-      display: none;
+    .impl-tier-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px;
+      padding: 16px;
+    }
+    .impl-tier-card.large { border-top: 3px solid var(--fabric); }
+    .impl-tier-card.medium { border-top: 3px solid var(--mgmt); }
+    .impl-tier-card.small { border-top: 3px solid var(--profile-small); }
+    .impl-tier-head {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 152px;
+    }
+    .impl-badge {
+      align-self: flex-start;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .impl-tier-head h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0;
+      color: var(--text);
+    }
+    .impl-tier-head p {
+      margin: 0;
+      color: var(--text2);
       font-size: 11px;
       line-height: 1.45;
     }
-    .ds-card h3 {
-      margin: 0 0 4px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    .ds-card .role {
-      color: var(--text2);
-      font-size: 10px;
-      margin-bottom: 10px;
-    }
-    .ds-card dl {
-      margin: 0;
+    .impl-topology {
       display: grid;
-      gap: 6px;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.14);
     }
-    .ds-card dt {
+    .impl-layer {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+    .impl-layer-title {
       color: var(--text2);
-      font-weight: 500;
-      font-size: 10px;
+      font-size: 9px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
     }
-    .ds-card dd {
-      margin: 0 0 2px;
+    .impl-node-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .impl-node-row.single { grid-template-columns: minmax(0, 1fr); }
+    .impl-product {
+      display: block;
+      min-width: 0;
+      min-height: 88px;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--fabric);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.18);
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+    .impl-product:hover {
+      border-color: var(--fabric);
+      background: color-mix(in srgb, var(--fabric) 12%, rgba(0, 0, 0, 0.18));
+      transform: translateY(-1px);
+    }
+    .impl-product.switch { border-left-color: var(--mgmt); }
+    .impl-product.access { border-left-color: var(--profile-small); }
+    .impl-product strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0;
       color: var(--text);
     }
-    .ds-card .source {
-      margin-top: 10px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
-      font-size: 9px;
+    .impl-product span {
+      display: block;
       color: var(--text2);
+      font-size: 10px;
+      line-height: 1.35;
     }
-    .ds-card .source a { color: var(--fabric); text-decoration: none; }
-    .ds-card .source a:hover { text-decoration: underline; }
-    body:has(#ds-ir8340:checked) .ds-ir8340 { display: block; }
-    body:has(#ds-ir8340:checked) .product-tabs label[for="ds-ir8340"] { border-color: var(--fabric); background: color-mix(in srgb, var(--fabric) 12%, transparent); }
-    body:has(#ds-ie9300:checked) .ds-ie9300 { display: block; }
-    body:has(#ds-ie9300:checked) .product-tabs label[for="ds-ie9300"] { border-color: var(--mgmt); background: color-mix(in srgb, var(--mgmt) 12%, transparent); }
-    body:has(#ds-ie3100:checked) .ds-ie3100 { display: block; }
-    body:has(#ds-ie3100:checked) .product-tabs label[for="ds-ie3100"] { border-color: var(--multi); background: color-mix(in srgb, var(--multi) 12%, transparent); }
-    body:has(#ds-ie3500:checked) .ds-ie3500 { display: block; }
-    body:has(#ds-ie3500:checked) .product-tabs label[for="ds-ie3500"] { border-color: var(--scada); background: color-mix(in srgb, var(--scada) 12%, transparent); }
-    body:has(#ds-ir1101:checked) .ds-ir1101 { display: block; }
-    body:has(#ds-ir1101:checked) .product-tabs label[for="ds-ir1101"] { border-color: var(--profile-small); background: color-mix(in srgb, var(--profile-small) 12%, transparent); }
+    .impl-link {
+      position: relative;
+      padding: 2px 0;
+      color: var(--text2);
+      font-size: 10px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .impl-link::before,
+    .impl-link::after {
+      content: "";
+      display: block;
+      width: 1px;
+      height: 9px;
+      margin: 0 auto;
+      background: var(--border);
+    }
+    .impl-link::before { margin-bottom: 4px; }
+    .impl-link::after { margin-top: 4px; }
+    .impl-notes {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text2);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .impl-notes li + li { margin-top: 5px; }
+    .impl-reference {
+      width: 100%;
+      max-width: 1180px;
+      margin: 2px auto 0;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .impl-reference h3 {
+      margin: 0 0 4px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .impl-reference p {
+      margin: 0 0 10px;
+      color: var(--text2);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .impl-shortcuts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .impl-shortcuts label {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.12);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .impl-shortcuts label:hover {
+      border-color: var(--fabric);
+      background: color-mix(in srgb, var(--fabric) 10%, transparent);
+    }
     .cfg-open {
       position: absolute;
       width: 1px;
@@ -1928,10 +2060,13 @@
       aside.cv-ports-panel { width: 100%; max-height: 340px; border-left: none; border-top: 1px solid var(--border); order: 3; }
       main { order: 2; width: 100%; }
       aside.panel { order: 1; }
+      .impl-tier-grid { grid-template-columns: minmax(0, 1fr); }
+      .impl-tier-head { min-height: 0; }
     }
     @media (max-width: 900px) {
       .layout { flex-direction: column; }
       aside.panel { width: 100%; max-height: 300px; overflow-y: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .impl-node-row { grid-template-columns: minmax(0, 1fr); }
     }
   </style>
 </head>
@@ -1960,11 +2095,6 @@
       <input type="checkbox" id="flow-info-dismiss-multi" class="flow-info-dismiss">
       <input type="checkbox" id="flow-info-dismiss-controller" class="flow-info-dismiss">
       <input type="checkbox" id="flow-info-dismiss-ipsec" class="flow-info-dismiss">
-      <input type="radio" name="product" id="ds-ir8340" checked>
-      <input type="radio" name="product" id="ds-ie9300">
-      <input type="radio" name="product" id="ds-ie3100">
-      <input type="radio" name="product" id="ds-ie3500">
-      <input type="radio" name="product" id="ds-ir1101">
       <input type="checkbox" id="cfg-ir8340-open" class="cfg-open">
       <input type="checkbox" id="cfg-ie9300-open" class="cfg-open">
       <input type="checkbox" id="cfg-ie3100-open" class="cfg-open">
@@ -2001,7 +2131,7 @@
         <label for="design-page-zoning"><span class="name">NERC CIP zoning</span><span class="desc">Impact mapping and substation zone highlights</span></label>
         <label for="design-page-policy"><span class="name">NBAR / Snort policy</span><span class="desc">Application recognition, IPS, and NGFW flow design</span></label>
       </div>
-      <label for="view-implementation-guide"><span class="name">Implementation Guide</span><span class="desc">Product references and configuration steps</span></label>
+      <label for="view-implementation-guide"><span class="name">Implementation Guide</span><span class="desc">Substation topology flows and product configuration steps</span></label>
 
       <div class="cip-menu">
         <div class="panel-title">Design guide controls</div>
@@ -3599,95 +3729,139 @@
 
     <aside class="datasheet-panel">
       <div class="panel-title">Implementation guide</div>
-      <div class="product-tabs">
-        <label for="ds-ir8340">IR8340</label>
-        <label for="ds-ie9300">IE9300</label>
-        <label for="ds-ie3100">IE3100</label>
-        <label for="ds-ie3500">IE3500</label>
-        <label for="ds-ir1101">IR1101</label>
+      <section class="impl-hero" aria-labelledby="impl-title">
+        <h2 id="impl-title">Substation implementation flows</h2>
+        <p>Start from the substation profile, then follow the basic topology from rugged WAN edge to industrial switching. Each product box opens the relevant configuration sequence so the guide reads as a deployment flow instead of a datasheet list.</p>
+      </section>
+
+      <div class="impl-tier-grid" aria-label="Substation implementation topology profiles">
+        <section class="impl-tier-card large" aria-labelledby="impl-large-title">
+          <div class="impl-tier-head">
+            <span class="impl-badge">Large substation</span>
+            <h3 id="impl-large-title">Transmission / EHV site</h3>
+            <p>Use redundant IR8340 routers for WAN and SD-WAN edge resilience, with IE9300 switches providing rugged aggregation for SCADA, PMU, engineering access, video, and Cyber Vision sensor coverage.</p>
+          </div>
+          <div class="impl-topology" aria-label="Large substation IR8340 to IE9300 topology">
+            <div class="impl-layer">
+              <span class="impl-layer-title">WAN edge and SD-WAN HA</span>
+              <div class="impl-node-row">
+                <label class="impl-product router" for="cfg-ir8340-open" role="button">
+                  <strong>IR8340 primary</strong>
+                  <span>Primary SD-WAN edge, zone firewall, IPsec transport, and service VPN handoff.</span>
+                </label>
+                <label class="impl-product router" for="cfg-ir8340-open" role="button">
+                  <strong>IR8340 secondary</strong>
+                  <span>Redundant edge for large-site survivability, LTE/fiber backup, and policy continuity.</span>
+                </label>
+              </div>
+            </div>
+            <div class="impl-link">Routed trunks and segmented service VPNs</div>
+            <div class="impl-layer">
+              <span class="impl-layer-title">Industrial aggregation</span>
+              <div class="impl-node-row">
+                <label class="impl-product switch" for="cfg-ie9300-open" role="button">
+                  <strong>IE9300 aggregation A</strong>
+                  <span>SCADA, PMU, station bus, and engineering VLAN aggregation with rugged timing support.</span>
+                </label>
+                <label class="impl-product switch" for="cfg-ie9300-open" role="button">
+                  <strong>IE9300 aggregation B</strong>
+                  <span>Redundant industrial aggregation and Cyber Vision sensor point for mirrored OT visibility.</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <ul class="impl-notes">
+            <li>Use for high-availability transmission substations with multiple protection, control, and monitoring zones.</li>
+            <li>Separate SCADA, management, multiservice, and Cyber Vision telemetry using routed interfaces or VLAN trunks.</li>
+          </ul>
+        </section>
+
+        <section class="impl-tier-card medium" aria-labelledby="impl-medium-title">
+          <div class="impl-tier-head">
+            <span class="impl-badge">Medium substation</span>
+            <h3 id="impl-medium-title">Distribution / sub-transmission site</h3>
+            <p>Use a single IR8340 WAN edge where rack space and uplink count are moderate, paired with IE9300 aggregation for rugged Layer 2/Layer 3 switching and embedded Cyber Vision telemetry.</p>
+          </div>
+          <div class="impl-topology" aria-label="Medium substation IR8340 to IE9300 topology">
+            <div class="impl-layer">
+              <span class="impl-layer-title">WAN edge</span>
+              <div class="impl-node-row single">
+                <label class="impl-product router" for="cfg-ir8340-open" role="button">
+                  <strong>IR8340</strong>
+                  <span>Primary substation router for SD-WAN, firewall segmentation, IPsec, and optional cellular backup.</span>
+                </label>
+              </div>
+            </div>
+            <div class="impl-link">Service handoff to industrial switching</div>
+            <div class="impl-layer">
+              <span class="impl-layer-title">Aggregation / access</span>
+              <div class="impl-node-row">
+                <label class="impl-product switch" for="cfg-ie9300-open" role="button">
+                  <strong>IE9300 core</strong>
+                  <span>Rugged aggregation for protection, control, management, and sensor telemetry VLANs.</span>
+                </label>
+                <label class="impl-product access" for="cfg-ie3100-open" role="button">
+                  <strong>IE3100 access</strong>
+                  <span>Optional DIN-rail access layer for smaller IED clusters, RTUs, meters, or local cameras.</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <ul class="impl-notes">
+            <li>Use when the substation needs strong segmentation but does not require dual-router edge HA.</li>
+            <li>IE3100 can extend access from the IE9300 when field panels or remote bays need hardened Ethernet.</li>
+          </ul>
+        </section>
+
+        <section class="impl-tier-card small" aria-labelledby="impl-small-title">
+          <div class="impl-tier-head">
+            <span class="impl-badge">Small substation</span>
+            <h3 id="impl-small-title">Compact distribution / DA site</h3>
+            <p>Use IR1101 as the compact routed edge, with IE3100 or IE3500 switching underneath depending on port density, PoE, uplink speed, and local service requirements.</p>
+          </div>
+          <div class="impl-topology" aria-label="Small substation IR1101 to IE3100 or IE3500 topology">
+            <div class="impl-layer">
+              <span class="impl-layer-title">Compact WAN edge</span>
+              <div class="impl-node-row single">
+                <label class="impl-product router" for="cfg-ir1101-open" role="button">
+                  <strong>IR1101</strong>
+                  <span>Small-site SD-WAN router for Ethernet or LTE WAN, zone firewall, and routed LAN handoff.</span>
+                </label>
+              </div>
+            </div>
+            <div class="impl-link">Routed LAN handoff to DIN-rail switching</div>
+            <div class="impl-layer">
+              <span class="impl-layer-title">Industrial access</span>
+              <div class="impl-node-row">
+                <label class="impl-product access" for="cfg-ie3100-open" role="button">
+                  <strong>IE3100</strong>
+                  <span>Compact rugged access for small IED groups, RTU connections, and low-port-count bays.</span>
+                </label>
+                <label class="impl-product access" for="cfg-ie3500-open" role="button">
+                  <strong>IE3500</strong>
+                  <span>Higher-density DIN-rail option for additional PoE, 10G uplinks, or modular expansion.</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <ul class="impl-notes">
+            <li>Use for space-constrained distribution sites, feeder automation, or small remote substations.</li>
+            <li>Choose IE3500 over IE3100 when uplink speed, PoE budget, or expansion capacity is the deciding factor.</li>
+          </ul>
+        </section>
       </div>
 
-      <article class="ds-card ds-ir8340">
-        <h3>Catalyst IR8340</h3>
-        <p class="role">Rugged SD-WAN router · site / headend edge</p>
-        <dl>
-          <dt>Form factor</dt><dd>2 RU rack-mount; 2× NIM + 2× PIM expansion slots</dd>
-          <dt>Compute</dt><dd>Intel x86, 8 cores, 8 GB cache; 8 GB DRAM; 8 GB eMMC flash</dd>
-          <dt>Ethernet ports</dt><dd>14× 1 GE built-in — 4 RJ-45 (PoE/PoE+/UPoE to 120 W), 4 combo RJ-45/SFP, 4 SFP LAN, 2 combo WAN</dd>
-          <dt>IPsec throughput</dt><dd>2 Gbps (FlexVPN, DMVPN, IKEv1/v2)</dd>
-          <dt>Timing</dt><dd>IEEE 1588v2 PTP, IRIG-B, GNSS, SyncE; Stratum 3E holdover</dd>
-          <dt>Software</dt><dd>Cisco IOS XE; Catalyst SD-WAN; NGFW, Cisco Cyber Vision, IOx edge hosting</dd>
-          <dt>Substation standards</dt><dd>IEEE 1613; IEC 61850-3</dd>
-        </dl>
-        <p class="source"><a href="https://www.cisco.com/c/en/us/products/collateral/routers/catalyst-ir8300-rugged-series-router/nb-06-cat-ir8340-rugged-ser-rout-ds-cte-en.html" target="_blank" rel="noopener">Cisco IR8340 data sheet</a></p>
-        <label class="cfg-btn" for="cfg-ir8340-open">View configuration steps</label>
-      </article>
-
-      <article class="ds-card ds-ie9300">
-        <h3>Catalyst IE9300</h3>
-        <p class="role">Rugged aggregation switch · large / medium substation</p>
-        <dl>
-          <dt>Form factor</dt><dd>1 RU rack-mount; fanless convection cooling</dd>
-          <dt>Port density</dt><dd>28 ports GE / 10G (model-dependent: SFP, RJ-45, mGig, 4PPoE variants)</dd>
-          <dt>Operating temperature</dt><dd>−40°C to 75°C (−40°F to 167°F)</dd>
-          <dt>PoE</dt><dd>Up to 24 ports 802.3af/at/bt; budget up to 720 W (dual 400 W PSUs on PoE models)</dd>
-          <dt>Resiliency</dt><dd>REP, PRP, MRP, HSR, EtherChannel; dual PSU, dying gasp</dd>
-          <dt>OT protocols</dt><dd>EtherNet/IP (CIP), PROFINET; IEEE 1588v2 PTP (utility + manufacturing profiles)</dd>
-          <dt>Security</dt><dd>Secure Boot, Trust Anchor, MACsec-256, TrustSec; Cisco Cyber Vision, Secure Equipment Access</dd>
-          <dt>Substation standards</dt><dd>IEEE 1613; IEC 61850-3; IEC 61850-9-3 power profile</dd>
-        </dl>
-        <p class="source"><a href="https://www.cisco.com/c/en/us/products/collateral/switches/catalyst-ie9300-rugged-series/catalyst-ie9300-rugged-series-ds.html" target="_blank" rel="noopener">Cisco IE9300 data sheet</a></p>
-        <label class="cfg-btn" for="cfg-ie9300-open">View configuration steps</label>
-      </article>
-
-      <article class="ds-card ds-ie3100">
-        <h3>Catalyst IE3100 Rugged Series</h3>
-        <p class="role">Compact DIN-rail switch · small substation / harsh edge</p>
-        <dl>
-          <dt>Form factor</dt><dd>DIN-rail mount; fanless convection cooling; space-constrained industrial deployments</dd>
-          <dt>Port options</dt><dd>6, 10, 12, or 20× GE RJ-45; up to 4× GE SFP or 2× GE combo uplinks (model-dependent)</dd>
-          <dt>PoE</dt><dd>Up to 8 PoE/PoE+ ports or 6 PoE/PoE+ + 2 4PPoE; 240 W max budget</dd>
-          <dt>Operating temperature</dt><dd>−40°C to 75°C; vibration, shock, and surge hardened</dd>
-          <dt>Resiliency</dt><dd>MRP, REP, dual DC inputs; alarm I/O</dd>
-          <dt>OT protocols</dt><dd>EtherNet/IP (CIP), Modbus, PROFINET; IEEE 1613 / IEC 61850-3 capable</dd>
-          <dt>Timing</dt><dd>IEEE 1588v2 PTP (utility and manufacturing profiles)</dd>
-          <dt>Software</dt><dd>Cisco IOS XE; Secure Boot, Trust Anchor; Catalyst Center / WebUI</dd>
-        </dl>
-        <p class="source"><a href="https://www.cisco.com/c/en/us/products/collateral/networking/industrial-switches/catalyst-ie3100-rugged-series/catalyst-ie3100-rugged-series-ds.html" target="_blank" rel="noopener">Cisco IE3100 Rugged Series data sheet</a></p>
-        <label class="cfg-btn" for="cfg-ie3100-open">View configuration steps</label>
-      </article>
-
-      <article class="ds-card ds-ie3500">
-        <h3>IE3500 Rugged Series</h3>
-        <p class="role">Modular DIN-rail switch · small site / high-bandwidth edge</p>
-        <dl>
-          <dt>Form factor</dt><dd>DIN-rail base + expansion modules (up to 27 GE/mGig ports)</dd>
-          <dt>Base ports</dt><dd>8× 1 GE RJ-45 (data or PoE+/4PPoE) + 3× 1/10G SFP/SFP+ uplinks</dd>
-          <dt>PoE</dt><dd>Up to 24 PoE ports; 480 W total budget; up to 90 W per port</dd>
-          <dt>Operating temperature</dt><dd>−40°C to 75°C; fanless; alarm I/O</dd>
-          <dt>Resiliency</dt><dd>MRP, REP, DLR; HSR / PRP on IE3505 variants</dd>
-          <dt>Advanced features</dt><dd>TSN frame preemption (802.1Qbu / 802.3br); L3, SD-Access fabric edge, BGP-EVPN (planned)</dd>
-          <dt>Timing</dt><dd>IEEE 1588 PTP transparent or boundary clock</dd>
-          <dt>Security</dt><dd>Secure Boot, Trust Anchor, MACsec-256, TrustSec; Cyber Vision, Secure Equipment Access</dd>
-        </dl>
-        <p class="source"><a href="https://www.cisco.com/c/en/us/products/collateral/networking/industrial-switches/ie3500-rugged-series/ie3500-rugged-series-ds.html" target="_blank" rel="noopener">Cisco IE3500 data sheet</a></p>
-        <label class="cfg-btn" for="cfg-ie3500-open">View configuration steps</label>
-      </article>
-
-      <article class="ds-card ds-ir1101">
-        <h3>Catalyst IR1101</h3>
-        <p class="role">Compact SD-WAN router · small distribution / DA site</p>
-        <dl>
-          <dt>Form factor</dt><dd>Compact rugged router; integrated WAN + LAN</dd>
-          <dt>Role in CVD</dt><dd>Single-box edge for small substation (SRD §4.1); ZBFW + SD-WAN catalogue</dd>
-          <dt>WAN</dt><dd>Ethernet DIA and/or cellular LTE backup; SD-WAN overlay to headend</dd>
-          <dt>LAN</dt><dd>Routed SVIs toward IE3100/IE3500 access switches</dd>
-          <dt>Software</dt><dd>Cisco IOS XE; Catalyst SD-WAN; zone firewall</dd>
-          <dt>Throughput</dt><dd>Size for SCADA + optional video; validate under concurrent load</dd>
-        </dl>
-        <p class="source">Align with <cite>Substation Security 1.1 SRD</cite> small-site profile and vManage templates.</p>
-        <label class="cfg-btn" for="cfg-ir1101-open">View configuration steps</label>
-      </article>
+      <section class="impl-reference" aria-labelledby="impl-reference-title">
+        <h3 id="impl-reference-title">Configuration entry points</h3>
+        <p>The topology boxes above open the same platform-specific configuration dialogs. Use these quick links when you already know the product you need.</p>
+        <div class="impl-shortcuts" aria-label="Product configuration shortcuts">
+          <label for="cfg-ir8340-open">IR8340</label>
+          <label for="cfg-ir1101-open">IR1101</label>
+          <label for="cfg-ie9300-open">IE9300</label>
+          <label for="cfg-ie3100-open">IE3100</label>
+          <label for="cfg-ie3500-open">IE3500</label>
+        </div>
+      </section>
     </aside>
   </div>
 
