@@ -1254,13 +1254,10 @@
     }
     .sdwan-design-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.75fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: 18px;
       align-items: start;
       margin-bottom: 24px;
-    }
-    @media (max-width: 1020px) {
-      .sdwan-design-grid { grid-template-columns: 1fr; }
     }
     .sdwan-design-panel {
       background: var(--surface);
@@ -1353,50 +1350,6 @@
     }
     .sdwan-controller-card li { margin-bottom: 6px; }
     .sdwan-controller-card strong { color: var(--text); }
-    .sdwan-topology-flow {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 18px;
-      margin: 16px 0 4px;
-    }
-    .sdwan-flow-node {
-      min-height: 96px;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.16);
-      position: relative;
-    }
-    .sdwan-flow-node:not(:last-child)::after {
-      content: "to";
-      position: absolute;
-      left: 12px;
-      bottom: -18px;
-      color: var(--text2);
-      font-size: 10px;
-      font-weight: 700;
-    }
-    .sdwan-flow-node span {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--mgmt);
-      font-size: 9px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .sdwan-flow-node strong {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--text);
-      font-size: 13px;
-    }
-    .sdwan-flow-node p {
-      margin: 0;
-      color: var(--text2);
-      font-size: 10px;
-      line-height: 1.4;
-    }
     .sdwan-reference-list a {
       color: var(--fabric);
       text-decoration: none;
@@ -2888,37 +2841,6 @@
             </div>
           </article>
 
-          <article class="sdwan-design-panel">
-            <h3>Topology pattern</h3>
-            <p>The secure substation topology is hub-and-spoke by default: field routers form encrypted overlay tunnels toward redundant control-center or headend routers, while controller sessions remain separate from user traffic.</p>
-            <div class="sdwan-topology-flow" aria-label="Cisco SD-WAN substation topology pattern">
-              <div class="sdwan-flow-node">
-                <span>Field site</span>
-                <strong>IEDs / RTUs / sensors</strong>
-                <p>OT endpoints connect through IE9300, IE3100, or IE3500 switching.</p>
-              </div>
-              <div class="sdwan-flow-node">
-                <span>WAN edge</span>
-                <strong>IR8340 / IR1101</strong>
-                <p>Routes service VPNs, applies zone policy, encrypts overlay traffic.</p>
-              </div>
-              <div class="sdwan-flow-node">
-                <span>Overlay</span>
-                <strong>SD-WAN fabric</strong>
-                <p>Encrypted tunnels use approved transports and centralized policy.</p>
-              </div>
-              <div class="sdwan-flow-node">
-                <span>Headend</span>
-                <strong>IR8340 hubs</strong>
-                <p>Terminates spokes and hands traffic to control-center services.</p>
-              </div>
-              <div class="sdwan-flow-node">
-                <span>Operations</span>
-                <strong>SCADA / NMS / SOC</strong>
-                <p>Approved applications consume only the service VPNs they require.</p>
-              </div>
-            </div>
-          </article>
         </div>
 
         <div class="sdwan-controller-grid" aria-label="Cisco SD-WAN controller roles">
