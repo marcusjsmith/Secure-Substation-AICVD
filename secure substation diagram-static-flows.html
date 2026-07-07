@@ -523,13 +523,10 @@
     }
     .overview-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: 18px;
       align-items: start;
       margin-top: 18px;
-    }
-    @media (max-width: 980px) {
-      .overview-layout { grid-template-columns: 1fr; }
     }
     .overview-panel {
       background: var(--surface);
