@@ -65,13 +65,42 @@
       top: 0;
       align-self: stretch;
       max-height: 100%;
-      overflow-y: auto;
+      overflow: visible;
       background: var(--surface);
       border-right: 1px solid var(--border);
       padding: 14px 12px;
       display: flex;
       flex-direction: column;
       gap: 6px;
+      z-index: 30;
+    }
+    .menu-group {
+      position: relative;
+    }
+    .menu-group > label {
+      display: block;
+      width: 100%;
+    }
+    .menu-flyout {
+      display: none;
+      position: absolute;
+      left: calc(100% + 14px);
+      top: 0;
+      width: min(540px, calc(100vw - 340px));
+      max-height: calc(100vh - 104px);
+      overflow-y: auto;
+      padding: 12px;
+      background: color-mix(in srgb, var(--surface) 96%, #000);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
+      z-index: 60;
+    }
+    body:has(#view-architecture:checked) .architecture-flyout,
+    body:has(#view-design-guide:checked) .design-flyout {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
     .panel-title {
       font-size: 11.7px;
@@ -111,6 +140,12 @@
       padding: 8px 0;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
+    }
+    .menu-flyout .architecture-subnav,
+    .menu-flyout .design-subnav {
+      margin: 0;
+      padding: 0;
+      border: 0;
     }
     .architecture-subnav .panel-title,
     .design-subnav .panel-title {
@@ -183,6 +218,11 @@
       overflow: visible;
       margin-top: 8px;
       padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .menu-flyout .flow-menu {
+      margin: 0;
+      padding-top: 12px;
       border-top: 1px solid var(--border);
     }
     .flow-menu > .panel-title,
@@ -370,6 +410,11 @@
       overflow: visible;
       margin-top: 8px;
       padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .menu-flyout .cip-menu {
+      margin: 0;
+      padding-top: 12px;
       border-top: 1px solid var(--border);
     }
     .cip-menu .panel-title,
@@ -2239,6 +2284,14 @@
     @media (max-width: 900px) {
       .layout { flex-direction: column; }
       aside.panel { width: 100%; max-height: 300px; overflow-y: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      .menu-flyout {
+        position: static;
+        width: 100%;
+        max-height: none;
+        overflow: visible;
+        margin: 6px 0;
+        box-shadow: none;
+      }
       .impl-node-row { grid-template-columns: minmax(0, 1fr); }
     }
   </style>
@@ -2293,63 +2346,71 @@
     <aside class="panel">
       <div class="panel-title">Navigation</div>
       <label for="view-overview"><span class="name">Overview</span><span class="desc">CVD purpose, scope, and solution structure</span></label>
-      <label for="view-architecture"><span class="name">Architecture</span><span class="desc">Topology, traffic flows, Cyber Vision telemetry, and bandwidth planning</span></label>
-      <div class="architecture-subnav" aria-label="Architecture sections">
-        <div class="panel-title">Architecture pages</div>
-        <label for="arch-page-diagram"><span class="name">Diagram &amp; use cases</span><span class="desc">Topology overlays and Cyber Vision telemetry</span></label>
-        <label for="arch-page-planning"><span class="name">Traffic profiles</span><span class="desc">Traffic types and bandwidth profiles</span></label>
-      </div>
-      <div class="flow-menu">
-        <div class="panel-title">Architecture use cases</div>
-        <p class="flow-menu-hint">Select a topology overlay or telemetry use case. Traffic detail panels appear on the diagram; use <strong>×</strong> to dismiss after reading, or <strong>Show details</strong> to bring them back.</p>
-        <label for="flow-none"><span class="name">Diagram only</span><span class="desc">Static topology — no flow overlay</span></label>
-        <label for="flow-scada"><span class="dot" style="background:var(--scada)"></span><span class="name">SCADA Traffic</span><span class="desc">Large, medium & small substations (all paths)</span></label>
-        <label for="flow-mgmt"><span class="dot" style="background:var(--mgmt)"></span><span class="name">Management Traffic</span><span class="desc">Management plane across all sites</span></label>
-        <label for="flow-multi"><span class="dot" style="background:var(--multi)"></span><span class="name">MultiService Traffic</span><span class="desc">Corporate VRF traffic across all sites</span></label>
-        <label for="flow-controller"><span class="dot" style="background:var(--fabric)"></span><span class="name">Controller overlay (TLS)</span><span class="desc">Every SD-WAN router → controllers</span></label>
-        <label for="flow-ipsec"><span class="dot" style="background:var(--ipsec)"></span><span class="name">IPsec Hub &amp; Spoke</span><span class="desc">Site IR8340 / IR1101 routers → Headend 1 &amp; 2</span></label>
-        <label for="flow-cybervision"><span class="dot" style="background:var(--cybervision)"></span><span class="name">Cyber Vision telemetry</span><span class="desc">Embedded sensors → Cyber Vision Center</span></label>
-        <div class="legend">
-          <span><i style="background:var(--scada)"></i>SCADA</span>
-          <span><i style="background:var(--mgmt)"></i>Mgmt</span>
-          <span><i style="background:var(--multi)"></i>Multi</span>
-          <span><i style="background:var(--fabric)"></i>SD-WAN / TLS</span>
-          <span><i style="background:var(--ipsec)"></i>IPsec</span>
-          <span><i style="background:var(--cybervision)"></i>Cyber Vision</span>
+      <div class="menu-group">
+        <label for="view-architecture"><span class="name">Architecture</span><span class="desc">Topology, traffic flows, Cyber Vision telemetry, and bandwidth planning</span></label>
+        <div class="menu-flyout architecture-flyout" aria-label="Architecture floating menu">
+          <div class="architecture-subnav" aria-label="Architecture sections">
+            <div class="panel-title">Architecture pages</div>
+            <label for="arch-page-diagram"><span class="name">Diagram &amp; use cases</span><span class="desc">Topology overlays and Cyber Vision telemetry</span></label>
+            <label for="arch-page-planning"><span class="name">Traffic profiles</span><span class="desc">Traffic types and bandwidth profiles</span></label>
+          </div>
+          <div class="flow-menu">
+            <div class="panel-title">Architecture use cases</div>
+            <p class="flow-menu-hint">Select a topology overlay or telemetry use case. Traffic detail panels appear on the diagram; use <strong>×</strong> to dismiss after reading, or <strong>Show details</strong> to bring them back.</p>
+            <label for="flow-none"><span class="name">Diagram only</span><span class="desc">Static topology — no flow overlay</span></label>
+            <label for="flow-scada"><span class="dot" style="background:var(--scada)"></span><span class="name">SCADA Traffic</span><span class="desc">Large, medium & small substations (all paths)</span></label>
+            <label for="flow-mgmt"><span class="dot" style="background:var(--mgmt)"></span><span class="name">Management Traffic</span><span class="desc">Management plane across all sites</span></label>
+            <label for="flow-multi"><span class="dot" style="background:var(--multi)"></span><span class="name">MultiService Traffic</span><span class="desc">Corporate VRF traffic across all sites</span></label>
+            <label for="flow-controller"><span class="dot" style="background:var(--fabric)"></span><span class="name">Controller overlay (TLS)</span><span class="desc">Every SD-WAN router → controllers</span></label>
+            <label for="flow-ipsec"><span class="dot" style="background:var(--ipsec)"></span><span class="name">IPsec Hub &amp; Spoke</span><span class="desc">Site IR8340 / IR1101 routers → Headend 1 &amp; 2</span></label>
+            <label for="flow-cybervision"><span class="dot" style="background:var(--cybervision)"></span><span class="name">Cyber Vision telemetry</span><span class="desc">Embedded sensors → Cyber Vision Center</span></label>
+            <div class="legend">
+              <span><i style="background:var(--scada)"></i>SCADA</span>
+              <span><i style="background:var(--mgmt)"></i>Mgmt</span>
+              <span><i style="background:var(--multi)"></i>Multi</span>
+              <span><i style="background:var(--fabric)"></i>SD-WAN / TLS</span>
+              <span><i style="background:var(--ipsec)"></i>IPsec</span>
+              <span><i style="background:var(--cybervision)"></i>Cyber Vision</span>
+            </div>
+            <label class="anim-toggle anim-toggle-global">
+              <span>Animate flows</span>
+              <input type="checkbox" id="animate-on" checked>
+            </label>
+          </div>
         </div>
-        <label class="anim-toggle anim-toggle-global">
-          <span>Animate flows</span>
-          <input type="checkbox" id="animate-on" checked>
-        </label>
       </div>
-      <label for="view-design-guide"><span class="name">Design Guide</span><span class="desc">SD-WAN architecture, NERC CIP zoning, NBAR, Snort, and NGFW policy design</span></label>
-      <div class="design-subnav" aria-label="Design Guide sections">
-        <div class="panel-title">Design guide pages</div>
-        <label for="design-page-sdwan"><span class="name">SD-WAN Design</span><span class="desc">Controllers, overlay architecture, and security capabilities</span></label>
-        <label for="design-page-zoning"><span class="name">NERC CIP zoning</span><span class="desc">Impact mapping and substation zone highlights</span></label>
-        <label for="design-page-policy"><span class="name">NBAR / Snort policy</span><span class="desc">Application recognition, IPS, and NGFW flow design</span></label>
-      </div>
-      <div class="cip-menu">
-        <div class="panel-title">Design guide controls</div>
-        <p class="cip-intro">Select one NERC CIP impact category (per CIP-002 asset identification). Matching substation zones on the diagram are highlighted.</p>
-        <label for="cip-medium">
-          <span class="name">Medium Impact</span>
-          <span class="desc">BES Cyber Systems that, if rendered inoperable or compromised within 15 minutes, could adversely impact the reliable operation of the BES.</span>
-          <span class="sites">Suitable zones: Large &amp; Medium substations</span>
-        </label>
-        <p class="cip-detail cip-detail-medium">Typically requires the full CIP standard set (CIP-002 through CIP-011) with stringent electronic access, patch, and recovery controls. Maps to dual IR8340 large transmission sites and single IR8340 medium transmission/distribution sites in this CVD.</p>
-        <label for="cip-low">
-          <span class="name">Low Impact</span>
-          <span class="desc">BES Cyber Systems with a lower consequence to BES reliability—still in scope for CIP but with reduced or tailored requirements versus Medium Impact.</span>
-          <span class="sites">Suitable zones: Medium &amp; Small substations</span>
-        </label>
-        <p class="cip-detail cip-detail-low">Controls are commensurate with operational risk (e.g., scoped access management and monitoring). Suitable for medium IR8340 deployments and compact IR1101 small sites where BES impact is present but not at the highest consequence tier.</p>
-        <label for="cip-nonbes">
-          <span class="name">Non-BES</span>
-          <span class="desc">Assets outside the Bulk Electric System—distribution automation, field, and other facilities not registered as BES.</span>
-          <span class="sites">Suitable zone: Small substation only</span>
-        </label>
-        <p class="cip-detail cip-detail-nonbes">CIP obligations depend on asset registration and utility policy; security is still required but aligns to programmatic or lighter-weight frameworks. Maps to the small-substation profile (IR1101 + IE3100/IE3500) for DA and field sites.</p>
+      <div class="menu-group">
+        <label for="view-design-guide"><span class="name">Design Guide</span><span class="desc">SD-WAN architecture, NERC CIP zoning, NBAR, Snort, and NGFW policy design</span></label>
+        <div class="menu-flyout design-flyout" aria-label="Design Guide floating menu">
+          <div class="design-subnav" aria-label="Design Guide sections">
+            <div class="panel-title">Design guide pages</div>
+            <label for="design-page-sdwan"><span class="name">SD-WAN Design</span><span class="desc">Controllers, overlay architecture, and security capabilities</span></label>
+            <label for="design-page-zoning"><span class="name">NERC CIP zoning</span><span class="desc">Impact mapping and substation zone highlights</span></label>
+            <label for="design-page-policy"><span class="name">NBAR / Snort policy</span><span class="desc">Application recognition, IPS, and NGFW flow design</span></label>
+          </div>
+          <div class="cip-menu">
+            <div class="panel-title">Design guide controls</div>
+            <p class="cip-intro">Select one NERC CIP impact category (per CIP-002 asset identification). Matching substation zones on the diagram are highlighted.</p>
+            <label for="cip-medium">
+              <span class="name">Medium Impact</span>
+              <span class="desc">BES Cyber Systems that, if rendered inoperable or compromised within 15 minutes, could adversely impact the reliable operation of the BES.</span>
+              <span class="sites">Suitable zones: Large &amp; Medium substations</span>
+            </label>
+            <p class="cip-detail cip-detail-medium">Typically requires the full CIP standard set (CIP-002 through CIP-011) with stringent electronic access, patch, and recovery controls. Maps to dual IR8340 large transmission sites and single IR8340 medium transmission/distribution sites in this CVD.</p>
+            <label for="cip-low">
+              <span class="name">Low Impact</span>
+              <span class="desc">BES Cyber Systems with a lower consequence to BES reliability—still in scope for CIP but with reduced or tailored requirements versus Medium Impact.</span>
+              <span class="sites">Suitable zones: Medium &amp; Small substations</span>
+            </label>
+            <p class="cip-detail cip-detail-low">Controls are commensurate with operational risk (e.g., scoped access management and monitoring). Suitable for medium IR8340 deployments and compact IR1101 small sites where BES impact is present but not at the highest consequence tier.</p>
+            <label for="cip-nonbes">
+              <span class="name">Non-BES</span>
+              <span class="desc">Assets outside the Bulk Electric System—distribution automation, field, and other facilities not registered as BES.</span>
+              <span class="sites">Suitable zone: Small substation only</span>
+            </label>
+            <p class="cip-detail cip-detail-nonbes">CIP obligations depend on asset registration and utility policy; security is still required but aligns to programmatic or lighter-weight frameworks. Maps to the small-substation profile (IR1101 + IE3100/IE3500) for DA and field sites.</p>
+          </div>
+        </div>
       </div>
       <label for="view-implementation-guide"><span class="name">Implementation Guide</span><span class="desc">Substation topology flows and product configuration steps</span></label>
     </aside>
