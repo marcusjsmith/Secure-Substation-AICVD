@@ -979,6 +979,37 @@
       font-size: 11.7px;
       line-height: 1.4;
     }
+    .guide-workings-toggle {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid color-mix(in srgb, var(--mgmt) 34%, var(--border));
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--mgmt) 8%, transparent);
+      color: var(--text2);
+      cursor: pointer;
+    }
+    .guide-workings-toggle:hover {
+      border-color: var(--mgmt);
+      background: color-mix(in srgb, var(--mgmt) 12%, transparent);
+    }
+    .guide-workings-toggle input {
+      margin-top: 3px;
+      accent-color: var(--fabric);
+    }
+    .guide-workings-toggle strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text);
+      font-size: 12.7px;
+    }
+    .guide-workings-toggle span {
+      display: block;
+      font-size: 11.7px;
+      line-height: 1.4;
+    }
     .guide-calculator-intro {
       margin: 8px 0 12px;
       color: var(--text2);
@@ -1236,6 +1267,155 @@
       color: var(--text2);
       font-size: 10.6px;
       line-height: 1.35;
+    }
+    .guide-workings-float {
+      display: none;
+      position: fixed;
+      right: 24px;
+      top: 104px;
+      width: min(470px, calc(100vw - 356px));
+      max-height: calc(100vh - 128px);
+      overflow-y: auto;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--mgmt);
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--surface) 97%, #000);
+      box-shadow: 0 20px 54px rgba(0, 0, 0, 0.48);
+      z-index: 85;
+    }
+    body:has(#view-overview:checked):has(#overview-page-guided:checked):has(#guide-show-workings:checked) .guide-workings-float {
+      display: block;
+    }
+    .guide-workings-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .guide-workings-eyebrow {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--mgmt);
+      font-size: 10.6px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .guide-workings-head h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 17px;
+    }
+    .guide-workings-close {
+      flex: 0 0 auto;
+      padding: 6px 9px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 10.6px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .guide-workings-close:hover {
+      border-color: var(--mgmt);
+      background: color-mix(in srgb, var(--mgmt) 10%, transparent);
+    }
+    .guide-workings-summary,
+    .guide-workings-rule,
+    .guide-workings-bandwidth {
+      margin: 0 0 12px;
+      color: var(--text2);
+      font-size: 11.7px;
+      line-height: 1.45;
+    }
+    .guide-workings-rule {
+      padding: 10px 11px;
+      border-left: 3px solid var(--fabric);
+      border-radius: 0 6px 6px 0;
+      background: color-mix(in srgb, var(--fabric) 8%, transparent);
+    }
+    .guide-workings-section {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .guide-workings-section > strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 12.7px;
+    }
+    .guide-workings-signals {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .guide-workings-signals li {
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text2);
+      font-size: 11.7px;
+      line-height: 1.4;
+    }
+    .guide-workings-signals strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text);
+      font-size: 12.7px;
+    }
+    .guide-workings-signals li > span:not(.guide-workings-tier) {
+      display: block;
+      margin-top: 3px;
+    }
+    .guide-workings-tier {
+      display: inline-flex;
+      margin-top: 6px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--fabric) 12%, transparent);
+      color: var(--text);
+      font-size: 10.6px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .guide-workings-score-table {
+      width: 100%;
+      border-collapse: collapse;
+      color: var(--text2);
+      font-size: 11.7px;
+    }
+    .guide-workings-score-table th,
+    .guide-workings-score-table td {
+      padding: 7px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+    }
+    .guide-workings-score-table th {
+      color: var(--mgmt);
+      font-size: 10.6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .guide-workings-score-table td:last-child {
+      color: var(--text);
+      font-weight: 800;
+      text-align: right;
+    }
+    @media (max-width: 980px) {
+      .guide-workings-float {
+        left: 18px;
+        right: 18px;
+        top: 92px;
+        width: auto;
+        max-height: calc(100vh - 116px);
+      }
     }
     .guided-profile-grid {
       display: grid;
@@ -3317,6 +3497,11 @@
 
           <div class="guided-flow-grid">
             <form class="guided-flow-panel" id="profile-guide-form" aria-label="Substation profile guide questions">
+              <label class="guide-workings-toggle" for="guide-show-workings">
+                <input type="checkbox" id="guide-show-workings">
+                <span><strong>Show background workings</strong>Display the decision logic, selected signals, raw profile scores, and bandwidth contribution in a floating panel.</span>
+              </label>
+
               <fieldset class="guide-question">
                 <legend>1. Which use-case mix must this site support?</legend>
                 <label>
@@ -3496,6 +3681,41 @@
               </div>
             </aside>
           </div>
+
+          <aside class="guide-workings-float" id="guide-workings-float" aria-label="Recommendation background workings" aria-live="polite">
+            <div class="guide-workings-head">
+              <div>
+                <span class="guide-workings-eyebrow">Decision workings</span>
+                <h3>How the profile is calculated</h3>
+              </div>
+              <label class="guide-workings-close" for="guide-show-workings">Hide</label>
+            </div>
+            <p class="guide-workings-summary" id="guide-workings-summary">Answer questions to see the decision logic.</p>
+            <p class="guide-workings-rule" id="guide-workings-rule">Rule: the guide applies a high-watermark decision. Any Large signal overrides Medium and Small, and any Medium signal overrides Small. Raw scores are shown for transparency but do not overrule a higher-tier signal.</p>
+            <div class="guide-workings-section">
+              <strong>Signals used</strong>
+              <ul class="guide-workings-signals" id="guide-workings-signals">
+                <li>No signals selected yet.</li>
+              </ul>
+            </div>
+            <div class="guide-workings-section">
+              <strong>Raw signal score context</strong>
+              <table class="guide-workings-score-table" aria-label="Raw profile signal scores">
+                <thead>
+                  <tr><th>Profile</th><th>Raw score</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Small</td><td id="guide-workings-score-small">0</td></tr>
+                  <tr><td>Medium</td><td id="guide-workings-score-medium">0</td></tr>
+                  <tr><td>Large</td><td id="guide-workings-score-large">0</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="guide-workings-section">
+              <strong>Bandwidth contribution</strong>
+              <p class="guide-workings-bandwidth" id="guide-workings-bandwidth">No bandwidth values entered yet.</p>
+            </div>
+          </aside>
 
           <div class="guided-profile-grid" aria-label="Profile reference summary">
             <article class="guided-profile-card large">
@@ -6344,6 +6564,78 @@ interface GigabitEthernet0/1/0
         );
       }
 
+      function profileBadge(tier) {
+        return PROFILES[tier] ? PROFILES[tier].badge : 'No profile';
+      }
+
+      function questionText(input) {
+        var fieldset = input.closest('fieldset');
+        var legend = fieldset ? fieldset.querySelector('legend') : null;
+        return legend ? legend.textContent.trim() : 'Question';
+      }
+
+      function answerText(input) {
+        var label = input.closest('label');
+        var strong = label ? label.querySelector('strong') : null;
+        return strong ? strong.textContent.trim() : input.value;
+      }
+
+      function scoreSummary(scoreSet) {
+        return 'Small +' + (scoreSet.small || 0) + ', Medium +' + (scoreSet.medium || 0) + ', Large +' + (scoreSet.large || 0);
+      }
+
+      function renderWorkings(tier, scores, signalDetails, bandwidthSignal, appliedCount) {
+        var summary = document.getElementById('guide-workings-summary');
+        var signals = document.getElementById('guide-workings-signals');
+        var bandwidth = document.getElementById('guide-workings-bandwidth');
+        if (!summary || !signals || !bandwidth) return;
+
+        setText('guide-workings-score-small', String(scores.small));
+        setText('guide-workings-score-medium', String(scores.medium));
+        setText('guide-workings-score-large', String(scores.large));
+
+        if (!tier) {
+          summary.textContent = 'No profile has been selected yet. The panel will update as soon as a questionnaire answer or bandwidth value is provided.';
+        } else {
+          summary.textContent = 'Final recommendation: ' + profileBadge(tier) + '. ' + appliedCount + ' of ' + TOTAL_GUIDE_INPUTS + ' inputs are active. The decision uses the highest selected tier signal, then shows raw scores as context.';
+        }
+
+        signals.innerHTML = '';
+        if (!signalDetails.length) {
+          var empty = document.createElement('li');
+          empty.textContent = 'No signals selected yet.';
+          signals.appendChild(empty);
+        } else {
+          signalDetails.forEach(function (detail) {
+            var item = document.createElement('li');
+            var title = document.createElement('strong');
+            var copy = document.createElement('span');
+            var tierLabel = document.createElement('span');
+
+            title.textContent = detail.source;
+            copy.textContent = detail.answer + '. Signal tier: ' + profileBadge(detail.tier) + '. Score context: ' + detail.scoreText + '.';
+            tierLabel.className = 'guide-workings-tier';
+            tierLabel.textContent = profileBadge(detail.tier);
+
+            item.appendChild(title);
+            item.appendChild(copy);
+            if (detail.reason) {
+              var reason = document.createElement('span');
+              reason.textContent = detail.reason;
+              item.appendChild(reason);
+            }
+            item.appendChild(tierLabel);
+            signals.appendChild(item);
+          });
+        }
+
+        if (!bandwidthSignal) {
+          bandwidth.textContent = 'No bandwidth values entered yet. The bandwidth calculator becomes one additional Small, Medium, or Large signal when SCADA points, PMU streams, or camera counts are entered.';
+        } else {
+          bandwidth.textContent = formatMbps(bandwidthSignal.total) + ' Mbps estimated WAN demand. Inputs: ' + bandwidthSignal.points + ' SCADA points, ' + bandwidthSignal.pmus + ' PMU streams, ' + bandwidthSignal.cameras + ' CCTV cameras at ' + bandwidthSignal.videoRate + ' Mbps each. Bandwidth signal: ' + profileBadge(bandwidthSignal.tier) + '.';
+        }
+      }
+
       function setScore(tier, score, maxScore) {
         var fill = document.getElementById('guide-score-' + tier);
         var label = document.getElementById('guide-score-' + tier + '-text');
@@ -6445,7 +6737,7 @@ interface GigabitEthernet0/1/0
         ].filter(function (segment) { return segment.value > 0; });
 
         var reason = 'Bandwidth calculator estimates ' + formatMbps(total) + ' Mbps and maps this site to the ' + PROFILES[tier].badge + ' based on SCADA points, PMU streams, and camera load.';
-        var signal = { tier: tier, total: total, scores: scores, segments: segments, reason: reason };
+        var signal = { tier: tier, total: total, scores: scores, segments: segments, reason: reason, points: points, pmus: pmus, cameras: cameras, videoRate: videoRate };
         updateBandwidthResult(signal);
         return signal;
       }
@@ -6485,13 +6777,26 @@ interface GigabitEthernet0/1/0
         var scores = { small: 0, medium: 0, large: 0 };
         var reasons = [];
         var dominantSignals = [];
+        var signalDetails = [];
         var bandwidthSignal = readBandwidthSignal();
 
         checked.forEach(function (input) {
+          var inputScores = {
+            small: scoreValue(input, 'small'),
+            medium: scoreValue(input, 'medium'),
+            large: scoreValue(input, 'large')
+          };
           scores.small += scoreValue(input, 'small');
           scores.medium += scoreValue(input, 'medium');
           scores.large += scoreValue(input, 'large');
           dominantSignals.push(input.value);
+          signalDetails.push({
+            source: questionText(input),
+            answer: answerText(input),
+            tier: input.value,
+            scoreText: scoreSummary(inputScores),
+            reason: input.dataset.reason || ''
+          });
           if (input.dataset.reason) reasons.push(input.dataset.reason);
         });
 
@@ -6500,6 +6805,13 @@ interface GigabitEthernet0/1/0
           scores.medium += bandwidthSignal.scores.medium;
           scores.large += bandwidthSignal.scores.large;
           dominantSignals.push(bandwidthSignal.tier);
+          signalDetails.push({
+            source: 'Bandwidth calculator',
+            answer: formatMbps(bandwidthSignal.total) + ' Mbps estimated WAN demand',
+            tier: bandwidthSignal.tier,
+            scoreText: scoreSummary(bandwidthSignal.scores),
+            reason: bandwidthSignal.reason
+          });
           reasons.push(bandwidthSignal.reason);
         }
 
@@ -6517,6 +6829,7 @@ interface GigabitEthernet0/1/0
           document.getElementById('guide-platform').innerHTML = '<strong>Recommended platform:</strong> Awaiting input';
           updateLiveStatus(null, appliedCount);
           updateCallouts(null, appliedCount);
+          renderWorkings(null, scores, signalDetails, bandwidthSignal, appliedCount);
           renderReasons(reasons);
           return;
         }
@@ -6530,6 +6843,7 @@ interface GigabitEthernet0/1/0
         document.getElementById('guide-platform').innerHTML = '<strong>Recommended platform:</strong> ' + profile.platform;
         updateLiveStatus(tier, appliedCount);
         updateCallouts(tier, appliedCount);
+        renderWorkings(tier, scores, signalDetails, bandwidthSignal, appliedCount);
         renderReasons(reasons);
       }
 
