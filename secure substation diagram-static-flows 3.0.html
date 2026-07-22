@@ -1692,6 +1692,11 @@
       width: 100%;
       height: auto;
       background: #fff;
+      cursor: zoom-in;
+    }
+    .service-flow-card img:focus-visible {
+      outline: 3px solid var(--fabric);
+      outline-offset: -3px;
     }
     .service-flow-card div {
       padding: 12px 14px 14px;
@@ -1713,6 +1718,84 @@
       padding-left: 18px;
     }
     .service-flow-card strong { color: var(--text); }
+    .diagram-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 240;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .diagram-lightbox.is-open { display: flex; }
+    .diagram-lightbox-backdrop {
+      position: absolute;
+      inset: 0;
+      border: 0;
+      background: rgba(0, 0, 0, 0.78);
+      cursor: zoom-out;
+    }
+    .diagram-lightbox-dialog {
+      position: relative;
+      z-index: 1;
+      width: min(1280px, calc(100vw - 48px));
+      max-height: calc(100vh - 48px);
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.56);
+      overflow: hidden;
+    }
+    .diagram-lightbox-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .diagram-lightbox-head h2 {
+      margin: 0;
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.2;
+    }
+    .diagram-lightbox-close {
+      flex: 0 0 auto;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: var(--text2);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .diagram-lightbox-close:hover,
+    .diagram-lightbox-close:focus-visible {
+      color: var(--text);
+      border-color: #555;
+    }
+    .diagram-lightbox-body {
+      overflow: auto;
+      padding: 14px;
+      background: #08080d;
+    }
+    .diagram-lightbox-body img {
+      display: block;
+      width: clamp(920px, 92vw, 1400px);
+      max-width: none;
+      height: auto;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 6px;
+    }
     .sdwan-controller-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -5437,6 +5520,19 @@ interface GigabitEthernet0/1/0
       </ol>
     </div>
   </div>
+
+  <div class="diagram-lightbox" id="service-flow-lightbox" aria-hidden="true">
+    <button type="button" class="diagram-lightbox-backdrop" data-lightbox-close aria-label="Close enlarged diagram"></button>
+    <div class="diagram-lightbox-dialog" role="dialog" aria-modal="true" aria-labelledby="service-flow-lightbox-title">
+      <div class="diagram-lightbox-head">
+        <h2 id="service-flow-lightbox-title">Service flow diagram</h2>
+        <button type="button" class="diagram-lightbox-close" data-lightbox-close aria-label="Close enlarged diagram">×</button>
+      </div>
+      <div class="diagram-lightbox-body">
+        <img id="service-flow-lightbox-image" alt="">
+      </div>
+    </div>
+  </div>
   <script>
     (function () {
       var menus = [
@@ -5475,6 +5571,73 @@ interface GigabitEthernet0/1/0
         menus.forEach(function (menu) {
           document.body.classList.add(menu.closedClass);
         });
+      });
+    })();
+
+    (function () {
+      var lightbox = document.getElementById('service-flow-lightbox');
+      var lightboxImage = document.getElementById('service-flow-lightbox-image');
+      var lightboxTitle = document.getElementById('service-flow-lightbox-title');
+      if (!lightbox || !lightboxImage || !lightboxTitle) return;
+
+      var lastTrigger = null;
+      var closeButtons = lightbox.querySelectorAll('[data-lightbox-close]');
+      var triggers = document.querySelectorAll('.impl-page-service-flows .service-flow-card img');
+
+      function getDiagramTitle(trigger) {
+        var card = trigger.closest('.service-flow-card');
+        var heading = card ? card.querySelector('h3') : null;
+        return heading && heading.textContent.trim() ? heading.textContent.trim() : 'Service flow diagram';
+      }
+
+      function openLightbox(trigger) {
+        lastTrigger = trigger;
+        lightboxImage.src = trigger.currentSrc || trigger.src;
+        lightboxImage.alt = trigger.alt || '';
+        lightboxTitle.textContent = getDiagramTitle(trigger);
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('diagram-lightbox-open');
+
+        var closeButton = lightbox.querySelector('.diagram-lightbox-close');
+        if (closeButton) closeButton.focus();
+      }
+
+      function closeLightbox() {
+        if (!lightbox.classList.contains('is-open')) return;
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('diagram-lightbox-open');
+        lightboxImage.removeAttribute('src');
+
+        if (lastTrigger) {
+          lastTrigger.focus();
+          lastTrigger = null;
+        }
+      }
+
+      triggers.forEach(function (trigger) {
+        trigger.setAttribute('tabindex', '0');
+        trigger.setAttribute('role', 'button');
+        trigger.setAttribute('aria-label', 'Enlarge ' + getDiagramTitle(trigger) + ' diagram');
+
+        trigger.addEventListener('click', function () {
+          openLightbox(trigger);
+        });
+
+        trigger.addEventListener('keydown', function (event) {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          openLightbox(trigger);
+        });
+      });
+
+      closeButtons.forEach(function (button) {
+        button.addEventListener('click', closeLightbox);
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeLightbox();
       });
     })();
 
