@@ -3187,7 +3187,23 @@
               </fieldset>
 
               <fieldset class="guide-question">
-                <legend>2. How many IEDs, RTUs, meters, or field devices are in scope?</legend>
+                <legend>2. What security inspection capability is required?</legend>
+                <label>
+                  <input type="radio" name="guide-security-inspection" value="large" data-large="3" data-medium="1" data-reason="Mandatory IDS/IPS or Snort inspection in critical OT paths points toward Large profile security headroom.">
+                  <span><strong>Firewall plus IDS/IPS or Snort inspection</strong>Traffic must be inspected for threats, protocol anomalies, and signature-based events in addition to segmentation.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-security-inspection" value="medium" data-medium="3" data-large="1" data-reason="Application-aware firewall policy or selective IDS/IPS maps well to the Medium profile.">
+                  <span><strong>Application-aware firewall, selective IDS/IPS</strong>Policy needs NBAR/application matching, logging, and selected inspection, but not full inspection on every OT path.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-security-inspection" value="small" data-small="3" data-medium="1" data-reason="Segmentation and zone firewall without IDS/IPS supports the Small profile when scale is otherwise compact.">
+                  <span><strong>Segmentation and firewall only, no IDS/IPS</strong>Use service separation, ACLs, and zone firewalling without inline IDS/IPS inspection requirements.</span>
+                </label>
+              </fieldset>
+
+              <fieldset class="guide-question">
+                <legend>3. How many IEDs, RTUs, meters, or field devices are in scope?</legend>
                 <label>
                   <input type="radio" name="guide-devices" value="large" data-large="3" data-reason="15 or more IEDs/RTUs typically needs Large profile headroom.">
                   <span><strong>15 or more devices</strong>Multiple bays, protection sets, PMU or fault-recording systems, and broader station LAN scale.</span>
@@ -3203,7 +3219,7 @@
               </fieldset>
 
               <fieldset class="guide-question">
-                <legend>3. What SCADA point-count range is expected?</legend>
+                <legend>4. What SCADA point-count range is expected?</legend>
                 <label>
                   <input type="radio" name="guide-points" value="large" data-large="3" data-reason="More than 1,000 SCADA points is treated as Large profile scale.">
                   <span><strong>More than 1,000 points</strong>Large transmission or EHV profile with higher telemetry and event-volume assumptions.</span>
@@ -3219,7 +3235,7 @@
               </fieldset>
 
               <fieldset class="guide-question">
-                <legend>4. Which traffic mix best matches the site?</legend>
+                <legend>5. Which traffic mix best matches the site?</legend>
                 <label>
                   <input type="radio" name="guide-traffic" value="large" data-large="3" data-medium="1" data-reason="PMU, fault recorder, and heavy video traffic pushes the design toward Large profile headroom.">
                   <span><strong>PMU or fault recording plus many cameras</strong>Higher bandwidth, QoS, storage, and inspection requirements.</span>
@@ -3235,7 +3251,7 @@
               </fieldset>
 
               <fieldset class="guide-question">
-                <legend>5. What resiliency model is expected?</legend>
+                <legend>6. What resiliency model is expected?</legend>
                 <label>
                   <input type="radio" name="guide-resiliency" value="large" data-large="3" data-medium="1" data-reason="Dual WAN edge and high availability requirements point to the Large profile.">
                   <span><strong>Dual WAN edge and high availability</strong>Resilient edge pair, diverse uplinks, and higher availability expectations.</span>
@@ -3251,7 +3267,7 @@
               </fieldset>
 
               <fieldset class="guide-question">
-                <legend>6. What security and compliance posture applies?</legend>
+                <legend>7. What security and compliance posture applies?</legend>
                 <label>
                   <input type="radio" name="guide-security" value="large" data-large="3" data-medium="1" data-reason="Medium Impact BES posture usually needs Large or upper-Medium controls and headroom.">
                   <span><strong>Medium Impact BES or highest utility criticality</strong>Strong segmentation, access control, logging, monitoring, and recovery evidence.</span>
