@@ -3319,7 +3319,7 @@
                   <p id="guide-bandwidth-total">Enter SCADA points, PMU streams, or cameras to estimate WAN demand.</p>
                   <div class="band-chart-track" id="guide-bandwidth-track"></div>
                   <div class="guide-bandwidth-breakdown" id="guide-bandwidth-breakdown"></div>
-                  <p id="guide-bandwidth-note">Bandwidth scoring is added to the recommendation once at least one calculator value is provided.</p>
+                  <p id="guide-bandwidth-note">Bandwidth signal is added to the recommendation once at least one calculator value is provided.</p>
                 </div>
               </fieldset>
 
@@ -3391,9 +3391,9 @@
             <aside class="guided-result-panel" id="profile-guide-result" data-tier="none" aria-live="polite">
               <div class="guided-result-badge" id="guide-tier-badge">Answer questions</div>
               <h3 id="guide-tier-title">Profile guide</h3>
-              <p id="guide-tier-summary">Select answers from the questions to build a profile recommendation. Ties are biased toward the higher profile to avoid undersizing critical substation designs.</p>
+              <p id="guide-tier-summary">Select answers from the questions to build a profile recommendation. The guide uses a high-watermark rule: any Large signal overrides Medium and Small, and any Medium signal overrides Small.</p>
               <p id="guide-platform"><strong>Recommended platform:</strong> Awaiting input</p>
-              <div class="guided-score-grid" aria-label="Profile fit score">
+              <div class="guided-score-grid" aria-label="Profile signal score">
                 <div class="guided-score-row"><span>Small</span><div class="guided-score-track"><span class="guided-score-fill small" id="guide-score-small"></span></div><strong id="guide-score-small-text">0</strong></div>
                 <div class="guided-score-row"><span>Medium</span><div class="guided-score-track"><span class="guided-score-fill medium" id="guide-score-medium"></span></div><strong id="guide-score-medium-text">0</strong></div>
                 <div class="guided-score-row"><span>Large</span><div class="guided-score-track"><span class="guided-score-fill large" id="guide-score-large"></span></div><strong id="guide-score-large-text">0</strong></div>
@@ -6222,7 +6222,7 @@ interface GigabitEthernet0/1/0
           panel.dataset.tier = 'none';
           tier.textContent = 'Bandwidth signal: awaiting values';
           total.textContent = 'Enter SCADA points, PMU streams, or cameras to estimate WAN demand.';
-          note.textContent = 'Bandwidth scoring is added to the recommendation once at least one calculator value is provided.';
+          note.textContent = 'Bandwidth signal is added to the recommendation once at least one calculator value is provided.';
           return;
         }
 
@@ -6299,22 +6299,27 @@ interface GigabitEthernet0/1/0
         container.appendChild(list);
       }
 
-      function selectRecommendedTier(scores) {
-        return ['small', 'medium', 'large'].reduce(function (best, tier) {
-          return scores[tier] >= scores[best] ? tier : best;
-        }, 'small');
+      function selectDominantTier(signals) {
+        var order = { small: 1, medium: 2, large: 3 };
+        return signals.reduce(function (best, tier) {
+          if (!order[tier]) return best;
+          if (!best || order[tier] > order[best]) return tier;
+          return best;
+        }, null);
       }
 
       function runGuide() {
         var checked = Array.prototype.slice.call(form.querySelectorAll('input[type="radio"]:checked'));
         var scores = { small: 0, medium: 0, large: 0 };
         var reasons = [];
+        var dominantSignals = [];
         var bandwidthSignal = readBandwidthSignal();
 
         checked.forEach(function (input) {
           scores.small += scoreValue(input, 'small');
           scores.medium += scoreValue(input, 'medium');
           scores.large += scoreValue(input, 'large');
+          dominantSignals.push(input.value);
           if (input.dataset.reason) reasons.push(input.dataset.reason);
         });
 
@@ -6322,6 +6327,7 @@ interface GigabitEthernet0/1/0
           scores.small += bandwidthSignal.scores.small;
           scores.medium += bandwidthSignal.scores.medium;
           scores.large += bandwidthSignal.scores.large;
+          dominantSignals.push(bandwidthSignal.tier);
           reasons.push(bandwidthSignal.reason);
         }
 
@@ -6334,13 +6340,13 @@ interface GigabitEthernet0/1/0
           resultPanel.dataset.tier = 'none';
           setText('guide-tier-badge', 'Answer questions');
           setText('guide-tier-title', 'Profile guide');
-          setText('guide-tier-summary', 'Select answers from the questions to build a profile recommendation. Ties are biased toward the higher profile to avoid undersizing critical substation designs.');
+          setText('guide-tier-summary', 'Select answers from the questions to build a profile recommendation. The guide uses a high-watermark rule: any Large signal overrides Medium and Small, and any Medium signal overrides Small.');
           document.getElementById('guide-platform').innerHTML = '<strong>Recommended platform:</strong> Awaiting input';
           renderReasons(reasons);
           return;
         }
 
-        var tier = selectRecommendedTier(scores);
+        var tier = selectDominantTier(dominantSignals);
         var profile = PROFILES[tier];
         resultPanel.dataset.tier = tier;
         setText('guide-tier-badge', profile.badge);
