@@ -1619,6 +1619,18 @@
       height: auto;
       background: #fff;
     }
+    .small-topology-figure {
+      padding-top: 16px;
+    }
+    .small-topology-figure img {
+      width: min(960px, calc(100% - 32px));
+      margin: 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+    }
+    .small-topology-figure figcaption {
+      margin-top: 16px;
+    }
     .docx-figure figcaption {
       padding: 10px 14px 12px;
       border-top: 1px solid var(--border);
@@ -5045,7 +5057,7 @@
           <p>Chapter 7 defines the small substation design around the IR1101 as compact WAN edge and security boundary, with IE3500/IE3100 switching for ESP and multiservice access.</p>
         </section>
 
-        <figure class="docx-figure">
+        <figure class="docx-figure small-topology-figure">
           <img src="assets/docx-diagrams/03-small-substation-architecture-topology.png" alt="Small substation architecture and topology with IR1101, IE3500, IE3100, ESP, multiservice zone, and WAN connectivity">
           <figcaption><strong>Small substation architecture and topology</strong>Extracted from the updated DOCX. The IR1101 provides WAN edge, SD-WAN/IPsec, service VPN termination, and integrated firewalling, while IE3500 and IE3100 separate ESP and multiservice access.</figcaption>
         </figure>
