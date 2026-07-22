@@ -221,10 +221,19 @@
     .nested-menu-group {
       position: relative;
     }
+    .nested-menu-group::after {
+      content: "";
+      position: absolute;
+      left: 100%;
+      top: -8px;
+      width: 14px;
+      height: calc(100% + 16px);
+    }
     .nested-menu-group > label {
       width: 100%;
     }
     .nested-menu-group > .submenu-window {
+      left: calc(100% + 6px);
       top: 0;
     }
     .nested-menu-group:hover > .submenu-window,
