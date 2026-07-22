@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CVD Architecture Diagram Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--font:'Inter',-apple-system,sans-serif;--radius:8px;--tr:150ms ease}
+[data-theme="dark"]{--bg:#0d0d12;--surface:#16161e;--raised:#1e1e28;--hover:#282836;--border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);--text:#f0f0f5;--text2:#a0a0b0;--text3:#6a6a7a;--accent:#049fd9;--accent2:rgba(4,159,217,.15);--canvas-bg:#111118;--grid-color:rgba(255,255,255,.04);--node-stroke:rgba(255,255,255,.3);--node-fill:rgba(255,255,255,.04);--line-color:rgba(255,255,255,.35);--select-ring:#049fd9;--danger:#ff3d71}
+[data-theme="light"]{--bg:#f5f5f8;--surface:#fff;--raised:#f0f0f3;--hover:#e4e4ea;--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);--text:#1a1a2e;--text2:#555;--text3:#888;--accent:#0373ae;--accent2:rgba(3,115,174,.1);--canvas-bg:#fafafa;--grid-color:rgba(0,0,0,.04);--node-stroke:rgba(0,0,0,.25);--node-fill:rgba(0,0,0,.03);--line-color:rgba(0,0,0,.3);--select-ring:#0373ae;--danger:#d6336c}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow:hidden;height:100vh;display:flex;flex-direction:column}
+
+.hdr{height:44px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0;z-index:50}
+.hdr-title{font-size:13px;font-weight:600;margin-right:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hdr-title .hdr-subtitle{color:var(--text3);font-weight:400}
+.hdr-version{font-size:10px;font-weight:500;color:var(--accent);background:var(--accent2);border:1px solid var(--border);padding:2px 7px;border-radius:4px;line-height:1.4;flex-shrink:0}
+.btn{background:var(--raised);border:1px solid var(--border);color:var(--text2);font:500 12px/1 var(--font);padding:6px 12px;border-radius:var(--radius);cursor:pointer;transition:all var(--tr);display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--hover);color:var(--text);border-color:var(--border2)}
+.btn-accent{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-accent:hover{opacity:.85}
+.btn-danger{color:var(--danger)}
+.btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.app{display:flex;flex:1;overflow:hidden}
+
+/* ── Left: Palette ── */
+.palette{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.palette-hdr{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.palette-hdr span{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text3)}
+.palette-search{width:100%;padding:6px 10px;background:var(--raised);border:1px solid var(--border);border-radius:6px;color:var(--text);font:400 12px var(--font);outline:none;margin-top:6px}
+.palette-search::placeholder{color:var(--text3)}
+.palette-search:focus{border-color:var(--accent)}
+.palette-list{flex:1;overflow-y:auto;padding:6px}
+.palette-empty{padding:20px 12px;font-size:12px;color:var(--text3);text-align:center;line-height:1.5}
+.pi{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:grab;font-size:11px;color:var(--text2);transition:background var(--tr);border:1px solid transparent}
+.pi:hover{background:var(--hover);border-color:var(--border)}
+.pi img,.pi svg{width:28px;height:28px;object-fit:contain;flex-shrink:0;pointer-events:none}
+[data-theme="dark"] .pi img{filter:brightness(0) invert(1)}
+[data-theme="light"] .pi img{filter:brightness(0) invert(0)}
+.pi-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pi-shapes{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:6px 6px 0}
+.pi-shape{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border-radius:6px;cursor:grab;border:1px solid var(--border);background:var(--raised);font-size:10px;color:var(--text3);transition:all var(--tr)}
+.pi-shape:hover{border-color:var(--accent);color:var(--text)}
+.pi-shape svg{width:28px;height:28px}
+.palette-divider{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:10px 8px 4px}
+
+/* ── Canvas ── */
+.canvas-wrap{flex:1;position:relative;overflow:hidden;background:var(--canvas-bg)}
+.canvas-svg{width:100%;height:100%;cursor:grab}
+.canvas-svg.panning{cursor:grabbing}
+.canvas-svg .grid-pattern{stroke:var(--grid-color);stroke-width:.5}
+
+/* Nodes */
+.c-node{cursor:move}
+.c-node:hover .c-node-bg{stroke-width:2;filter:drop-shadow(0 0 3px var(--accent))}
+.c-node.selected .c-node-bg{stroke-width:2;stroke-dasharray:5 3;filter:drop-shadow(0 0 4px var(--accent)) drop-shadow(0 0 8px var(--accent))}
+.c-node-bg{stroke-width:1;transition:stroke .15s,filter .15s;pointer-events:all}
+.c-node-label{fill:var(--text);font:600 12px var(--font);pointer-events:none}
+.c-node-sublabel{fill:var(--text3);font:400 10px var(--font);pointer-events:none}
+.c-node image{pointer-events:none}
+
+/* Icon theming — white in dark mode, dark in light mode */
+[data-theme="dark"] .c-node image{filter:brightness(0) invert(1)}
+[data-theme="light"] .c-node image{filter:brightness(0)}
+
+/* Lines */
+.c-line{cursor:pointer}
+.c-line .hit-area{stroke:transparent;stroke-width:16;fill:none;pointer-events:stroke}
+.c-line path.vis{fill:none;stroke-linecap:round;transition:filter .15s;pointer-events:none}
+.c-line:hover path.vis{filter:drop-shadow(0 0 3px var(--accent))}
+.c-line.selected path.vis{filter:drop-shadow(0 0 4px var(--accent)) drop-shadow(0 0 8px var(--accent))}
+.c-line-handle{fill:var(--accent);r:5;opacity:0;cursor:move;transition:opacity .15s}
+.c-line:hover .c-line-handle,.c-line.selected .c-line-handle{opacity:1}
+.c-curve-handle{fill:var(--accent);r:5;opacity:0;cursor:move;transition:opacity .15s;stroke:#fff;stroke-width:1.5}
+.c-line:hover .c-curve-handle,.c-line.selected .c-curve-handle{opacity:1}
+.c-line-handle{cursor:crosshair}
+
+/* Zones */
+.c-shape{cursor:move}
+.c-shape:hover .c-shape-bg{stroke-width:2;filter:drop-shadow(0 0 3px var(--accent))}
+.c-shape.selected .c-shape-bg{stroke-width:2;stroke-dasharray:5 3;filter:drop-shadow(0 0 4px var(--accent)) drop-shadow(0 0 8px var(--accent))}
+
+/* Resize handles — corners + edge midpoints */
+.c-resize{fill:transparent;stroke:transparent;pointer-events:all;stroke-width:0}
+.c-node:hover .c-resize,.c-shape:hover .c-resize,.c-node.selected .c-resize,.c-shape.selected .c-resize{fill:var(--accent);stroke:#fff;stroke-width:1;opacity:.9}
+.c-resize.rh-nw{cursor:nw-resize}.c-resize.rh-n{cursor:n-resize}.c-resize.rh-ne{cursor:ne-resize}
+.c-resize.rh-e{cursor:e-resize}.c-resize.rh-se{cursor:se-resize}.c-resize.rh-s{cursor:s-resize}
+.c-resize.rh-sw{cursor:sw-resize}.c-resize.rh-w{cursor:w-resize}
+
+/* Ports — hidden, appear on node hover */
+.c-port{r:6;fill:var(--accent);opacity:0;cursor:crosshair;transition:opacity .12s,r .12s;pointer-events:all}
+.c-node:hover .c-port,.c-shape:hover .c-port{opacity:.5}
+.c-port:hover{opacity:1 !important;r:8;filter:drop-shadow(0 0 4px var(--accent))}
+.c-port.port-active{opacity:1 !important;r:8;fill:var(--danger)}
+.c-port.port-hover{opacity:1 !important;r:9;fill:#6CC04A;filter:drop-shadow(0 0 6px #6CC04A)}
+
+/* Rubber-band box selection */
+.select-box{fill:var(--accent2);stroke:var(--accent);stroke-width:1;stroke-dasharray:4 3;pointer-events:none}
+
+/* Help modal */
+.help-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:12px;line-height:1.6}
+.help-grid dt{font-weight:600;color:var(--text);white-space:nowrap}
+.help-grid dd{color:var(--text2);margin:0}
+.help-section{font-size:13px;font-weight:700;color:var(--accent);margin:16px 0 6px;grid-column:1/-1}
+.help-section:first-child{margin-top:0}
+.help-kbd{display:inline-block;background:var(--raised);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font:500 11px var(--font);color:var(--text)}
+
+/* Preview line while drawing */
+#connect-preview{pointer-events:none}
+#connect-preview path{stroke:var(--accent);stroke-width:2;stroke-dasharray:6 4;fill:none;opacity:.7}
+
+/* ── Right: Properties ── */
+.props{width:250px;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
+.props-hdr{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text3)}
+.props-empty{padding:24px 12px;font-size:12px;color:var(--text3);text-align:center}
+.props-group{padding:10px 12px;border-bottom:1px solid var(--border)}
+.props-group label{display:block;font-size:11px;font-weight:600;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
+.props-group input,.props-group select{width:100%;padding:5px 8px;background:var(--raised);border:1px solid var(--border);border-radius:5px;color:var(--text);font:400 12px var(--font);outline:none}
+.props-group input:focus,.props-group select:focus{border-color:var(--accent)}
+.props-row{display:flex;gap:8px}
+.props-row > *{flex:1}
+
+/* Brand color swatch picker */
+.swatch-grid{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px}
+.swatch{width:22px;height:22px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:all .12s;flex-shrink:0}
+.swatch:hover{transform:scale(1.2);z-index:2}
+.swatch.active{border-color:#fff;box-shadow:0 0 0 1px var(--accent)}
+.swatch-none{background:linear-gradient(135deg,transparent 45%,var(--danger) 45%,var(--danger) 55%,transparent 55%);border:1px solid var(--border)}
+.swatch-custom-wrap{display:flex;align-items:center;gap:6px}
+.swatch-custom-wrap input[type="color"]{width:26px;height:26px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:none;padding:0}
+.swatch-custom-wrap input[type="text"]{flex:1}
+
+/* ── Status bar ── */
+.statusbar{height:24px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 12px;font-size:10px;color:var(--text3);gap:16px;flex-shrink:0}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:90%;max-width:700px;max-height:80vh;display:flex;flex-direction:column}
+.modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-hdr h3{font-size:16px;font-weight:600}
+.modal-body{padding:16px 20px;overflow-y:auto;flex:1}
+.modal-body pre{background:var(--raised);border:1px solid var(--border);border-radius:6px;padding:16px;font:12px/1.6 'Courier New',monospace;color:var(--text2);overflow-x:auto;white-space:pre;max-height:400px}
+.modal-foot{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+/* Theme toggle in header */
+.theme-btns{display:flex;gap:2px;background:var(--raised);border:1px solid var(--border);border-radius:6px;padding:2px}
+.theme-btns button{background:none;border:none;color:var(--text3);cursor:pointer;padding:3px 8px;border-radius:4px;font:500 10px var(--font);transition:all var(--tr)}
+.theme-btns button:hover{color:var(--text)}
+.theme-btns button.active{background:var(--accent2);color:var(--accent)}
+.hdr-sep{width:1px;height:22px;background:var(--border);flex-shrink:0}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-title">CVD Diagram Builder <span class="hdr-subtitle">— Architecture Editor</span><span class="hdr-version" id="app-version" title="Application version"></span></div>
+  <div class="theme-btns" id="theme-toggle">
+    <button class="active" data-theme="dark">Dark</button>
+    <button data-theme="light">Light</button>
+  </div>
+  <span class="hdr-sep" aria-hidden="true"></span>
+  <button class="btn" id="btn-fit" title="Fit diagram to view">
+    <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+    Fit
+  </button>
+  <button class="btn" id="btn-center" title="Center diagram in view">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+    Center
+  </button>
+  <span class="hdr-sep" aria-hidden="true"></span>
+  <button class="btn" id="btn-help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>?</button>
+  <button class="btn" id="btn-save"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save</button>
+  <button class="btn" id="btn-load"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Open</button>
+  <input type="file" id="file-load" accept=".json" style="display:none"/>
+  <button class="btn btn-danger" id="btn-clear"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg>Clear</button>
+  <button class="btn btn-accent" id="btn-export"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export HTML</button>
+</header>
+
+<div class="app">
+  <aside class="palette">
+    <div class="palette-hdr"><span>Components</span></div>
+    <div style="padding:6px">
+      <div class="palette-divider">Shapes</div>
+      <div class="pi-shapes">
+        <div class="pi-shape" draggable="true" data-shape="rect"><svg viewBox="0 0 40 30"><rect x="2" y="2" width="36" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Rectangle</div>
+        <div class="pi-shape" draggable="true" data-shape="circle"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Circle</div>
+        <div class="pi-shape" draggable="true" data-shape="zone"><svg viewBox="0 0 40 30"><rect x="2" y="2" width="36" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3"/></svg>Zone</div>
+        <div class="pi-shape" draggable="true" data-shape="text"><svg viewBox="0 0 40 30"><text x="20" y="20" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">T</text></svg>Text</div>
+        <div class="pi-shape" draggable="true" data-shape="line"><svg viewBox="0 0 40 30"><path d="M4,26 C14,26 26,4 36,4" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="4" cy="26" r="2.5" fill="currentColor"/><circle cx="36" cy="4" r="2.5" fill="currentColor"/></svg>Line</div>
+      </div>
+
+      <div class="palette-divider" style="margin-top:8px">Icons</div>
+      <input type="file" id="icon-upload" multiple accept=".svg,.png,.jpg,.jpeg,.webp,.gif,image/svg+xml,image/png,image/jpeg,image/webp,image/gif" style="display:none"/>
+      <input type="file" id="icon-folder-upload" webkitdirectory multiple accept=".svg,.png,.jpg,.jpeg,.webp,.gif,image/*" style="display:none"/>
+      <input class="palette-search" id="icon-search" placeholder="Filter icons..." style="margin:0 0 4px"/>
+      <div style="display:flex;gap:4px;padding:0 0 4px">
+        <button class="btn" id="btn-load-icons" style="flex:1;justify-content:center;font-size:10px;padding:4px 6px"><svg viewBox="0 0 24 24"><path d="M17 8l-5-5-5 5M12 3v12"/></svg>Files</button>
+        <button class="btn" id="btn-load-folder" style="flex:1;justify-content:center;font-size:10px;padding:4px 6px"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Folder</button>
+      </div>
+    </div>
+    <div class="palette-list" id="icon-list">
+      <div class="palette-empty">Loading icons...</div>
+    </div>
+  </aside>
+
+  <div class="canvas-wrap" id="canvas-wrap">
+    <svg id="canvas" class="canvas-svg" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" class="grid-pattern"/>
+        </pattern>
+        <marker id="arrow-end" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="6" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0,0 L10,4 L0,8 Z" fill="var(--line-color)"/>
+        </marker>
+      </defs>
+      <rect x="-10000" y="-10000" width="30000" height="30000" fill="url(#grid)"/>
+      <g id="layer-zones"></g>
+      <g id="layer-lines"></g>
+      <g id="layer-nodes"></g>
+      <g id="connect-preview"></g>
+      <g id="select-box-g"></g>
+    </svg>
+  </div>
+
+  <aside class="props">
+    <div class="props-hdr">Properties</div>
+    <div id="props-content"><div class="props-empty">Select an element to edit its properties</div></div>
+  </aside>
+</div>
+
+<div class="statusbar">
+  <span id="status-info">Ready</span>
+  <span id="status-count">0 elements</span>
+  <span id="status-pos">x: 0, y: 0</span>
+</div>
+
+<div class="modal-overlay" id="modal-export">
+  <div class="modal">
+    <div class="modal-hdr"><h3>Export Diagram</h3><button class="btn" id="btn-modal-close">Close</button></div>
+    <div class="modal-body"><pre id="export-code"></pre></div>
+    <div class="modal-foot"><button class="btn" id="btn-copy">Copy to Clipboard</button><button class="btn" id="btn-download">Download .html</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-help">
+  <div class="modal">
+    <div class="modal-hdr"><h3>Keyboard &amp; Interaction Guide</h3><button class="btn" id="btn-help-close">Close</button></div>
+    <div class="modal-body">
+      <dl class="help-grid">
+        <div class="help-section">Canvas</div>
+        <dt>Click + drag background</dt><dd>Pan the canvas</dd>
+        <dt>Scroll wheel</dt><dd>Zoom in / out</dd>
+        <dt>Fit button</dt><dd>Zoom out to show the entire diagram</dd>
+        <dt>Center button</dt><dd>Pan so the diagram is centered in the view</dd>
+        <dt><span class="help-kbd">Shift</span> + drag background</dt><dd>Rubber-band box select</dd>
+
+        <div class="help-section">Elements</div>
+        <dt>Click element</dt><dd>Select it and show properties</dd>
+        <dt><span class="help-kbd">Shift</span> + click</dt><dd>Add / remove from multi-selection</dd>
+        <dt>Drag inside element</dt><dd>Move element (or all selected elements)</dd>
+        <dt>Drag edge / corner handles</dt><dd>Resize element</dd>
+        <dt><span class="help-kbd">Ctrl/&#8984;</span> + <span class="help-kbd">A</span></dt><dd>Select all elements and lines</dd>
+
+        <div class="help-section">Connections</div>
+        <dt>Hover port (blue dot) + drag</dt><dd>Draw a new connection line</dd>
+        <dt>Drag line endpoint circle</dt><dd>Reconnect to a different port (or detach)</dd>
+        <dt>Drag curve handle</dt><dd>Adjust the bend of S-shape, Arc, or Elbow lines</dd>
+
+        <div class="help-section">Copy &amp; Paste</div>
+        <dt><span class="help-kbd">Ctrl/&#8984;</span> + <span class="help-kbd">C</span></dt><dd>Copy selected elements and their connections</dd>
+        <dt><span class="help-kbd">Ctrl/&#8984;</span> + <span class="help-kbd">V</span></dt><dd>Paste with offset (repeatable)</dd>
+
+        <div class="help-section">Other</div>
+        <dt><span class="help-kbd">Delete</span> / <span class="help-kbd">Backspace</span></dt><dd>Delete all selected elements and lines</dd>
+        <dt><span class="help-kbd">Esc</span></dt><dd>Cancel current action or clear selection</dd>
+        <dt>Save / Open buttons</dt><dd>Save diagram to .json file / reload a saved diagram</dd>
+        <dt>Export HTML</dt><dd>Generate a standalone SVG snippet of the diagram</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<script id="preloaded-icon-data" src="icons-brand-data.js"></script>
+<script>
+/* Keep in sync with RELEASE_NOTES.md */
+const APP_VERSION = '1.1.2';
+(function initAppVersion() {
+  const label = 'v' + APP_VERSION;
+  const el = document.getElementById('app-version');
+  if (el) {
+    el.textContent = label;
+    el.title = 'CVD Diagram Builder ' + label;
+  }
+  document.title = 'CVD Diagram Builder ' + label;
+})();
+
+/* ═══════════════════════════════════════════════════════
+   BRAND COLORS (starter set — will be replaced later)
+   ═══════════════════════════════════════════════════════ */
+const BRAND_COLORS = [
+  { n:'Cisco Blue',  h:'#049FD9' },
+  { n:'Dark Blue',   h:'#005073' },
+  { n:'Sky Blue',    h:'#00BCEB' },
+  { n:'Light Blue',  h:'#64CBE8' },
+  { n:'Indigo',      h:'#3B5998' },
+  { n:'Purple',      h:'#7B61FF' },
+  { n:'Green',       h:'#6CC04A' },
+  { n:'Teal',        h:'#00B5AD' },
+  { n:'Gold',        h:'#FBAB18' },
+  { n:'Coral',       h:'#FF6B6B' },
+  { n:'Berry',       h:'#C74A77' },
+  { n:'Dark Gray',   h:'#58585B' },
+  { n:'Mid Gray',    h:'#9E9EA2' },
+  { n:'Light Gray',  h:'#C6C7CA' },
+  { n:'White',       h:'#FFFFFF' },
+  { n:'Black',       h:'#000000' },
+];
+
+/* ═══════════════════════════════════════════════════════
+   STATE — always in select mode, connections are port-driven
+   ═══════════════════════════════════════════════════════ */
+const state = {
+  elements: [],
+  lines: [],
+  nextId: 1,
+  selection: [],       // [{ id, kind:'element'|'line' }, ...]
+  icons: [],
+  drag: null,          // { els: [{el,ox,oy},...] }
+  resizing: null,      // { el, dir, sx, sy, ox, oy, ow, oh }
+  curveDrag: null,     // { ln, type }
+  endpointDrag: null,  // { ln, end:'from'|'to', active }
+  connecting: null,    // { elId, port, sx, sy }
+  panning: null,       // { startX, startY, vbX, vbY }
+  boxSelect: null,     // { sx, sy } — rubber-band start in SVG coords
+  viewBox: { x: 0, y: 0, w: 0, h: 0 },
+  clipboard: [],       // serialized elements + lines for paste
+};
+
+const canvas = document.getElementById('canvas');
+const layerZones = document.getElementById('layer-zones');
+const layerLines = document.getElementById('layer-lines');
+const layerNodes = document.getElementById('layer-nodes');
+const previewG = document.getElementById('connect-preview');
+const selectBoxG = document.getElementById('select-box-g');
+
+function initViewBox() {
+  const r = canvas.getBoundingClientRect();
+  state.viewBox = { x: 0, y: 0, w: r.width, h: r.height };
+  applyViewBox();
+}
+function applyViewBox() {
+  const vb = state.viewBox;
+  canvas.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+}
+
+function getDiagramBounds(padding = 40) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  state.elements.forEach(el => {
+    minX = Math.min(minX, el.x - 10);
+    minY = Math.min(minY, el.y - 20);
+    maxX = Math.max(maxX, el.x + el.w + 10);
+    maxY = Math.max(maxY, el.y + el.h + 30);
+  });
+  state.lines.forEach(ln => {
+    const { x1, y1, x2, y2 } = resolveLineEndpoints(ln);
+    minX = Math.min(minX, x1, x2);
+    minY = Math.min(minY, y1, y2);
+    maxX = Math.max(maxX, x1, x2);
+    maxY = Math.max(maxY, y1, y2);
+  });
+  if (!isFinite(minX)) return null;
+  return {
+    minX: minX - padding,
+    minY: minY - padding,
+    maxX: maxX + padding,
+    maxY: maxY + padding,
+  };
+}
+
+function fitToDiagram() {
+  const bounds = getDiagramBounds();
+  if (!bounds) {
+    initViewBox();
+    document.getElementById('status-info').textContent = 'No diagram content to fit';
+    return;
+  }
+  const contentW = bounds.maxX - bounds.minX;
+  const contentH = bounds.maxY - bounds.minY;
+  const r = canvas.getBoundingClientRect();
+  const aspectCanvas = r.width / r.height;
+  const aspectContent = contentW / contentH;
+  let vbW, vbH;
+  if (aspectContent > aspectCanvas) {
+    vbW = contentW;
+    vbH = contentW / aspectCanvas;
+  } else {
+    vbH = contentH;
+    vbW = contentH * aspectCanvas;
+  }
+  const cx = (bounds.minX + bounds.maxX) / 2;
+  const cy = (bounds.minY + bounds.maxY) / 2;
+  state.viewBox.x = cx - vbW / 2;
+  state.viewBox.y = cy - vbH / 2;
+  state.viewBox.w = vbW;
+  state.viewBox.h = vbH;
+  applyViewBox();
+  document.getElementById('status-info').textContent = 'Fitted diagram to view';
+}
+
+function centerOnDiagram() {
+  const bounds = getDiagramBounds(0);
+  if (!bounds) {
+    document.getElementById('status-info').textContent = 'No diagram content to center';
+    return;
+  }
+  const cx = (bounds.minX + bounds.maxX) / 2;
+  const cy = (bounds.minY + bounds.maxY) / 2;
+  state.viewBox.x = cx - state.viewBox.w / 2;
+  state.viewBox.y = cy - state.viewBox.h / 2;
+  applyViewBox();
+  document.getElementById('status-info').textContent = 'Centered diagram in view';
+}
+
+document.getElementById('btn-fit').addEventListener('click', fitToDiagram);
+document.getElementById('btn-center').addEventListener('click', centerOnDiagram);
+
+window.addEventListener('resize', () => {
+  const r = canvas.getBoundingClientRect();
+  state.viewBox.w = r.width / (state.viewBox.zoom || 1);
+  state.viewBox.h = r.height / (state.viewBox.zoom || 1);
+  applyViewBox();
+});
+requestAnimationFrame(initViewBox);
+
+/* ═══════════════════════════════════════════════════════
+   THEME
+   ═══════════════════════════════════════════════════════ */
+document.getElementById('theme-toggle').addEventListener('click', e => {
+  const btn = e.target.closest('[data-theme]');
+  if (!btn) return;
+  document.documentElement.setAttribute('data-theme', btn.dataset.theme);
+  document.querySelectorAll('#theme-toggle button').forEach(b => b.classList.toggle('active', b.dataset.theme === btn.dataset.theme));
+});
+
+/* ═══════════════════════════════════════════════════════
+   SVG HELPERS
+   ═══════════════════════════════════════════════════════ */
+const NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  if (attrs) for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+function canvasPoint(e) {
+  const pt = canvas.createSVGPoint();
+  pt.x = e.clientX; pt.y = e.clientY;
+  const ctm = canvas.getScreenCTM().inverse();
+  const p = pt.matrixTransform(ctm);
+  return { x: Math.round(p.x / 10) * 10, y: Math.round(p.y / 10) * 10 };
+}
+
+/* ═══════════════════════════════════════════════════════
+   PATH GENERATION — straight / elbow / arc / s-shape
+   ═══════════════════════════════════════════════════════ */
+function buildPath(x1, y1, x2, y2, shape, opts) {
+  switch (shape) {
+    case 'straight':
+      return `M${x1},${y1} L${x2},${y2}`;
+    case 'elbow': {
+      const mx = opts?.elbowX ?? (x1 + x2) / 2;
+      return `M${x1},${y1} L${mx},${y1} L${mx},${y2} L${x2},${y2}`;
+    }
+    case 'arc': {
+      const { cx, cy } = arcCtrl(x1, y1, x2, y2, opts);
+      return `M${x1},${y1} Q${cx},${cy} ${x2},${y2}`;
+    }
+    default: { // s-shape
+      const { cx1, cy1, cx2, cy2 } = sCurveCtrl(x1, y1, x2, y2, opts);
+      return `M${x1},${y1} C${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`;
+    }
+  }
+}
+
+function arcCtrl(x1, y1, x2, y2, opts) {
+  if (opts?.arcCtrlX != null && opts?.arcCtrlY != null) {
+    return { cx: opts.arcCtrlX, cy: opts.arcCtrlY };
+  }
+  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+  const dx = x2 - x1, dy = y2 - y1;
+  const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+  const px = -dy / dist, py = dx / dist;
+  const bulge = dist * 0.35;
+  return { cx: mx + px * bulge, cy: my + py * bulge };
+}
+
+function sCurveCtrl(x1, y1, x2, y2, opts) {
+  if (opts?.sCpOffset != null) {
+    const cp = opts.sCpOffset;
+    const useHoriz = Math.abs(x2 - x1) >= Math.abs(y2 - y1);
+    if (useHoriz) {
+      const dir = x2 > x1 ? 1 : -1;
+      return { cx1: x1 + dir * cp, cy1: y1, cx2: x2 - dir * cp, cy2: y2 };
+    }
+    const dir = y2 > y1 ? 1 : -1;
+    return { cx1: x1, cy1: y1 + dir * cp, cx2: x2, cy2: y2 - dir * cp };
+  }
+  const adx = Math.abs(x2 - x1) * 0.45, ady = Math.abs(y2 - y1) * 0.45;
+  const useHoriz = Math.abs(x2 - x1) >= Math.abs(y2 - y1);
+  if (useHoriz) {
+    const cp = Math.max(adx, 40), dir = x2 > x1 ? 1 : -1;
+    return { cx1: x1 + dir * cp, cy1: y1, cx2: x2 - dir * cp, cy2: y2 };
+  }
+  const cp = Math.max(ady, 40), dir = y2 > y1 ? 1 : -1;
+  return { cx1: x1, cy1: y1 + dir * cp, cx2: x2, cy2: y2 - dir * cp };
+}
+
+/* ═══════════════════════════════════════════════════════
+   PORT HELPERS
+   ═══════════════════════════════════════════════════════ */
+function getPort(el, port) {
+  if (el.shape === 'circle') {
+    const cx = el.x + el.w/2, cy = el.y + el.h/2, r = Math.min(el.w, el.h)/2;
+    if (port === 'top') return { x: cx, y: cy - r };
+    if (port === 'bottom') return { x: cx, y: cy + r };
+    if (port === 'left') return { x: cx - r, y: cy };
+    return { x: cx + r, y: cy };
+  }
+  if (port === 'top') return { x: el.x + el.w/2, y: el.y };
+  if (port === 'bottom') return { x: el.x + el.w/2, y: el.y + el.h };
+  if (port === 'left') return { x: el.x, y: el.y + el.h/2 };
+  return { x: el.x + el.w, y: el.y + el.h/2 };
+}
+
+function resolveLineEndpoints(ln) {
+  let { x1, y1, x2, y2 } = ln;
+  if (ln.fromEl) { const el = state.elements.find(e => e.id === ln.fromEl); if (el) { const p = getPort(el, ln.fromPort); x1 = p.x; y1 = p.y; } }
+  if (ln.toEl) { const el = state.elements.find(e => e.id === ln.toEl); if (el) { const p = getPort(el, ln.toPort); x2 = p.x; y2 = p.y; } }
+  return { x1, y1, x2, y2 };
+}
+
+/* ═══════════════════════════════════════════════════════
+   ICON LOADING
+   ═══════════════════════════════════════════════════════ */
+const iconList = document.getElementById('icon-list');
+const iconSearch = document.getElementById('icon-search');
+
+const ICON_IMAGE_EXT = new Set(['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif']);
+
+function getFileExtension(name) {
+  const idx = name.lastIndexOf('.');
+  return idx >= 0 ? name.slice(idx).toLowerCase() : '';
+}
+
+function isIconImageFile(name) {
+  return ICON_IMAGE_EXT.has(getFileExtension(name));
+}
+
+function formatIconName(relativePath) {
+  const withoutExt = relativePath.replace(/\.[^./\\]+$/, '');
+  return withoutExt
+    .split(/[/\\]+/)
+    .map(part => part.replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .join(' / ');
+}
+
+function iconNameExists(name) {
+  return state.icons.some(i => i.name === name);
+}
+
+function uniqueIconName(name) {
+  if (!iconNameExists(name)) return name;
+  let n = 2;
+  while (iconNameExists(`${name} (${n})`)) n++;
+  return `${name} (${n})`;
+}
+
+function addIcon(name, svgContent, dataUrl, opts = {}) {
+  const finalName = uniqueIconName(name);
+  state.icons.push({ name: finalName, svgContent, dataUrl });
+  if (!opts.skipRender) renderIconList(iconSearch.value);
+  return finalName;
+}
+
+/** Resolve raw SVG markup for export (standalone HTML cannot use blob: URLs). */
+function resolveIconSvgContent(el) {
+  if (el.iconSvgContent) return el.iconSvgContent;
+  if (el.iconName) {
+    const icon = state.icons.find(i => i.name === el.iconName);
+    if (icon?.svgContent) return icon.svgContent;
+  }
+  return null;
+}
+
+/** Restore iconDataUrl + iconSvgContent on elements after save/load (JSON stores iconName only). */
+function hydrateElementIcon(el) {
+  if (!el.iconName) return;
+  const icon = state.icons.find(i => i.name === el.iconName);
+  if (!icon) return;
+  if (!el.iconDataUrl) el.iconDataUrl = icon.dataUrl;
+  if (!el.iconSvgContent) el.iconSvgContent = icon.svgContent;
+}
+
+/** Resolve embeddable image href for export (SVG base64 or raster data URL). */
+function resolveIconExportHref(el) {
+  const svg = resolveIconSvgContent(el);
+  if (svg) return iconSvgToDataHref(svg);
+  if (el.iconDataUrl?.startsWith('data:')) return el.iconDataUrl;
+  if (el.iconName) {
+    const icon = state.icons.find(i => i.name === el.iconName);
+    if (icon?.dataUrl?.startsWith('data:')) return icon.dataUrl;
+  }
+  return null;
+}
+
+function renderIconList(filter) {
+  const f = (filter || '').toLowerCase();
+  const filtered = f ? state.icons.filter(i => i.name.toLowerCase().includes(f)) : state.icons;
+  iconList.innerHTML = '';
+  if (state.icons.length === 0) { iconList.innerHTML = '<div class="palette-empty">No icons loaded.</div>'; return; }
+  if (filtered.length === 0) { iconList.innerHTML = '<div class="palette-empty">No icons match filter</div>'; return; }
+  const frag = document.createDocumentFragment();
+  filtered.forEach(icon => {
+    const div = document.createElement('div');
+    div.className = 'pi'; div.draggable = true;
+    div.setAttribute('data-icon-name', icon.name);
+    div.innerHTML = `<img src="${icon.dataUrl}" alt="${icon.name}"/><span class="pi-label" title="${icon.name}">${icon.name}</span>`;
+    div.addEventListener('dragstart', e => { e.dataTransfer.setData('application/icon-name', icon.name); e.dataTransfer.effectAllowed = 'copy'; });
+    frag.appendChild(div);
+  });
+  iconList.appendChild(frag);
+}
+
+iconSearch.addEventListener('input', e => renderIconList(e.target.value));
+document.getElementById('btn-load-icons').addEventListener('click', () => document.getElementById('icon-upload').click());
+document.getElementById('icon-upload').addEventListener('change', e => {
+  Array.from(e.target.files).forEach(f => loadIconFile(f));
+  e.target.value = '';
+});
+
+function iconSvgToDataHref(svgContent) {
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgContent)));
+}
+
+async function loadIconFile(file, relativePath = '', opts = {}) {
+  if (!isIconImageFile(file.name)) return;
+  const displayName = formatIconName(relativePath || file.name);
+  const ext = getFileExtension(file.name);
+  if (ext === '.svg') {
+    const content = await file.text();
+    const url = URL.createObjectURL(new Blob([content], { type: 'image/svg+xml' }));
+    addIcon(displayName, content, url, opts);
+    return;
+  }
+  const dataUrl = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+  addIcon(displayName, null, dataUrl, opts);
+}
+
+/** Recursively scan a directory handle and load all supported images from subfolders. */
+async function scanFolder(dir, prefix = '') {
+  const entries = [];
+  for await (const entry of dir.values()) entries.push(entry);
+  entries.sort((a, b) => {
+    if (a.kind !== b.kind) return a.kind === 'directory' ? 1 : -1;
+    return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+  });
+
+  for (const entry of entries) {
+    const relativePath = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.kind === 'file') {
+      if (!isIconImageFile(entry.name)) continue;
+      try {
+        await loadIconFile(await entry.getFile(), relativePath, { skipRender: true });
+      } catch (err) {
+        console.warn('Skipped icon file:', relativePath, err);
+      }
+    } else if (entry.kind === 'directory') {
+      try {
+        await scanFolder(entry, relativePath);
+      } catch (err) {
+        console.warn('Skipped folder:', relativePath, err);
+      }
+    }
+  }
+}
+
+function loadSvgFile(file, relativePath = '') {
+  return loadIconFile(file, relativePath || file.name);
+}
+
+async function importIconFolderFromInput(files) {
+  const list = Array.from(files).filter(f => isIconImageFile(f.name));
+  if (list.length === 0) {
+    document.getElementById('status-info').textContent = 'No icons found in folder';
+    return;
+  }
+  document.getElementById('status-info').textContent = `Loading ${list.length} icons from folder...`;
+  const loadedBefore = state.icons.length;
+  for (const file of list) {
+    const relativePath = file.webkitRelativePath || file.name;
+    try {
+      await loadIconFile(file, relativePath, { skipRender: true });
+    } catch (err) {
+      console.warn('Skipped icon file:', relativePath, err);
+    }
+  }
+  renderIconList();
+  const added = state.icons.length - loadedBefore;
+  document.getElementById('status-info').textContent = `Loaded ${added} icon${added !== 1 ? 's' : ''} from folder`;
+  updateStatus();
+}
+
+document.getElementById('icon-folder-upload').addEventListener('change', e => {
+  importIconFolderFromInput(e.target.files);
+  e.target.value = '';
+});
+
+document.getElementById('btn-load-folder').addEventListener('click', async () => {
+  if (!('showDirectoryPicker' in window)) {
+    document.getElementById('icon-folder-upload').click();
+    return;
+  }
+  try {
+    const dir = await window.showDirectoryPicker({ mode: 'read' });
+    document.getElementById('status-info').textContent = 'Scanning folder for icons...';
+    const loadedBefore = state.icons.length;
+    await scanFolder(dir, '');
+    renderIconList();
+    const added = state.icons.length - loadedBefore;
+    document.getElementById('status-info').textContent = added
+      ? `Loaded ${added} icon${added !== 1 ? 's' : ''} from folder`
+      : 'No icons found in folder';
+    updateStatus();
+  } catch (e) {
+    if (e.name !== 'AbortError') alert('Failed to load folder: ' + e.message);
+  }
+});
+
+iconList.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+iconList.addEventListener('drop', e => {
+  e.preventDefault();
+  Array.from(e.dataTransfer.files).filter(f => isIconImageFile(f.name)).forEach(f => loadIconFile(f));
+});
+
+/* ═══════════════════════════════════════════════════════
+   ELEMENT CREATION
+   ═══════════════════════════════════════════════════════ */
+function createElement(type, x, y, opts = {}) {
+  const id = state.nextId++;
+  const el = {
+    id, type, x, y,
+    w: opts.w || (type === 'circle' ? 80 : type === 'zone' ? 300 : type === 'text' ? 120 : 100),
+    h: opts.h || (type === 'circle' ? 80 : type === 'zone' ? 200 : type === 'text' ? 30 : 80),
+    label: opts.label || (type === 'text' ? 'Label' : type === 'zone' ? 'Zone' : ''),
+    sublabel: opts.sublabel || '',
+    shape: opts.shape || (type === 'circle' ? 'circle' : 'rect'), // visual shape for icon nodes
+    fill: opts.fill || (type === 'zone' ? 'rgba(4,159,217,.05)' : 'transparent'),
+    stroke: opts.stroke || (type === 'zone' ? 'rgba(4,159,217,.3)' : 'var(--node-stroke)'),
+    strokeDash: type === 'zone' ? '8 5' : 'none',
+    iconName: opts.iconName || null,
+    iconDataUrl: opts.iconDataUrl || null,
+    iconSvgContent: opts.iconSvgContent || null,
+    fontSize: opts.fontSize || 12,
+    radius: opts.radius || (type === 'circle' ? 40 : 8),
+  };
+  state.elements.push(el);
+  renderElement(el);
+  selectElement(el);
+  updateStatus();
+  return el;
+}
+
+function renderElement(el) {
+  const existing = document.getElementById('el-' + el.id);
+  if (existing) existing.remove();
+
+  const layer = el.type === 'zone' ? layerZones : layerNodes;
+  const g = svgEl('g', { id: 'el-' + el.id, class: el.type === 'zone' ? 'c-shape' : 'c-node', 'data-id': el.id }, layer);
+
+  // Background shape
+  if (el.shape === 'circle' || el.type === 'circle') {
+    const r = Math.min(el.w, el.h) / 2;
+    svgEl('circle', { cx: el.x + el.w/2, cy: el.y + el.h/2, r, fill: el.fill, stroke: el.stroke, 'stroke-width': 1.5, class: el.type === 'zone' ? 'c-shape-bg' : 'c-node-bg' }, g);
+  } else if (el.type === 'text') {
+    svgEl('rect', { x: el.x, y: el.y, width: el.w, height: el.h, fill: 'transparent', stroke: 'transparent', class: 'c-node-bg' }, g);
+    const t = svgEl('text', { x: el.x + el.w/2, y: el.y + el.h/2, 'text-anchor': 'middle', 'dominant-baseline': 'central', class: 'c-node-label', style: `font-size:${el.fontSize}px` }, g);
+    t.textContent = el.label;
+  } else {
+    svgEl('rect', { x: el.x, y: el.y, width: el.w, height: el.h, rx: el.radius, fill: el.fill, stroke: el.stroke, 'stroke-width': 1.5, 'stroke-dasharray': el.strokeDash, class: el.type === 'zone' ? 'c-shape-bg' : 'c-node-bg' }, g);
+  }
+
+  // Icon
+  if (el.iconDataUrl && el.type !== 'zone' && el.type !== 'text') {
+    const iSize = Math.min(el.w, el.h) * 0.55;
+    svgEl('image', {
+      href: el.iconDataUrl,
+      x: el.x + (el.w - iSize) / 2,
+      y: el.y + (el.h - iSize) / 2 - (el.label ? 8 : 0),
+      width: iSize, height: iSize,
+    }, g);
+  }
+
+  // Label
+  if (el.label && el.type !== 'text') {
+    const isZone = el.type === 'zone';
+    const labelY = isZone ? el.y + 18 : el.y + el.h - 6;
+    const labelX = isZone ? el.x + 14 : el.x + el.w / 2;
+    const t = svgEl('text', { x: labelX, y: labelY, 'text-anchor': isZone ? 'start' : 'middle', class: isZone ? 'c-node-sublabel' : 'c-node-label', style: `font-size:${el.fontSize}px` }, g);
+    t.textContent = el.label;
+  }
+
+  // Sublabel
+  if (el.sublabel && el.type !== 'zone' && el.type !== 'text') {
+    const t = svgEl('text', { x: el.x + el.w/2, y: el.y + el.h + 14, 'text-anchor': 'middle', class: 'c-node-sublabel' }, g);
+    t.textContent = el.sublabel;
+  }
+
+  // Resize handles (8 points: corners + edge midpoints)
+  if (el.type !== 'text') {
+    const hs = 8, hh = hs / 2;
+    const rHandles = [
+      { x: el.x - hh,            y: el.y - hh,            dir: 'nw' },
+      { x: el.x + el.w/2 - hh,   y: el.y - hh,            dir: 'n' },
+      { x: el.x + el.w - hh,     y: el.y - hh,            dir: 'ne' },
+      { x: el.x + el.w - hh,     y: el.y + el.h/2 - hh,   dir: 'e' },
+      { x: el.x + el.w - hh,     y: el.y + el.h - hh,     dir: 'se' },
+      { x: el.x + el.w/2 - hh,   y: el.y + el.h - hh,     dir: 's' },
+      { x: el.x - hh,            y: el.y + el.h - hh,     dir: 'sw' },
+      { x: el.x - hh,            y: el.y + el.h/2 - hh,   dir: 'w' },
+    ];
+    rHandles.forEach(rh => {
+      svgEl('rect', { x: rh.x, y: rh.y, width: hs, height: hs, rx: 2, class: `c-resize rh-${rh.dir}`, 'data-resize': rh.dir, 'data-el': el.id }, g);
+    });
+  }
+
+  // Connection ports (top, bottom, left, right)
+  if (el.type !== 'text') {
+    const ports = getPortPositions(el);
+    ports.forEach(p => {
+      svgEl('circle', { cx: p.x, cy: p.y, class: 'c-port', 'data-port': p.pos, 'data-el': el.id }, g);
+    });
+  }
+
+  // Mousedown handler: resize / move / shift-select
+  g.addEventListener('mousedown', e => {
+    const portEl = e.target.closest('.c-port');
+    if (portEl) return;
+
+    const resizeEl = e.target.closest('.c-resize');
+    if (resizeEl) {
+      e.stopPropagation();
+      const pt = canvasPoint(e);
+      state.resizing = { el, dir: resizeEl.getAttribute('data-resize'), sx: pt.x, sy: pt.y, ox: el.x, oy: el.y, ow: el.w, oh: el.h };
+      if (!isSelected(el.id, 'element')) selectElement(el);
+      return;
+    }
+
+    e.stopPropagation();
+
+    if (e.shiftKey) {
+      toggleSelection(el.id, 'element');
+    } else if (!isSelected(el.id, 'element')) {
+      selectElement(el);
+    }
+
+    const pt = canvasPoint(e);
+    const dragEls = getSelectedElements().map(sel => ({ el: sel, ox: pt.x - sel.x, oy: pt.y - sel.y }));
+    if (dragEls.length === 0) dragEls.push({ el, ox: pt.x - el.x, oy: pt.y - el.y });
+    state.drag = { els: dragEls };
+  });
+
+  return g;
+}
+
+function getPortPositions(el) {
+  const isCircle = el.shape === 'circle' || el.type === 'circle';
+  if (isCircle) {
+    const cx = el.x + el.w/2, cy = el.y + el.h/2, r = Math.min(el.w, el.h)/2;
+    return [
+      { x: cx, y: cy - r, pos: 'top' },
+      { x: cx, y: cy + r, pos: 'bottom' },
+      { x: cx - r, y: cy, pos: 'left' },
+      { x: cx + r, y: cy, pos: 'right' },
+    ];
+  }
+  return [
+    { x: el.x + el.w/2, y: el.y, pos: 'top' },
+    { x: el.x + el.w/2, y: el.y + el.h, pos: 'bottom' },
+    { x: el.x, y: el.y + el.h/2, pos: 'left' },
+    { x: el.x + el.w, y: el.y + el.h/2, pos: 'right' },
+  ];
+}
+
+/* ═══════════════════════════════════════════════════════
+   LINES (connectors + free lines)
+   ═══════════════════════════════════════════════════════ */
+function createLine(x1, y1, x2, y2, opts = {}) {
+  const id = state.nextId++;
+  const ln = {
+    id, x1, y1, x2, y2,
+    fromEl: opts.fromEl || null, toEl: opts.toEl || null,
+    fromPort: opts.fromPort || null, toPort: opts.toPort || null,
+    lineShape: opts.lineShape || 's-shape',
+    elbowX: null,
+    arcCtrlX: null, arcCtrlY: null,
+    sCpOffset: null,
+    style: opts.style || 'solid',
+    color: opts.color || '',
+    strokeWidth: opts.strokeWidth || 2,
+    arrow: opts.arrow || false,
+    label: opts.label || '',
+  };
+  state.lines.push(ln);
+  renderLine(ln);
+  updateStatus();
+  return ln;
+}
+
+function renderLine(ln) {
+  const existing = document.getElementById('ln-' + ln.id);
+  if (existing) existing.remove();
+
+  const { x1, y1, x2, y2 } = resolveLineEndpoints(ln);
+  const pathOpts = { elbowX: ln.elbowX, arcCtrlX: ln.arcCtrlX, arcCtrlY: ln.arcCtrlY, sCpOffset: ln.sCpOffset };
+  const d = buildPath(x1, y1, x2, y2, ln.lineShape, pathOpts);
+
+  const g = svgEl('g', { id: 'ln-' + ln.id, class: 'c-line', 'data-line': ln.id }, layerLines);
+
+  svgEl('path', { d, class: 'hit-area' }, g);
+
+  const visAttrs = { d, class: 'vis' };
+  if (ln.style === 'dashed') visAttrs['stroke-dasharray'] = '8 5';
+  if (ln.style === 'dotted') visAttrs['stroke-dasharray'] = '3 3';
+  if (ln.arrow) visAttrs['marker-end'] = 'url(#arrow-end)';
+  const strokeColor = ln.color || 'var(--line-color)';
+  const strokeW = ln.strokeWidth || 2;
+  visAttrs.style = `stroke:${strokeColor};stroke-width:${strokeW}`;
+  svgEl('path', visAttrs, g);
+
+  // Endpoint handles — draggable to reconnect
+  const h1 = svgEl('circle', { cx: x1, cy: y1, class: 'c-line-handle', 'data-end': 'from' }, g);
+  const h2 = svgEl('circle', { cx: x2, cy: y2, class: 'c-line-handle', 'data-end': 'to' }, g);
+  const startEndDrag = (end) => (e) => {
+    e.stopPropagation();
+    selectLine(ln);
+    state.endpointDrag = { ln, end, active: true };
+    document.getElementById('status-info').textContent = 'Drag to a port to reconnect, or release to place freely';
+  };
+  h1.addEventListener('mousedown', startEndDrag('from'));
+  h2.addEventListener('mousedown', startEndDrag('to'));
+
+  // Curve adjustment handle
+  if (ln.lineShape === 'elbow') {
+    const mx = ln.elbowX ?? (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    const ch = svgEl('circle', { cx: mx, cy: my, class: 'c-curve-handle' }, g);
+    ch.addEventListener('mousedown', e => { e.stopPropagation(); selectLine(ln); state.curveDrag = { ln, type: 'elbow' }; });
+  } else if (ln.lineShape === 'arc') {
+    const { cx, cy } = arcCtrl(x1, y1, x2, y2, pathOpts);
+    const ch = svgEl('circle', { cx, cy, class: 'c-curve-handle' }, g);
+    ch.addEventListener('mousedown', e => { e.stopPropagation(); selectLine(ln); state.curveDrag = { ln, type: 'arc' }; });
+  } else if (ln.lineShape === 's-shape') {
+    const { cx1, cy1 } = sCurveCtrl(x1, y1, x2, y2, pathOpts);
+    const ch = svgEl('circle', { cx: cx1, cy: cy1, class: 'c-curve-handle' }, g);
+    ch.addEventListener('mousedown', e => { e.stopPropagation(); selectLine(ln); state.curveDrag = { ln, type: 's-shape', x1, y1, x2, y2 }; });
+  }
+
+  if (ln.label) {
+    const mx = (x1+x2)/2, my = (y1+y2)/2;
+    const t = svgEl('text', { x: mx, y: my - 8, 'text-anchor': 'middle', class: 'c-node-sublabel', style: 'font-size:10px' }, g);
+    t.textContent = ln.label;
+  }
+
+  g.addEventListener('mousedown', e => {
+    if (e.target.closest('.c-curve-handle') || e.target.closest('.c-line-handle')) return;
+    e.stopPropagation();
+    if (e.shiftKey) { toggleSelection(ln.id, 'line'); } else { selectLine(ln); }
+  });
+}
+
+function recomputeLines() { state.lines.forEach(renderLine); }
+
+/* ═══════════════════════════════════════════════════════
+   SELECTION (multi-select aware)
+   ═══════════════════════════════════════════════════════ */
+function isSelected(id, kind) {
+  return state.selection.some(s => s.id === id && s.kind === kind);
+}
+
+function getSelectedElements() {
+  return state.selection.filter(s => s.kind === 'element').map(s => state.elements.find(e => e.id === s.id)).filter(Boolean);
+}
+
+function getSelectedLines() {
+  return state.selection.filter(s => s.kind === 'line').map(s => state.lines.find(l => l.id === s.id)).filter(Boolean);
+}
+
+function selectElement(el) {
+  clearSelection();
+  state.selection = [{ id: el.id, kind: 'element' }];
+  applySelectionClasses();
+  showElementProps(el);
+}
+
+function selectLine(ln) {
+  clearSelection();
+  state.selection = [{ id: ln.id, kind: 'line' }];
+  applySelectionClasses();
+  showLineProps(ln);
+}
+
+function toggleSelection(id, kind) {
+  const idx = state.selection.findIndex(s => s.id === id && s.kind === kind);
+  if (idx >= 0) {
+    state.selection.splice(idx, 1);
+  } else {
+    state.selection.push({ id, kind });
+  }
+  applySelectionClasses();
+  showSelectionProps();
+}
+
+function clearSelection() {
+  document.querySelectorAll('.selected').forEach(e => e.classList.remove('selected'));
+  state.selection = [];
+  document.getElementById('props-content').innerHTML = '<div class="props-empty">Select an element to edit its properties</div>';
+}
+
+function applySelectionClasses() {
+  document.querySelectorAll('.selected').forEach(e => e.classList.remove('selected'));
+  state.selection.forEach(s => {
+    const domId = s.kind === 'element' ? 'el-' + s.id : 'ln-' + s.id;
+    document.getElementById(domId)?.classList.add('selected');
+  });
+}
+
+function showSelectionProps() {
+  const els = getSelectedElements();
+  const lns = getSelectedLines();
+  const total = els.length + lns.length;
+  if (total === 0) { clearSelection(); return; }
+  if (total === 1 && els.length === 1) { showElementProps(els[0]); return; }
+  if (total === 1 && lns.length === 1) { showLineProps(lns[0]); return; }
+  const c = document.getElementById('props-content');
+  c.innerHTML = `
+    <div class="props-group" style="text-align:center;padding:20px 12px">
+      <div style="font-size:24px;font-weight:700;color:var(--accent)">${total}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px">${els.length} element${els.length!==1?'s':''}, ${lns.length} line${lns.length!==1?'s':''} selected</div>
+    </div>
+    <div class="props-group"><button class="btn btn-danger" id="p-delete-multi" style="width:100%;justify-content:center">Delete Selected</button></div>
+  `;
+  document.getElementById('p-delete-multi').addEventListener('click', deleteSelected);
+}
+
+function deleteSelected() {
+  const selEls = new Set(state.selection.filter(s => s.kind === 'element').map(s => s.id));
+  const selLns = new Set(state.selection.filter(s => s.kind === 'line').map(s => s.id));
+  selEls.forEach(id => {
+    state.elements = state.elements.filter(e => e.id !== id);
+    state.lines = state.lines.filter(l => l.fromEl !== id && l.toEl !== id);
+    document.getElementById('el-' + id)?.remove();
+  });
+  selLns.forEach(id => {
+    state.lines = state.lines.filter(l => l.id !== id);
+    document.getElementById('ln-' + id)?.remove();
+  });
+  recomputeLines();
+  clearSelection();
+  updateStatus();
+}
+
+/* ═══════════════════════════════════════════════════════
+   BRAND COLOR SWATCH PICKER (reusable)
+   ═══════════════════════════════════════════════════════ */
+function buildSwatchPicker(id, currentValue, opts = {}) {
+  const allowNone = opts.allowNone !== false;
+  let html = `<div class="swatch-grid" data-picker="${id}">`;
+  if (allowNone) html += `<div class="swatch swatch-none${!currentValue || currentValue === 'none' ? ' active' : ''}" data-color="none" title="None"></div>`;
+  BRAND_COLORS.forEach(c => {
+    const active = currentValue === c.h ? ' active' : '';
+    html += `<div class="swatch${active}" style="background:${c.h}" data-color="${c.h}" title="${c.n}"></div>`;
+  });
+  html += `</div>`;
+  html += `<div class="swatch-custom-wrap"><input type="color" id="${id}-custom-color" value="${currentValue && currentValue !== 'none' && !currentValue.startsWith('var') && !currentValue.startsWith('rgba') ? currentValue : '#049FD9'}"/><input type="text" id="${id}-custom-text" value="${currentValue || ''}" placeholder="Custom hex or CSS"/></div>`;
+  return html;
+}
+
+function bindSwatchPicker(id, callback) {
+  const grid = document.querySelector(`[data-picker="${id}"]`);
+  if (!grid) return;
+  grid.addEventListener('click', e => {
+    const sw = e.target.closest('.swatch');
+    if (!sw) return;
+    grid.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    sw.classList.add('active');
+    const c = sw.getAttribute('data-color');
+    const textInput = document.getElementById(id + '-custom-text');
+    if (textInput) textInput.value = c === 'none' ? '' : c;
+    callback(c === 'none' ? 'none' : c);
+  });
+  const colorInput = document.getElementById(id + '-custom-color');
+  const textInput = document.getElementById(id + '-custom-text');
+  if (colorInput) colorInput.addEventListener('input', e => {
+    grid.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    if (textInput) textInput.value = e.target.value;
+    callback(e.target.value);
+  });
+  if (textInput) textInput.addEventListener('change', e => {
+    grid.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    callback(e.target.value || 'none');
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROPERTIES PANELS
+   ═══════════════════════════════════════════════════════ */
+function showElementProps(el) {
+  const c = document.getElementById('props-content');
+  const shapeOpts = el.type !== 'zone' && el.type !== 'text'
+    ? `<div class="props-group"><label>Shape</label><select id="p-shape"><option value="rect"${el.shape==='rect'?' selected':''}>Rectangle</option><option value="circle"${el.shape==='circle'?' selected':''}>Circle</option></select></div>`
+    : '';
+
+  c.innerHTML = `
+    <div class="props-group"><label>Label</label><input id="p-label" value="${esc(el.label)}"/></div>
+    <div class="props-group"><label>Sublabel</label><input id="p-sublabel" value="${esc(el.sublabel || '')}"/></div>
+    ${shapeOpts}
+    <div class="props-group"><div class="props-row"><div><label>X</label><input id="p-x" type="number" value="${el.x}"/></div><div><label>Y</label><input id="p-y" type="number" value="${el.y}"/></div></div></div>
+    <div class="props-group"><div class="props-row"><div><label>Width</label><input id="p-w" type="number" value="${el.w}"/></div><div><label>Height</label><input id="p-h" type="number" value="${el.h}"/></div></div></div>
+    <div class="props-group"><label>Font Size</label><input id="p-fontsize" type="number" value="${el.fontSize}"/></div>
+    <div class="props-group"><label>Fill Color</label>${buildSwatchPicker('el-fill', el.fill)}</div>
+    <div class="props-group"><label>Stroke Color</label>${buildSwatchPicker('el-stroke', el.stroke)}</div>
+    <div class="props-group"><label>Stroke Style</label><select id="p-dash"><option value="none"${el.strokeDash==='none'?' selected':''}>Solid</option><option value="8 5"${el.strokeDash==='8 5'?' selected':''}>Dashed</option><option value="3 3"${el.strokeDash==='3 3'?' selected':''}>Dotted</option></select></div>
+    <div class="props-group"><button class="btn btn-danger" id="p-delete" style="width:100%;justify-content:center">Delete Element</button></div>
+  `;
+
+  const update = (skipReselect) => {
+    el.label = document.getElementById('p-label').value;
+    el.sublabel = document.getElementById('p-sublabel').value;
+    if (document.getElementById('p-shape')) el.shape = document.getElementById('p-shape').value;
+    el.x = +document.getElementById('p-x').value;
+    el.y = +document.getElementById('p-y').value;
+    el.w = +document.getElementById('p-w').value;
+    el.h = +document.getElementById('p-h').value;
+    el.fontSize = +document.getElementById('p-fontsize').value;
+    el.strokeDash = document.getElementById('p-dash').value;
+    renderElement(el);
+    recomputeLines();
+    applySelectionClasses();
+  };
+
+  c.querySelectorAll('input:not([type="color"]),select').forEach(i => i.addEventListener('change', () => update()));
+  bindSwatchPicker('el-fill', v => { el.fill = v === 'none' ? 'none' : v; update(); });
+  bindSwatchPicker('el-stroke', v => { el.stroke = v === 'none' ? 'none' : v; update(); });
+
+  document.getElementById('p-delete').addEventListener('click', () => {
+    state.elements = state.elements.filter(e => e.id !== el.id);
+    state.lines = state.lines.filter(l => l.fromEl !== el.id && l.toEl !== el.id);
+    document.getElementById('el-' + el.id)?.remove();
+    recomputeLines();
+    clearSelection(); updateStatus();
+  });
+}
+
+function showLineProps(ln) {
+  const c = document.getElementById('props-content');
+  c.innerHTML = `
+    <div class="props-group"><label>Line Shape</label><select id="p-lineshape">
+      <option value="s-shape"${ln.lineShape==='s-shape'?' selected':''}>S-Shape</option>
+      <option value="straight"${ln.lineShape==='straight'?' selected':''}>Straight</option>
+      <option value="elbow"${ln.lineShape==='elbow'?' selected':''}>Elbow</option>
+      <option value="arc"${ln.lineShape==='arc'?' selected':''}>Arc</option>
+    </select></div>
+    ${(ln.lineShape === 'elbow' && ln.elbowX != null) || (ln.lineShape === 'arc' && ln.arcCtrlX != null) || (ln.lineShape === 's-shape' && ln.sCpOffset != null) ? '<div class="props-group"><button class="btn" id="p-reset-curve" style="width:100%;justify-content:center;font-size:11px">Reset Curve</button></div>' : ''}
+    <div class="props-group"><label>Label</label><input id="p-label" value="${esc(ln.label || '')}"/></div>
+    <div class="props-group"><label>Line Style</label><select id="p-style"><option value="solid"${ln.style==='solid'?' selected':''}>Solid</option><option value="dashed"${ln.style==='dashed'?' selected':''}>Dashed</option><option value="dotted"${ln.style==='dotted'?' selected':''}>Dotted</option></select></div>
+    <div class="props-group"><label>Stroke Width</label><input id="p-sw" type="number" value="${ln.strokeWidth}" min="1" max="12"/></div>
+    <div class="props-group"><label>Color</label>${buildSwatchPicker('ln-color', ln.color, { allowNone: false })}</div>
+    <div class="props-group"><label>Arrow</label><select id="p-arrow"><option value="false"${!ln.arrow?' selected':''}>None</option><option value="true"${ln.arrow?' selected':''}>End</option></select></div>
+    <div class="props-group"><button class="btn btn-danger" id="p-delete" style="width:100%;justify-content:center">Delete Line</button></div>
+  `;
+
+  const update = (refreshPanel) => {
+    const newShape = document.getElementById('p-lineshape').value;
+    if (newShape !== ln.lineShape) { ln.elbowX = null; ln.arcCtrlX = null; ln.arcCtrlY = null; ln.sCpOffset = null; }
+    ln.lineShape = newShape;
+    ln.label = document.getElementById('p-label').value;
+    ln.style = document.getElementById('p-style').value;
+    ln.strokeWidth = +document.getElementById('p-sw').value;
+    ln.arrow = document.getElementById('p-arrow').value === 'true';
+    renderLine(ln);
+    applySelectionClasses();
+    if (refreshPanel) showLineProps(ln);
+  };
+
+  document.getElementById('p-lineshape').addEventListener('change', () => update(true));
+  c.querySelectorAll('input:not([type="color"]),select:not(#p-lineshape)').forEach(i => i.addEventListener('change', () => update()));
+  bindSwatchPicker('ln-color', v => { ln.color = v === 'none' ? '' : v; update(); });
+
+  document.getElementById('p-reset-curve')?.addEventListener('click', () => {
+    ln.elbowX = null; ln.arcCtrlX = null; ln.arcCtrlY = null; ln.sCpOffset = null;
+    renderLine(ln); applySelectionClasses(); showLineProps(ln);
+  });
+
+  document.getElementById('p-delete').addEventListener('click', () => {
+    state.lines = state.lines.filter(l => l.id !== ln.id);
+    document.getElementById('ln-' + ln.id)?.remove();
+    clearSelection(); updateStatus();
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   CANVAS EVENTS — select + port-driven connections
+   ═══════════════════════════════════════════════════════ */
+
+// Port mousedown → begin connection drawing
+canvas.addEventListener('mousedown', e => {
+  const portEl = e.target.closest('.c-port');
+  if (portEl) {
+    e.stopPropagation();
+    e.preventDefault();
+    const elId = +portEl.getAttribute('data-el');
+    const portName = portEl.getAttribute('data-port');
+    const el = state.elements.find(el => el.id === elId);
+    if (!el) return;
+    const p = getPort(el, portName);
+    state.connecting = { elId, port: portName, sx: p.x, sy: p.y };
+    portEl.classList.add('port-active');
+    document.getElementById('status-info').textContent = 'Drawing connection — release on a port to connect';
+    return;
+  }
+
+  // Click on grid background → box-select (shift) or pan
+  const isBackground = e.target === canvas || (e.target.tagName === 'rect' && e.target.getAttribute('fill') === 'url(#grid)') || e.target.tagName === 'svg';
+  if (isBackground) {
+    if (e.shiftKey) {
+      const pt = canvasPoint(e);
+      state.boxSelect = { sx: pt.x, sy: pt.y };
+      document.getElementById('status-info').textContent = 'Drag to select elements...';
+    } else {
+      clearSelection();
+      state.panning = { startX: e.clientX, startY: e.clientY, vbX: state.viewBox.x, vbY: state.viewBox.y };
+      canvas.classList.add('panning');
+      document.getElementById('status-info').textContent = 'Panning...';
+    }
+  }
+});
+
+canvas.addEventListener('mousemove', e => {
+  const pt = canvasPoint(e);
+  document.getElementById('status-pos').textContent = `x: ${pt.x}, y: ${pt.y}`;
+
+  // Connection preview
+  if (state.connecting) {
+    previewG.innerHTML = '';
+    const d = buildPath(state.connecting.sx, state.connecting.sy, pt.x, pt.y, 's-shape');
+    svgEl('path', { d }, previewG);
+    const portUnder = e.target.closest('.c-port');
+    document.querySelectorAll('.c-port.port-hover').forEach(p => p.classList.remove('port-hover'));
+    if (portUnder && +portUnder.getAttribute('data-el') !== state.connecting.elId) {
+      portUnder.classList.add('port-hover');
+    }
+    return;
+  }
+
+  // Resize
+  if (state.resizing) {
+    const r = state.resizing;
+    const dx = pt.x - r.sx, dy = pt.y - r.sy;
+    const MIN = 30;
+    if (r.dir.includes('e')) r.el.w = Math.max(MIN, r.ow + dx);
+    if (r.dir.includes('w')) { const nw = Math.max(MIN, r.ow - dx); r.el.x = r.ox + (r.ow - nw); r.el.w = nw; }
+    if (r.dir.includes('s')) r.el.h = Math.max(MIN, r.oh + dy);
+    if (r.dir.includes('n')) { const nh = Math.max(MIN, r.oh - dy); r.el.y = r.oy + (r.oh - nh); r.el.h = nh; }
+    renderElement(r.el);
+    applySelectionClasses();
+    recomputeLines();
+    if (state.selection.length === 1 && isSelected(r.el.id, 'element')) showElementProps(r.el);
+    return;
+  }
+
+  // Curve handle drag (elbow / arc / s-shape)
+  if (state.curveDrag) {
+    const cd = state.curveDrag;
+    if (cd.type === 'elbow') { cd.ln.elbowX = pt.x; }
+    else if (cd.type === 'arc') { cd.ln.arcCtrlX = pt.x; cd.ln.arcCtrlY = pt.y; }
+    else if (cd.type === 's-shape') {
+      const useHoriz = Math.abs(cd.x2 - cd.x1) >= Math.abs(cd.y2 - cd.y1);
+      cd.ln.sCpOffset = useHoriz ? Math.abs(pt.x - cd.x1) : Math.abs(pt.y - cd.y1);
+    }
+    renderLine(cd.ln);
+    applySelectionClasses();
+    return;
+  }
+
+  // Line endpoint drag (reconnect)
+  if (state.endpointDrag) {
+    previewG.innerHTML = '';
+    const ed = state.endpointDrag;
+    const { x1, y1, x2, y2 } = resolveLineEndpoints(ed.ln);
+    const sx = ed.end === 'from' ? pt.x : x1;
+    const sy = ed.end === 'from' ? pt.y : y1;
+    const ex = ed.end === 'to' ? pt.x : x2;
+    const ey = ed.end === 'to' ? pt.y : y2;
+    const d = buildPath(sx, sy, ex, ey, 's-shape');
+    svgEl('path', { d }, previewG);
+    const portUnder = e.target.closest('.c-port');
+    document.querySelectorAll('.c-port.port-hover').forEach(p => p.classList.remove('port-hover'));
+    if (portUnder) portUnder.classList.add('port-hover');
+    return;
+  }
+
+  // Box selection
+  if (state.boxSelect) {
+    selectBoxG.innerHTML = '';
+    const bs = state.boxSelect;
+    const bx = Math.min(bs.sx, pt.x), by = Math.min(bs.sy, pt.y);
+    const bw = Math.abs(pt.x - bs.sx), bh = Math.abs(pt.y - bs.sy);
+    svgEl('rect', { x: bx, y: by, width: bw, height: bh, class: 'select-box' }, selectBoxG);
+    return;
+  }
+
+  // Panning
+  if (state.panning) {
+    const scale = state.viewBox.w / canvas.getBoundingClientRect().width;
+    state.viewBox.x = state.panning.vbX - (e.clientX - state.panning.startX) * scale;
+    state.viewBox.y = state.panning.vbY - (e.clientY - state.panning.startY) * scale;
+    applyViewBox();
+    return;
+  }
+
+  // Multi-element drag
+  if (state.drag) {
+    state.drag.els.forEach(d => {
+      d.el.x = pt.x - d.ox;
+      d.el.y = pt.y - d.oy;
+      renderElement(d.el);
+    });
+    applySelectionClasses();
+    recomputeLines();
+    if (state.selection.length === 1 && state.selection[0].kind === 'element') {
+      const sel = state.elements.find(e2 => e2.id === state.selection[0].id);
+      if (sel) showElementProps(sel);
+    }
+  }
+});
+
+canvas.addEventListener('mouseup', e => {
+  // Finish connection
+  if (state.connecting) {
+    previewG.innerHTML = '';
+    document.querySelectorAll('.port-active').forEach(p => p.classList.remove('port-active'));
+    document.querySelectorAll('.port-hover').forEach(p => p.classList.remove('port-hover'));
+
+    const portEl = e.target.closest('.c-port');
+    if (portEl) {
+      const toElId = +portEl.getAttribute('data-el');
+      const toPort = portEl.getAttribute('data-port');
+      if (toElId !== state.connecting.elId) {
+        const ln = createLine(0, 0, 0, 0, {
+          fromEl: state.connecting.elId, fromPort: state.connecting.port,
+          toEl: toElId, toPort: toPort,
+          lineShape: 's-shape',
+        });
+        selectLine(ln);
+      }
+    }
+    state.connecting = null;
+    document.getElementById('status-info').textContent = 'Ready';
+    return;
+  }
+
+  // End pan
+  if (state.panning) {
+    state.panning = null;
+    canvas.classList.remove('panning');
+    document.getElementById('status-info').textContent = 'Ready';
+    return;
+  }
+
+  // End box select
+  if (state.boxSelect) {
+    selectBoxG.innerHTML = '';
+    const pt2 = canvasPoint(e);
+    const bs = state.boxSelect;
+    const bx1 = Math.min(bs.sx, pt2.x), by1 = Math.min(bs.sy, pt2.y);
+    const bx2 = Math.max(bs.sx, pt2.x), by2 = Math.max(bs.sy, pt2.y);
+
+    const newSel = [];
+    state.elements.forEach(el => {
+      if (el.x + el.w >= bx1 && el.x <= bx2 && el.y + el.h >= by1 && el.y <= by2) {
+        newSel.push({ id: el.id, kind: 'element' });
+      }
+    });
+    state.lines.forEach(ln => {
+      const ep = resolveLineEndpoints(ln);
+      const lx1 = Math.min(ep.x1, ep.x2), ly1 = Math.min(ep.y1, ep.y2);
+      const lx2 = Math.max(ep.x1, ep.x2), ly2 = Math.max(ep.y1, ep.y2);
+      if (lx2 >= bx1 && lx1 <= bx2 && ly2 >= by1 && ly1 <= by2) {
+        newSel.push({ id: ln.id, kind: 'line' });
+      }
+    });
+
+    state.selection = newSel;
+    applySelectionClasses();
+    showSelectionProps();
+    state.boxSelect = null;
+    document.getElementById('status-info').textContent = newSel.length ? `${newSel.length} items selected` : 'Ready';
+    return;
+  }
+
+  // End resize
+  if (state.resizing) { state.resizing = null; return; }
+
+  // End curve handle drag
+  if (state.curveDrag) { state.curveDrag = null; return; }
+
+  // End endpoint reconnect drag
+  if (state.endpointDrag) {
+    previewG.innerHTML = '';
+    document.querySelectorAll('.port-hover').forEach(p => p.classList.remove('port-hover'));
+    const ed = state.endpointDrag;
+    const pt2 = canvasPoint(e);
+    const portEl = e.target.closest('.c-port');
+    if (portEl) {
+      const elId = +portEl.getAttribute('data-el');
+      const portName = portEl.getAttribute('data-port');
+      if (ed.end === 'from') { ed.ln.fromEl = elId; ed.ln.fromPort = portName; }
+      else { ed.ln.toEl = elId; ed.ln.toPort = portName; }
+    } else {
+      if (ed.end === 'from') { ed.ln.fromEl = null; ed.ln.fromPort = null; ed.ln.x1 = pt2.x; ed.ln.y1 = pt2.y; }
+      else { ed.ln.toEl = null; ed.ln.toPort = null; ed.ln.x2 = pt2.x; ed.ln.y2 = pt2.y; }
+    }
+    renderLine(ed.ln);
+    applySelectionClasses();
+    state.endpointDrag = null;
+    document.getElementById('status-info').textContent = 'Ready';
+    return;
+  }
+
+  // End drag
+  if (state.drag) { state.drag = null; }
+});
+
+// Scroll to zoom
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const zoomFactor = e.deltaY > 0 ? 1.08 : 1 / 1.08;
+  const pt = canvasPoint(e);
+  const vb = state.viewBox;
+  const newW = vb.w * zoomFactor;
+  const newH = vb.h * zoomFactor;
+  vb.x = pt.x - (pt.x - vb.x) * zoomFactor;
+  vb.y = pt.y - (pt.y - vb.y) * zoomFactor;
+  vb.w = newW;
+  vb.h = newH;
+  applyViewBox();
+}, { passive: false });
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  const inInput = document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT' || document.activeElement.tagName === 'TEXTAREA';
+
+  // Delete / Backspace — remove selected
+  if ((e.key === 'Delete' || e.key === 'Backspace') && !inInput) {
+    if (state.selection.length > 0) { deleteSelected(); }
+  }
+
+  // Escape — cancel connecting or clear selection
+  if (e.key === 'Escape') {
+    if (state.connecting) {
+      previewG.innerHTML = '';
+      document.querySelectorAll('.port-active,.port-hover').forEach(p => { p.classList.remove('port-active'); p.classList.remove('port-hover'); });
+      state.connecting = null;
+      document.getElementById('status-info').textContent = 'Ready';
+    } else { clearSelection(); }
+  }
+
+  // Ctrl/Cmd + A — select all
+  if ((e.key === 'a' || e.key === 'A') && (e.metaKey || e.ctrlKey) && !inInput) {
+    e.preventDefault();
+    state.selection = [
+      ...state.elements.map(el => ({ id: el.id, kind: 'element' })),
+      ...state.lines.map(ln => ({ id: ln.id, kind: 'line' })),
+    ];
+    applySelectionClasses();
+    showSelectionProps();
+  }
+
+  // Ctrl/Cmd + C — copy selected
+  if ((e.key === 'c' || e.key === 'C') && (e.metaKey || e.ctrlKey) && !inInput) {
+    if (state.selection.length === 0) return;
+    const selElIds = new Set(state.selection.filter(s => s.kind === 'element').map(s => s.id));
+    const selLnIds = new Set(state.selection.filter(s => s.kind === 'line').map(s => s.id));
+    const copiedEls = state.elements.filter(el => selElIds.has(el.id)).map(el => ({ ...el }));
+    const copiedLns = state.lines.filter(ln => selLnIds.has(ln.id) || (selElIds.has(ln.fromEl) && selElIds.has(ln.toEl))).map(ln => ({ ...ln }));
+    state.clipboard = { elements: copiedEls, lines: copiedLns };
+    document.getElementById('status-info').textContent = `Copied ${copiedEls.length + copiedLns.length} items`;
+  }
+
+  // Ctrl/Cmd + V — paste
+  if ((e.key === 'v' || e.key === 'V') && (e.metaKey || e.ctrlKey) && !inInput) {
+    if (!state.clipboard || state.clipboard.elements.length === 0 && state.clipboard.lines.length === 0) return;
+    e.preventDefault();
+    const offset = 30;
+    const idMap = {};
+    const newSel = [];
+
+    state.clipboard.elements.forEach(src => {
+      const newId = state.nextId++;
+      idMap[src.id] = newId;
+      const dup = { ...src, id: newId, x: src.x + offset, y: src.y + offset };
+      state.elements.push(dup);
+      renderElement(dup);
+      newSel.push({ id: newId, kind: 'element' });
+    });
+
+    state.clipboard.lines.forEach(src => {
+      const newId = state.nextId++;
+      const dup = { ...src, id: newId };
+      if (src.fromEl && idMap[src.fromEl]) dup.fromEl = idMap[src.fromEl];
+      if (src.toEl && idMap[src.toEl]) dup.toEl = idMap[src.toEl];
+      if (!src.fromEl) { dup.x1 = src.x1 + offset; dup.y1 = src.y1 + offset; }
+      if (!src.toEl) { dup.x2 = src.x2 + offset; dup.y2 = src.y2 + offset; }
+      state.lines.push(dup);
+      renderLine(dup);
+      newSel.push({ id: newId, kind: 'line' });
+    });
+
+    state.clipboard.elements = state.clipboard.elements.map(el => ({ ...el, x: el.x + offset, y: el.y + offset }));
+    state.clipboard.lines.forEach(ln => {
+      if (!ln.fromEl) { ln.x1 += offset; ln.y1 += offset; }
+      if (!ln.toEl) { ln.x2 += offset; ln.y2 += offset; }
+    });
+
+    state.selection = newSel;
+    applySelectionClasses();
+    showSelectionProps();
+    updateStatus();
+    document.getElementById('status-info').textContent = `Pasted ${newSel.length} items`;
+  }
+});
+
+/* ═══════════════════════════════════════════════════════
+   DRAG & DROP FROM PALETTE
+   ═══════════════════════════════════════════════════════ */
+const canvasWrap = document.getElementById('canvas-wrap');
+canvasWrap.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+canvasWrap.addEventListener('drop', e => {
+  e.preventDefault();
+  const pt = canvasPoint(e);
+
+  const shape = e.dataTransfer.getData('application/shape');
+  if (shape) {
+    if (shape === 'line') {
+      createLine(pt.x - 60, pt.y, pt.x + 60, pt.y, { lineShape: 's-shape' });
+    } else {
+      createElement(shape, pt.x - 50, pt.y - 40, shape === 'zone' ? { w: 300, h: 200 } : {});
+    }
+    return;
+  }
+
+  const iconName = e.dataTransfer.getData('application/icon-name');
+  if (iconName) {
+    const icon = state.icons.find(i => i.name === iconName);
+    if (icon) {
+      createElement('rect', pt.x - 40, pt.y - 40, { w: 80, h: 80, shape: 'rect', iconName: icon.name, iconDataUrl: icon.dataUrl, iconSvgContent: icon.svgContent, label: icon.name });
+    }
+    return;
+  }
+
+  Array.from(e.dataTransfer.files).filter(f => isIconImageFile(f.name)).forEach(f => loadIconFile(f));
+});
+
+document.querySelectorAll('.pi-shape').forEach(shape => {
+  shape.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('application/shape', shape.dataset.shape);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+});
+
+/* ═══════════════════════════════════════════════════════
+   SAVE / LOAD
+   ═══════════════════════════════════════════════════════ */
+document.getElementById('btn-save').addEventListener('click', () => {
+  const cleanEls = state.elements.map(el => {
+    const copy = { ...el };
+    delete copy.iconDataUrl;
+    delete copy.iconSvgContent;
+    return copy;
+  });
+  const data = {
+    version: 1,
+    nextId: state.nextId,
+    elements: cleanEls,
+    lines: state.lines.map(ln => ({ ...ln })),
+    viewBox: state.viewBox,
+  };
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `diagram-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  document.getElementById('status-info').textContent = 'Diagram saved';
+});
+
+document.getElementById('btn-load').addEventListener('click', () => {
+  document.getElementById('file-load').click();
+});
+
+document.getElementById('file-load').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (!data.elements || !data.lines) throw new Error('Invalid diagram file');
+      layerZones.innerHTML = ''; layerLines.innerHTML = ''; layerNodes.innerHTML = '';
+      clearSelection();
+      state.elements = data.elements;
+      state.lines = data.lines;
+      state.nextId = data.nextId || Math.max(0, ...state.elements.map(e2 => e2.id), ...state.lines.map(l => l.id)) + 1;
+      if (data.viewBox) { Object.assign(state.viewBox, data.viewBox); applyViewBox(); }
+
+      state.elements.forEach(hydrateElementIcon);
+
+      state.elements.forEach(renderElement);
+      state.lines.forEach(renderLine);
+      updateStatus();
+      document.getElementById('status-info').textContent = `Loaded: ${file.name}`;
+    } catch (err) {
+      alert('Failed to load diagram: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+/* ═══════════════════════════════════════════════════════
+   CLEAR
+   ═══════════════════════════════════════════════════════ */
+document.getElementById('btn-clear').addEventListener('click', () => {
+  if (!confirm('Clear all elements?')) return;
+  state.elements = []; state.lines = [];
+  layerZones.innerHTML = ''; layerLines.innerHTML = ''; layerNodes.innerHTML = '';
+  clearSelection(); updateStatus();
+});
+
+/* ═══════════════════════════════════════════════════════
+   EXPORT
+   ═══════════════════════════════════════════════════════ */
+document.getElementById('btn-export').addEventListener('click', () => {
+  document.getElementById('modal-export').classList.add('open');
+  state.elements.forEach(hydrateElementIcon);
+
+  const bounds = getDiagramBounds(20);
+  let minX, minY, vw, vh;
+  if (!bounds) {
+    minX = 0; minY = 0; vw = 800; vh = 600;
+  } else {
+    minX = bounds.minX; minY = bounds.minY;
+    vw = bounds.maxX - bounds.minX;
+    vh = bounds.maxY - bounds.minY;
+  }
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${minX-20} ${minY-20} ${vw} ${vh}" style="width:100%;max-width:${vw}px">\n`;
+
+  // Zones
+  state.elements.filter(e => e.type === 'zone').forEach(el => {
+    svg += `  <rect x="${el.x}" y="${el.y}" width="${el.w}" height="${el.h}" rx="${el.radius}" fill="${el.fill}" stroke="${el.stroke}" stroke-width="1.5" stroke-dasharray="${el.strokeDash}"/>\n`;
+    if (el.label) svg += `  <text x="${el.x+14}" y="${el.y+18}" font-family="Inter,sans-serif" font-size="${el.fontSize}" fill="currentColor" opacity=".5">${esc(el.label)}</text>\n`;
+  });
+
+  // Lines
+  state.lines.forEach(ln => {
+    const { x1, y1, x2, y2 } = resolveLineEndpoints(ln);
+    const pathOpts = { elbowX: ln.elbowX, arcCtrlX: ln.arcCtrlX, arcCtrlY: ln.arcCtrlY, sCpOffset: ln.sCpOffset };
+    const d = buildPath(x1, y1, x2, y2, ln.lineShape, pathOpts);
+    let attrs = `d="${d}" stroke="${ln.color || 'currentColor'}" stroke-width="${ln.strokeWidth}" fill="none" stroke-linecap="round"`;
+    if (ln.style === 'dashed') attrs += ` stroke-dasharray="8 5"`;
+    if (ln.style === 'dotted') attrs += ` stroke-dasharray="3 3"`;
+    if (ln.arrow) attrs += ` marker-end="url(#arrow-end)"`;
+    svg += `  <path ${attrs} opacity=".5"/>\n`;
+    if (ln.label) {
+      const mx = (x1+x2)/2, my = (y1+y2)/2;
+      svg += `  <text x="${mx}" y="${my-8}" text-anchor="middle" font-family="Courier New,monospace" font-size="10" fill="currentColor" opacity=".6">${esc(ln.label)}</text>\n`;
+    }
+  });
+
+  // Nodes
+  state.elements.filter(e => e.type !== 'zone').forEach(el => {
+    svg += `  <g>\n`;
+    if (el.shape === 'circle') {
+      const r = Math.min(el.w, el.h)/2;
+      svg += `    <circle cx="${el.x+el.w/2}" cy="${el.y+el.h/2}" r="${r}" fill="${el.fill}" stroke="${el.stroke}" stroke-width="1.5"/>\n`;
+    } else if (el.type === 'text') {
+      svg += `    <text x="${el.x+el.w/2}" y="${el.y+el.h/2}" text-anchor="middle" dominant-baseline="central" font-family="Inter,sans-serif" font-size="${el.fontSize}" font-weight="600" fill="currentColor">${esc(el.label)}</text>\n`;
+    } else {
+      svg += `    <rect x="${el.x}" y="${el.y}" width="${el.w}" height="${el.h}" rx="${el.radius}" fill="${el.fill}" stroke="${el.stroke}" stroke-width="1.5"/>\n`;
+    }
+    const iconHref = resolveIconExportHref(el);
+    if (iconHref && el.type !== 'text' && el.type !== 'zone') {
+      const iSize = Math.min(el.w, el.h) * 0.55;
+      const ix = el.x + (el.w - iSize)/2, iy = el.y + (el.h - iSize)/2 - (el.label ? 8 : 0);
+      svg += `    <image href="${iconHref}" x="${ix}" y="${iy}" width="${iSize}" height="${iSize}"/>\n`;
+    }
+    if (el.label && el.type !== 'text') {
+      svg += `    <text x="${el.x+el.w/2}" y="${el.y+el.h-6}" text-anchor="middle" font-family="Inter,sans-serif" font-size="${el.fontSize}" font-weight="600" fill="currentColor">${esc(el.label)}</text>\n`;
+    }
+    if (el.sublabel) {
+      svg += `    <text x="${el.x+el.w/2}" y="${el.y+el.h+14}" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="currentColor" opacity=".5">${esc(el.sublabel)}</text>\n`;
+    }
+    svg += `  </g>\n`;
+  });
+
+  svg += `</svg>`;
+  document.getElementById('export-code').textContent = svg;
+});
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.getElementById('btn-modal-close').addEventListener('click', () => document.getElementById('modal-export').classList.remove('open'));
+document.getElementById('modal-export').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+document.getElementById('btn-help').addEventListener('click', () => document.getElementById('modal-help').classList.add('open'));
+document.getElementById('btn-help-close').addEventListener('click', () => document.getElementById('modal-help').classList.remove('open'));
+document.getElementById('modal-help').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+document.getElementById('btn-copy').addEventListener('click', () => {
+  const code = document.getElementById('export-code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('btn-copy');
+    btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy to Clipboard', 1500);
+  });
+});
+
+document.getElementById('btn-download').addEventListener('click', () => {
+  const code = document.getElementById('export-code').textContent;
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Architecture Diagram</title><style>body{margin:0;padding:40px;background:#0d0d12;color:#f0f0f5;font-family:Inter,sans-serif;display:flex;justify-content:center}svg{max-width:100%}</style></head><body>\n${code}\n</body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'architecture-diagram.html'; a.click();
+});
+
+function updateStatus() {
+  document.getElementById('status-count').textContent = `${state.elements.length} elements, ${state.lines.length} lines`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PRELOADED ICONS
+   ═══════════════════════════════════════════════════════ */
+function loadPreloadedIcons() {
+  if (typeof PRELOADED_ICONS === 'undefined') return;
+  PRELOADED_ICONS.forEach(ic => {
+    const svgContent = atob(ic.d);
+    const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+    state.icons.push({ name: ic.n, svgContent, dataUrl: URL.createObjectURL(blob) });
+  });
+  renderIconList();
+  document.getElementById('status-count').textContent = `${PRELOADED_ICONS.length} icons loaded`;
+}
+
+loadPreloadedIcons();
+</script>
+</body>
+</html>

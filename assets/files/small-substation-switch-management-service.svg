@@ -1,0 +1,294 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2005 1130" font-family="'Segoe UI',Helvetica,Arial,sans-serif" role="img" aria-label="Secure Substation switch management service for a small substation">
+  <defs>
+    <style>
+      .pageTitle{font-size:64px;font-weight:700;fill:#071a30;text-anchor:middle}
+      .title{font-size:24px;font-weight:650;fill:#0d2740}
+      .sub{font-size:20px;font-weight:650;fill:#0d2740}
+      .label{font-size:20px;fill:#111827}
+      .labelMono{font-size:18px;fill:#0c2840;font-family:'SFMono-Regular','Cascadia Mono','Consolas',monospace}
+      .small{font-size:16px;fill:#233b4d;text-anchor:middle}
+      .tiny{font-size:14px;fill:#233b4d;text-anchor:middle}
+      .zone{font-size:18px;font-weight:650;fill:#12324a;text-anchor:middle}
+      .serviceText{font-size:18px;font-weight:650;fill:#004b93;font-family:'SFMono-Regular','Cascadia Mono','Consolas',monospace}
+      .tableHead{font-size:20px;font-weight:700;fill:#071a30}
+      .tableCell{font-size:20px;fill:#071a30}
+      .tableCellMono{font-size:20px;fill:#004b93;font-family:'SFMono-Regular','Cascadia Mono','Consolas',monospace}
+      .footer{font-size:15px;fill:#071a30}
+      .confidential{font-size:16px;fill:#8a8a8a;text-anchor:end}
+      .flow{fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:10 8}
+    </style>
+
+    <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#00bce7"/></marker>
+    <marker id="arrowLavender" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#9fb0e0"/></marker>
+    <marker id="arrowGreen" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#00a650"/></marker>
+    <marker id="arrowBlue" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#0072ce"/></marker>
+    <marker id="arrowOrange" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#d07900"/></marker>
+    <marker id="arrowMagenta" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#ff0084"/></marker>
+    <marker id="arrowPurple" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#7437a8"/></marker>
+
+    <symbol id="router" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="27" fill="#1c4e6b" stroke="#0e3145" stroke-width="1.5"/>
+      <g stroke="#ffffff" stroke-width="2.6" fill="#ffffff" stroke-linejoin="round" stroke-linecap="round">
+        <line x1="13" y1="23" x2="47" y2="23"/><path d="M17 18 L11 23 L17 28 Z"/><path d="M43 18 L49 23 L43 28 Z"/>
+        <line x1="13" y1="37" x2="47" y2="37"/><path d="M17 32 L11 37 L17 42 Z"/><path d="M43 32 L49 37 L43 42 Z"/>
+        <line x1="30" y1="13" x2="30" y2="47"/><path d="M25 17 L30 11 L35 17 Z"/><path d="M25 43 L30 49 L35 43 Z"/>
+      </g>
+    </symbol>
+
+    <symbol id="switch" viewBox="0 0 74 34">
+      <rect x="2" y="2" width="70" height="30" rx="4" fill="#0f7d8e" stroke="#0a5a67" stroke-width="1.2"/>
+      <g stroke="#eafcff" stroke-width="2.2" fill="#eafcff" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="16" y1="12" x2="58" y2="12"/><path d="M22 8 L14 12 L22 16 Z"/><path d="M52 8 L60 12 L52 16 Z"/>
+        <line x1="16" y1="22" x2="58" y2="22"/><path d="M52 18 L60 22 L52 26 Z"/><path d="M22 18 L14 22 L22 26 Z"/>
+      </g>
+    </symbol>
+
+    <symbol id="server" viewBox="0 0 46 56">
+      <rect x="8" y="3" width="30" height="50" rx="2.5" fill="#7c8b96" stroke="#3f4d57" stroke-width="1.4"/>
+      <rect x="12" y="8" width="22" height="6" rx="1" fill="#d5dde2"/>
+      <rect x="12" y="18" width="22" height="6" rx="1" fill="#d5dde2"/>
+      <rect x="12" y="28" width="22" height="6" rx="1" fill="#d5dde2"/>
+      <circle cx="30" cy="45" r="2.4" fill="#57c85a"/><circle cx="22" cy="45" r="2.4" fill="#f0b429"/>
+    </symbol>
+
+    <symbol id="monitor" viewBox="0 0 56 48">
+      <rect x="4" y="3" width="48" height="32" rx="2.5" fill="#2b3f4e" stroke="#182631" stroke-width="1.4"/>
+      <rect x="8" y="7" width="40" height="24" fill="#8fb8d6"/>
+      <rect x="23" y="35" width="10" height="6" fill="#2b3f4e"/><rect x="16" y="41" width="24" height="4" rx="2" fill="#2b3f4e"/>
+    </symbol>
+
+    <symbol id="eye" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="27" fill="#0b2f4a" stroke="#08243a" stroke-width="1.5"/>
+      <path d="M12 30 Q30 14 48 30 Q30 46 12 30 Z" fill="#0e3f63"/>
+      <circle cx="30" cy="30" r="8" fill="#37c5f0"/><circle cx="30" cy="30" r="3.4" fill="#0b2f4a"/>
+      <g fill="#37c5f0"><circle cx="14" cy="20" r="2"/><circle cx="46" cy="20" r="2"/><circle cx="14" cy="40" r="2"/><circle cx="46" cy="40" r="2"/><circle cx="30" cy="12" r="2"/><circle cx="30" cy="48" r="2"/></g>
+    </symbol>
+
+    <symbol id="ise" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="27" fill="#00b4e6" stroke="#008fbb" stroke-width="1.5"/>
+      <g fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round">
+        <path d="M18 34 Q18 18 30 18 Q42 18 42 34"/>
+        <path d="M23 36 Q23 23 30 23 Q37 23 37 36"/>
+        <path d="M28 38 Q28 28 30 28 Q32 28 32 38"/>
+        <line x1="30" y1="32" x2="30" y2="40"/>
+      </g>
+    </symbol>
+
+    <symbol id="controller" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="27" fill="#0e5579" stroke="#08374e" stroke-width="1.4"/>
+      <rect x="14" y="26" width="32" height="8" rx="4" fill="#03b5df"/>
+      <circle cx="30" cy="18" r="4" fill="#f5b73b"/>
+      <line x1="30" y1="22" x2="30" y2="39" stroke="#f5b73b" stroke-width="2"/>
+      <g stroke="#7ed957" stroke-width="2" fill="#7ed957">
+        <line x1="18" y1="34" x2="18" y2="42"/><circle cx="18" cy="44" r="3"/>
+        <line x1="30" y1="34" x2="30" y2="42"/><circle cx="30" cy="44" r="3"/>
+        <line x1="42" y1="34" x2="42" y2="42"/><circle cx="42" cy="44" r="3"/>
+      </g>
+    </symbol>
+
+    <symbol id="ied" viewBox="0 0 40 40">
+      <rect x="5" y="6" width="30" height="24" rx="2" fill="#1c6fb5" stroke="#0f4a7c" stroke-width="1.3"/>
+      <g fill="#cfe6fb"><rect x="9" y="10" width="7" height="7"/><rect x="18" y="10" width="7" height="7"/><rect x="27" y="10" width="4" height="7"/><rect x="9" y="20" width="22" height="5"/></g>
+      <g stroke="#0f4a7c" stroke-width="1.6"><line x1="12" y1="30" x2="12" y2="35"/><line x1="20" y1="30" x2="20" y2="35"/><line x1="28" y1="30" x2="28" y2="35"/></g>
+    </symbol>
+
+    <symbol id="laptop" viewBox="0 0 48 36">
+      <rect x="9" y="4" width="30" height="20" rx="2" fill="#324a5c" stroke="#1d2e3b" stroke-width="1.2"/>
+      <rect x="12" y="7" width="24" height="14" fill="#8fb8d6"/>
+      <path d="M4 30 L44 30 L48 34 L0 34 Z" fill="#4a5f70" stroke="#1d2e3b" stroke-width="1"/>
+    </symbol>
+
+    <symbol id="phone" viewBox="0 0 40 40">
+      <rect x="9" y="3" width="22" height="28" rx="3" fill="#324a5c" stroke="#1d2e3b" stroke-width="1.2"/>
+      <rect x="12" y="7" width="16" height="10" rx="1" fill="#8fb8d6"/>
+      <g fill="#8aa1b3"><circle cx="15" cy="21" r="1.8"/><circle cx="20" cy="21" r="1.8"/><circle cx="25" cy="21" r="1.8"/><circle cx="15" cy="26" r="1.8"/><circle cx="20" cy="26" r="1.8"/><circle cx="25" cy="26" r="1.8"/></g>
+      <path d="M4 31 Q4 37 10 37 L30 37 Q36 37 36 31" fill="none" stroke="#324a5c" stroke-width="3"/>
+    </symbol>
+
+    <symbol id="ap" viewBox="0 0 46 40">
+      <rect x="10" y="24" width="26" height="12" rx="3" fill="#3b566b" stroke="#22333f" stroke-width="1.2"/>
+      <circle cx="23" cy="30" r="2.2" fill="#7ed957"/>
+      <g fill="none" stroke="#1c6fb5" stroke-width="2.4" stroke-linecap="round">
+        <path d="M15 18 Q23 10 31 18"/><path d="M11 13 Q23 1 35 13"/>
+      </g>
+    </symbol>
+
+    <symbol id="cctv" viewBox="0 0 50 40">
+      <rect x="30" y="6" width="6" height="10" rx="2" fill="#3b566b"/>
+      <rect x="22" y="3" width="20" height="5" rx="2.5" fill="#3b566b"/>
+      <rect x="7" y="15" width="30" height="15" rx="6" fill="#556b7d" stroke="#22333f" stroke-width="1.3"/>
+      <rect x="3" y="17" width="9" height="11" rx="3.5" fill="#3b4f5e" stroke="#22333f" stroke-width="1.1"/>
+      <circle cx="7" cy="22" r="3.3" fill="#22333f"/>
+      <circle cx="7" cy="22" r="1.4" fill="#9fc4e0"/>
+      <circle cx="31" cy="21" r="1.7" fill="#7ed957"/>
+    </symbol>
+
+    <symbol id="rtu" viewBox="0 0 60 40">
+      <rect x="2" y="2" width="56" height="36" rx="4" fill="#151515" stroke="#000" stroke-width="1.2"/>
+      <text x="30" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#f2f2f2">Legacy</text>
+      <text x="30" y="31" text-anchor="middle" font-size="12" font-weight="700" fill="#f2f2f2">RTU</text>
+    </symbol>
+
+    <marker id="arrowRed" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#d00000"/></marker>
+  </defs>
+
+  <rect width="2005" height="1130" fill="#ffffff"/>
+  <text x="1002" y="64" class="pageTitle" font-size="60">Secure Substation - Switch Management Service</text>
+  <rect x="395" y="108" width="170" height="78" fill="#ffffff" stroke="#b5b5b5"/>
+  <text x="410" y="132" class="serviceText">PHYSEC-SVC</text>
+  <text x="410" y="153" class="serviceText">WORKFORCE-SVC</text>
+  <text x="410" y="174" class="serviceText">VOIP-SVC</text>
+
+  <rect x="170" y="350" width="125" height="36" fill="#ffffff" stroke="#b5b5b5"/>
+  <text x="184" y="374" class="serviceText">SCADA-SVC</text>
+  <rect x="1578" y="360" width="125" height="36" fill="#ffffff" stroke="#b5b5b5"/>
+  <text x="1591" y="384" class="serviceText">SCADA-SVC</text>
+  <text x="755" y="96" class="labelMono" text-anchor="middle">Enterprise Applications Center</text>
+  <rect x="590" y="108" width="330" height="120" rx="20" fill="none" stroke="#737373" stroke-width="2" stroke-dasharray="10 8"/>
+  <use href="#server" x="635" y="140" width="76" height="70"/>
+  <use href="#server" x="785" y="140" width="76" height="70"/>
+
+  <text x="1406" y="102" class="labelMono" text-anchor="middle">Security Operations &amp; Management Center</text>
+  <rect x="1115" y="112" width="570" height="120" rx="20" fill="none" stroke="#737373" stroke-width="2" stroke-dasharray="10 8"/>
+  <use href="#eye" x="1185" y="148" width="66" height="66"/>
+  <text x="1218" y="140" class="labelMono" text-anchor="middle">Cyber Vision</text>
+  <use href="#ise" x="1340" y="148" width="66" height="66"/>
+  <text x="1373" y="140" class="labelMono" text-anchor="middle">ISE</text>
+  <use href="#monitor" x="1492" y="146" width="82" height="70"/>
+  <text x="1533" y="140" class="labelMono" text-anchor="middle">Management Station</text>
+
+  <path d="M470 250 Q452 224 512 218 Q558 196 666 208 Q790 190 982 205 Q1072 180 1232 206 Q1345 196 1448 221 Q1484 232 1428 254 Q1384 280 1260 272 Q1114 298 980 274 Q820 298 678 272 Q540 288 490 269 Q438 266 470 250 Z" fill="#8fbfe6" stroke="#6799c5" stroke-width="2" opacity="0.96"/>
+  <text x="980" y="264" class="title" text-anchor="middle" font-size="34">Corporate network</text>
+  <path d="M85 510 Q54 478 136 470 Q198 438 318 456 Q452 434 640 456 Q780 424 972 450 Q1140 420 1320 452 Q1490 436 1648 458 Q1830 452 1855 486 Q1905 496 1848 525 Q1766 560 1608 548 Q1408 578 1180 552 Q955 590 760 554 Q540 582 318 552 Q180 562 118 538 Q54 536 85 510 Z" fill="#c8c8c8" stroke="#a6a6a6" stroke-width="2"/>
+  <text x="950" y="566" class="title" text-anchor="middle" font-size="34">WAN</text>
+  <g fill="none" stroke-linecap="round">
+    <path d="M570 455 L1600 594" stroke="#00bce7" stroke-width="8"/>
+    <path d="M1295 455 L1600 594" stroke="#9fb0e0" stroke-width="8"/>
+  </g>
+  <rect x="305" y="292" width="305" height="145" rx="22" fill="#f6f8f9" stroke="#6f6f6f" stroke-width="2"/>
+  <text x="325" y="322" class="labelMono">Data Center1</text>
+  <use href="#server" x="325" y="344" width="72" height="72"/>
+  <text x="360" y="426" class="labelMono" text-anchor="middle">SCADA</text>
+  <rect x="455" y="382" width="154" height="36" fill="#fff200" stroke="#d1c900"/>
+  <text x="469" y="406" class="serviceText" fill="#0c2840">SERVICE VPNs</text>
+  <use href="#router" x="535" y="420" width="70" height="70"/>
+  <text x="340" y="478" class="labelMono">DC1 Hub Router</text>
+
+  <rect x="1252" y="292" width="305" height="145" rx="22" fill="#f6f8f9" stroke="#6f6f6f" stroke-width="2"/>
+  <text x="1390" y="322" class="labelMono">Data Center2</text>
+  <use href="#server" x="1468" y="344" width="72" height="72"/>
+  <text x="1504" y="426" class="labelMono" text-anchor="middle">SCADA</text>
+  <rect x="1262" y="382" width="154" height="36" fill="#fff200" stroke="#d1c900"/>
+  <text x="1276" y="406" class="serviceText" fill="#0c2840">SERVICE VPNs</text>
+  <use href="#router" x="1260" y="420" width="70" height="70"/>
+  <text x="1360" y="458" class="labelMono">DC2 Hub Router</text>
+
+  <rect x="725" y="340" width="420" height="140" rx="24" fill="#f3f5f6" stroke="#737373" stroke-width="3"/>
+  <text x="935" y="330" class="labelMono" text-anchor="middle">Cisco SD-WAN Controllers</text>
+  <text x="790" y="365" class="labelMono" text-anchor="middle">Manager</text>
+  <text x="934" y="365" class="labelMono" text-anchor="middle">Controller</text>
+  <text x="1070" y="365" class="labelMono" text-anchor="middle">Validator</text>
+  <use href="#controller" x="760" y="382" width="70" height="70"/>
+  <use href="#controller" x="900" y="382" width="70" height="70"/>
+  <use href="#controller" x="1040" y="382" width="70" height="70"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path class="flow" d="M1534 206 C1300 285 830 260 535 392" stroke="#00a650" marker-end="url(#arrowGreen)"/>
+    <path class="flow" d="M1534 206 C1478 260 1370 310 1334 392" stroke="#00a650" marker-end="url(#arrowGreen)"/>
+    <path class="flow" d="M1534 206 C1760 292 1770 498 1610 630" stroke="#00a650" marker-end="url(#arrowGreen)"/>
+  </g>
+  <rect x="1490" y="225" width="184" height="24" rx="4" fill="#ffffff" opacity="0.92" stroke="#b8d4ea"/>
+  <text x="1499" y="242" class="serviceText" font-size="15" fill="#00a650" text-anchor="start">SEC-OPS-MGMT-SVC</text>
+  <rect x="1168" y="558" width="820" height="492" rx="80" fill="#9fc4ef" stroke="#67727a" stroke-width="3"/>
+  <text x="1225" y="590" class="labelMono">Small Substation Router</text>
+  <text x="1225" y="635" class="labelMono">and Integrated Firewall</text>
+  <use href="#router" x="1578" y="552" width="80" height="80"/>
+  <rect x="1550" y="630" width="154" height="36" fill="#fff200" stroke="#d1c900"/>
+  <text x="1564" y="654" class="serviceText" fill="#0c2840">SERVICE VPNs</text>
+
+  <rect x="1198" y="750" width="310" height="270" rx="34" fill="#d6ebfc" stroke="#c3d8eb" stroke-width="1.5"/>
+  <text x="1353" y="777" class="zone">Multi Service Zone</text>
+  <rect x="1640" y="670" width="330" height="355" rx="58" fill="#e7eaec" stroke="#d4dadd" stroke-width="1.5"/>
+  <text x="1860" y="754" class="labelMono">Switch +</text>
+  <text x="1860" y="782" class="labelMono">CV Sensor</text>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1612 630 L1468 808" stroke="#0072ce" stroke-width="3"/>
+    <path d="M1608 632 L1464 808" stroke="#4a8ff0" stroke-width="2"/>
+    <path d="M1634 630 L1725 760" stroke="#c56f00" stroke-width="5"/>
+    <path d="M1660 630 C1720 710 1800 788 1812 810" stroke="#0072ce" stroke-width="3"/>
+    <path class="flow" d="M1612 664 C1578 755 1534 810 1498 820" stroke="#00a650" marker-end="url(#arrowGreen)"/>
+    <path class="flow" d="M1624 666 C1590 790 1598 875 1700 875 C1758 874 1792 840 1810 820" stroke="#00a650" marker-end="url(#arrowGreen)"/>
+  </g>
+
+  <use href="#cctv" x="1212" y="790" width="58" height="46"/>
+  <use href="#ap" x="1288" y="858" width="70" height="60"/>
+  <text x="1208" y="862" class="labelMono">Workforce</text>
+  <text x="1208" y="884" class="labelMono">Enablement</text>
+  <use href="#switch" x="1380" y="796" width="124" height="58"/>
+  <use href="#laptop" x="1244" y="944" width="62" height="46"/>
+  <use href="#laptop" x="1320" y="944" width="62" height="46"/>
+  <use href="#phone" x="1412" y="935" width="58" height="58"/>
+
+  <use href="#rtu" x="1682" y="745" width="78" height="52"/>
+  <text x="1721" y="826" class="small">Serial</text>
+  <text x="1721" y="846" class="small">RS232</text>
+  <use href="#switch" x="1806" y="792" width="124" height="58"/>
+  <g fill="none" stroke="#063e85" stroke-width="2.6" stroke-linecap="round">
+    <line x1="1845" y1="850" x2="1845" y2="890"/>
+    <line x1="1915" y1="850" x2="1915" y2="890"/>
+  </g>
+  <use href="#ied" x="1810" y="886" width="70" height="70"/>
+  <text x="1845" y="974" class="small">IED</text>
+  <use href="#ied" x="1885" y="886" width="70" height="70"/>
+  <text x="1920" y="974" class="small">IED</text>
+  <text x="1710" y="962" class="zone">Electronic</text>
+  <text x="1710" y="987" class="zone">Security Perimeter</text>
+  <text x="1710" y="1012" class="zone">Zone</text>
+  <rect x="1518" y="826" width="98" height="24" rx="4" fill="#ffffff" opacity="0.92" stroke="#b8d4ea"/>
+  <text x="1527" y="843" class="serviceText" font-size="14" fill="#00a650" text-anchor="start">SEC-OPS</text>
+  <rect x="1518" y="852" width="108" height="24" rx="4" fill="#ffffff" opacity="0.92" stroke="#b8d4ea"/>
+  <text x="1527" y="869" class="serviceText" font-size="14" fill="#00a650" text-anchor="start">MGMT-SVC</text>
+  <rect x="1448" y="708" width="88" height="24" rx="4" fill="#ffffff" opacity="0.92" stroke="#b8d4ea"/>
+  <text x="1457" y="725" class="serviceText" font-size="14" fill="#0c2840" text-anchor="start">VLAN 100</text>
+  <g>
+    <rect x="36" y="626" width="960" height="386" fill="#cbe8f7"/>
+    <rect x="36" y="626" width="960" height="46" fill="#21b8d6"/>
+    <line x1="516" y1="626" x2="516" y2="1012" stroke="#ffffff" stroke-width="2"/>
+    <line x1="804" y1="626" x2="804" y2="1012" stroke="#ffffff" stroke-width="2"/>
+    <line x1="36" y1="672" x2="996" y2="672" stroke="#ffffff" stroke-width="2"/>
+    <line x1="36" y1="812" x2="996" y2="812" stroke="#ffffff" stroke-width="2"/>
+    <line x1="36" y1="862" x2="996" y2="862" stroke="#ffffff" stroke-width="2"/>
+    <line x1="36" y1="912" x2="996" y2="912" stroke="#ffffff" stroke-width="2"/>
+    <line x1="36" y1="962" x2="996" y2="962" stroke="#ffffff" stroke-width="2"/>
+    <text x="50" y="654" class="tableHead">Devices</text>
+    <text x="530" y="654" class="tableHead">Service (SVC) VPN name</text>
+    <text x="818" y="654" class="tableHead">Example VLAN</text>
+    <text x="50" y="696" class="tableCell">Switches Management in MSZ &amp; ESP</text>
+    <text x="50" y="721" class="tableCell">(Security Operations &amp; Management Service)</text>
+    <text x="50" y="746" class="tableCell">Cyber Vision, ISE &amp; Switch Management</text>
+    <text x="530" y="696" class="tableCellMono">SEC-OPS-MGMT-SVC</text>
+    <text x="818" y="696" class="tableCell">100</text>
+    <text x="50" y="836" class="tableCell">Physical security (Cameras)</text>
+    <text x="530" y="836" class="tableCellMono">PHYSEC-SVC</text>
+    <text x="818" y="836" class="tableCell">101</text>
+    <text x="50" y="886" class="tableCell">Laptops/User access and enablement</text>
+    <text x="530" y="886" class="tableCellMono">WORKFORCE-SVC</text>
+    <text x="818" y="886" class="tableCell">102</text>
+    <text x="50" y="936" class="tableCell">VOIP Phone/Voice Communication</text>
+    <text x="530" y="936" class="tableCellMono">VOIP-SVC</text>
+    <text x="818" y="936" class="tableCell">103</text>
+    <text x="50" y="986" class="tableCell">IEDs/SCADA communication traffic</text>
+    <text x="530" y="986" class="tableCellMono">SCADA-SVC</text>
+    <text x="818" y="986" class="tableCell">201</text>
+    </g>
+  <line x1="32" y1="1058" x2="1978" y2="1058" stroke="#a7a7a7" stroke-dasharray="8 4"/>
+  <text x="52" y="1088" class="footer">&#169; 2025 Cisco and/or its affiliates. All rights reserved.</text>
+  <text x="935" y="1082" class="label" text-anchor="middle">Legend</text>
+  <line x1="86" y1="1102" x2="250" y2="1102" stroke="#00bce7" stroke-width="7"/>
+  <text x="270" y="1110" class="labelMono">IPSec Tunnel to Primary DC</text>
+  <line x1="620" y1="1102" x2="780" y2="1102" stroke="#9fb0e0" stroke-width="7"/>
+  <text x="800" y="1110" class="labelMono">IPSec Tunnel to Secondary DC</text>
+  <line x1="1190" y1="1102" x2="1350" y2="1102" stroke="#00a650" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#arrowGreen)"/>
+  <text x="1370" y="1110" class="labelMono" fill="#00a650">Switch Management from Management Station</text>
+  <text x="1980" y="1110" class="confidential">Cisco Confidential</text>
+</svg>
