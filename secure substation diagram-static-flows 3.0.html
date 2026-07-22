@@ -1068,6 +1068,8 @@
     .guided-result-panel {
       position: sticky;
       top: 0;
+      max-height: calc(100vh - 24px);
+      overflow-y: auto;
       padding: 16px;
       border-top: 3px solid var(--fabric);
     }
@@ -1106,6 +1108,14 @@
       color: var(--text2);
       font-size: 12.7px;
       line-height: 1.5;
+    }
+    .guided-live-status {
+      padding: 9px 10px;
+      border: 1px solid color-mix(in srgb, var(--mgmt) 40%, var(--border));
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--mgmt) 10%, transparent);
+      color: var(--text) !important;
+      font-weight: 600;
     }
     .guided-score-grid {
       display: grid;
@@ -1175,6 +1185,57 @@
     .guided-actions button:hover {
       border-color: var(--fabric);
       background: color-mix(in srgb, var(--fabric) 10%, transparent);
+    }
+    .guided-callouts {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .guided-callout-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--text);
+      font-size: 12.7px;
+    }
+    .guided-callout-head span {
+      color: var(--text2);
+      font-size: 10.6px;
+      font-weight: 600;
+      text-align: right;
+    }
+    .guide-callout {
+      width: 100%;
+      min-height: 54px;
+      padding: 10px 11px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--fabric);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+    }
+    .guide-callout:hover {
+      border-color: var(--fabric);
+      border-left-color: var(--mgmt);
+      background: color-mix(in srgb, var(--fabric) 10%, transparent);
+    }
+    .guide-callout span {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 12.7px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .guide-callout small {
+      display: block;
+      color: var(--text2);
+      font-size: 10.6px;
+      line-height: 1.35;
     }
     .guided-profile-grid {
       display: grid;
@@ -3393,6 +3454,7 @@
               <h3 id="guide-tier-title">Profile guide</h3>
               <p id="guide-tier-summary">Select answers from the questions to build a profile recommendation. The guide uses a high-watermark rule: any Large signal overrides Medium and Small, and any Medium signal overrides Small.</p>
               <p id="guide-platform"><strong>Recommended platform:</strong> Awaiting input</p>
+              <p class="guided-live-status" id="guide-live-status">Live recommendation: waiting for answers.</p>
               <div class="guided-score-grid" aria-label="Profile signal score">
                 <div class="guided-score-row"><span>Small</span><div class="guided-score-track"><span class="guided-score-fill small" id="guide-score-small"></span></div><strong id="guide-score-small-text">0</strong></div>
                 <div class="guided-score-row"><span>Medium</span><div class="guided-score-track"><span class="guided-score-fill medium" id="guide-score-medium"></span></div><strong id="guide-score-medium-text">0</strong></div>
@@ -3402,9 +3464,35 @@
                 <strong>Recommendation rationale</strong>
                 <ul><li>Answer at least one question to start the recommendation.</li></ul>
               </div>
-              <div class="guided-actions">
-                <button type="button" id="guide-open-traffic">Open traffic profile</button>
-                <button type="button" id="guide-open-implementation">Open implementation</button>
+              <div class="guided-callouts" id="guide-callouts" aria-label="Relevant CVD pages">
+                <div class="guided-callout-head">
+                  <strong>Relevant CVD pages</strong>
+                  <span id="guide-answer-count">0 of 7 inputs applied</span>
+                </div>
+                <button type="button" class="guide-callout" id="guide-open-architecture">
+                  <span id="guide-callout-architecture-title">Architecture / Reference architecture</span>
+                  <small id="guide-callout-architecture-text">Review the validated substation reference model before selecting profile details.</small>
+                </button>
+                <button type="button" class="guide-callout" id="guide-open-traffic">
+                  <span id="guide-callout-traffic-title">Architecture / Traffic profiles</span>
+                  <small id="guide-callout-traffic-text">Open bandwidth and service-flow planning for the current profile.</small>
+                </button>
+                <button type="button" class="guide-callout" id="guide-open-sdwan">
+                  <span id="guide-callout-sdwan-title">Design Guide / SD-WAN Design</span>
+                  <small id="guide-callout-sdwan-text">Review controllers, overlay segmentation, transport security, and centralized policy.</small>
+                </button>
+                <button type="button" class="guide-callout" id="guide-open-security">
+                  <span id="guide-callout-security-title">Design Guide / Firewall &amp; IDS/IPS</span>
+                  <small id="guide-callout-security-text">Open security policy placement for firewall, application recognition, and inspection.</small>
+                </button>
+                <button type="button" class="guide-callout" id="guide-open-zoning">
+                  <span id="guide-callout-zoning-title">Design Guide / NERC CIP zoning</span>
+                  <small id="guide-callout-zoning-text">Map the profile to BES impact, ESP boundary, management, and monitoring zones.</small>
+                </button>
+                <button type="button" class="guide-callout" id="guide-open-implementation">
+                  <span id="guide-callout-implementation-title">Implementation Guide / Topology profiles</span>
+                  <small id="guide-callout-implementation-text">Open the product topology and configuration flow for the recommended profile.</small>
+                </button>
               </div>
             </aside>
           </div>
@@ -6143,21 +6231,31 @@ interface GigabitEthernet0/1/0
           badge: 'Small substation',
           title: 'Small substation profile',
           platform: 'Single IR1101 + IE3100/IE3500',
-          summary: 'Use this profile for compact distribution automation, remote field sites, lower device counts, and lighter SCADA or multiservice traffic.'
+          summary: 'Use this profile for compact distribution automation, remote field sites, lower device counts, and lighter SCADA or multiservice traffic.',
+          implementationPage: 'impl-page-small',
+          implementationTitle: 'Implementation Guide / Small substation',
+          implementationText: 'Open the IR1101, IE3100, IE3500, VLAN mapping, and small-site configuration flow.'
         },
         medium: {
           badge: 'Medium substation',
           title: 'Medium substation profile',
           platform: 'Single IR8340 + IE9300/IE9320',
-          summary: 'Use this profile for primary distribution, sub-transmission, or smaller transmission sites that need rugged WAN, industrial aggregation, and formal segmentation.'
+          summary: 'Use this profile for primary distribution, sub-transmission, or smaller transmission sites that need rugged WAN, industrial aggregation, and formal segmentation.',
+          implementationPage: 'impl-page-medium',
+          implementationTitle: 'Implementation Guide / Medium substation',
+          implementationText: 'Open the IR8340 and IE9300/IE9320 implementation flow for a single rugged WAN edge.'
         },
         large: {
           badge: 'Large substation',
           title: 'Large substation profile',
           platform: 'Dual IR8340 + dual IE9300/IE9320',
-          summary: 'Use this profile for transmission, EHV, high-consequence, or high-availability sites with larger device counts, richer traffic mix, and stronger resiliency requirements.'
+          summary: 'Use this profile for transmission, EHV, high-consequence, or high-availability sites with larger device counts, richer traffic mix, and stronger resiliency requirements.',
+          implementationPage: 'impl-page-profiles',
+          implementationTitle: 'Implementation Guide / Topology profiles',
+          implementationText: 'Open the large-site topology profile with dual IR8340 and dual IE9300/IE9320 relationships.'
         }
       };
+      var TOTAL_GUIDE_INPUTS = 7;
 
       function scoreValue(input, tier) {
         return parseInt(input.getAttribute('data-' + tier), 10) || 0;
@@ -6170,6 +6268,80 @@ interface GigabitEthernet0/1/0
       function setText(id, text) {
         var node = document.getElementById(id);
         if (node) node.textContent = text;
+      }
+
+      function selectedValue(name) {
+        var input = form.querySelector('input[name="' + name + '"]:checked');
+        return input ? input.value : null;
+      }
+
+      function setCalloutText(titleId, textId, title, text) {
+        setText(titleId, title);
+        setText(textId, text);
+      }
+
+      function updateLiveStatus(tier, appliedCount) {
+        var status = document.getElementById('guide-live-status');
+        if (!status) return;
+        if (!tier) {
+          status.textContent = 'Live recommendation: waiting for answers. Results update as choices and calculator values change.';
+          return;
+        }
+        status.textContent = 'Live recommendation: ' + PROFILES[tier].badge + ' from ' + appliedCount + ' of ' + TOTAL_GUIDE_INPUTS + ' inputs. Change any answer or bandwidth value to recalculate.';
+      }
+
+      function updateCallouts(tier, appliedCount) {
+        var profile = tier ? PROFILES[tier] : PROFILES.medium;
+        var count = document.getElementById('guide-answer-count');
+        var inspection = selectedValue('guide-security-inspection');
+        var compliance = selectedValue('guide-security');
+        var securityTitle = 'Design Guide / Firewall & IDS/IPS';
+        var securityText = 'Open firewall, IDS/IPS, and DNP3 policy placement for the current profile.';
+        var zoningText = 'Map the profile to BES impact, ESP boundary, management, and monitoring zones.';
+
+        if (count) count.textContent = appliedCount + ' of ' + TOTAL_GUIDE_INPUTS + ' inputs applied';
+
+        setCalloutText(
+          'guide-callout-architecture-title',
+          'guide-callout-architecture-text',
+          'Architecture / Reference architecture',
+          tier ? 'Review how the ' + profile.platform + ' profile fits the validated substation reference model.' : 'Review the validated substation reference model before selecting profile details.'
+        );
+        setCalloutText(
+          'guide-callout-traffic-title',
+          'guide-callout-traffic-text',
+          tier ? 'Architecture / Traffic profiles: ' + profile.badge : 'Architecture / Traffic profiles',
+          tier ? 'Open bandwidth and service-flow planning with ' + profile.badge + ' selected.' : 'Open bandwidth and service-flow planning once a profile begins to emerge.'
+        );
+        setCalloutText(
+          'guide-callout-sdwan-title',
+          'guide-callout-sdwan-text',
+          'Design Guide / SD-WAN Design',
+          tier ? 'Review controller, overlay, service VPN, and security-policy decisions for ' + profile.badge + '.' : 'Review controllers, overlay segmentation, transport security, and centralized policy.'
+        );
+
+        if (inspection === 'large' || inspection === 'medium') {
+          securityTitle = 'Design Guide / NBAR & Snort policy';
+          securityText = 'Open application recognition, Snort IDS/IPS, and NGFW policy guidance for ' + profile.badge + '.';
+        } else if (inspection === 'small') {
+          securityText = 'Open firewall placement and segmentation policy without IDS/IPS for ' + profile.badge + '.';
+        }
+        setCalloutText('guide-callout-security-title', 'guide-callout-security-text', securityTitle, securityText);
+
+        if (compliance === 'large') {
+          zoningText = 'Review Medium Impact BES zoning, ESP boundary, monitoring, and evidence expectations.';
+        } else if (compliance === 'medium') {
+          zoningText = 'Review Low Impact BES or major distribution zoning and access-control alignment.';
+        } else if (compliance === 'small') {
+          zoningText = 'Review non-BES or distribution automation zoning with compact segmentation controls.';
+        }
+        setCalloutText('guide-callout-zoning-title', 'guide-callout-zoning-text', 'Design Guide / NERC CIP zoning', zoningText);
+        setCalloutText(
+          'guide-callout-implementation-title',
+          'guide-callout-implementation-text',
+          tier ? profile.implementationTitle : 'Implementation Guide / Topology profiles',
+          tier ? profile.implementationText : 'Open the product topology and configuration flow for the recommended profile.'
+        );
       }
 
       function setScore(tier, score, maxScore) {
@@ -6331,6 +6503,7 @@ interface GigabitEthernet0/1/0
           reasons.push(bandwidthSignal.reason);
         }
 
+        var appliedCount = checked.length + (bandwidthSignal ? 1 : 0);
         var maxScore = Math.max(scores.small, scores.medium, scores.large, 1);
         setScore('small', scores.small, maxScore);
         setScore('medium', scores.medium, maxScore);
@@ -6342,6 +6515,8 @@ interface GigabitEthernet0/1/0
           setText('guide-tier-title', 'Profile guide');
           setText('guide-tier-summary', 'Select answers from the questions to build a profile recommendation. The guide uses a high-watermark rule: any Large signal overrides Medium and Small, and any Medium signal overrides Small.');
           document.getElementById('guide-platform').innerHTML = '<strong>Recommended platform:</strong> Awaiting input';
+          updateLiveStatus(null, appliedCount);
+          updateCallouts(null, appliedCount);
           renderReasons(reasons);
           return;
         }
@@ -6353,6 +6528,8 @@ interface GigabitEthernet0/1/0
         setText('guide-tier-title', profile.title);
         setText('guide-tier-summary', profile.summary);
         document.getElementById('guide-platform').innerHTML = '<strong>Recommended platform:</strong> ' + profile.platform;
+        updateLiveStatus(tier, appliedCount);
+        updateCallouts(tier, appliedCount);
         renderReasons(reasons);
       }
 
@@ -6369,6 +6546,26 @@ interface GigabitEthernet0/1/0
         return tier && tier !== 'none' ? tier : 'medium';
       }
 
+      function currentSecurityPage() {
+        var inspection = selectedValue('guide-security-inspection');
+        return inspection === 'large' || inspection === 'medium' ? 'design-page-policy' : 'design-page-firewall';
+      }
+
+      function scrollMain() {
+        var main = document.querySelector('main');
+        if (main) main.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function scrollImplementation() {
+        var panel = document.querySelector('aside.datasheet-panel');
+        if (panel) panel.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function bindGuideButton(id, handler) {
+        var button = document.getElementById(id);
+        if (button) button.addEventListener('click', handler);
+      }
+
       form.querySelectorAll('input[type="radio"]').forEach(function (input) {
         input.addEventListener('change', runGuide);
       });
@@ -6377,28 +6574,45 @@ interface GigabitEthernet0/1/0
         input.addEventListener('change', runGuide);
       });
 
-      var trafficButton = document.getElementById('guide-open-traffic');
-      if (trafficButton) {
-        trafficButton.addEventListener('click', function () {
-          var tier = currentTier();
-          checkRadio('view-architecture');
-          checkRadio('arch-page-planning');
-          checkRadio('band-tier-' + tier);
-          var main = document.querySelector('main');
-          if (main) main.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-      }
+      bindGuideButton('guide-open-architecture', function () {
+        checkRadio('view-architecture');
+        checkRadio('arch-page-reference');
+        scrollMain();
+      });
 
-      var implementationButton = document.getElementById('guide-open-implementation');
-      if (implementationButton) {
-        implementationButton.addEventListener('click', function () {
-          var tier = currentTier();
-          checkRadio('view-implementation-guide');
-          checkRadio(tier === 'small' ? 'impl-page-small' : tier === 'medium' ? 'impl-page-medium' : 'impl-page-profiles');
-          var panel = document.querySelector('aside.datasheet-panel');
-          if (panel) panel.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-      }
+      bindGuideButton('guide-open-traffic', function () {
+        var tier = currentTier();
+        checkRadio('view-architecture');
+        checkRadio('arch-page-planning');
+        checkRadio('band-tier-' + tier);
+        scrollMain();
+      });
+
+      bindGuideButton('guide-open-sdwan', function () {
+        checkRadio('view-design-guide');
+        checkRadio('design-page-sdwan');
+        scrollMain();
+      });
+
+      bindGuideButton('guide-open-security', function () {
+        checkRadio('view-design-guide');
+        checkRadio(currentSecurityPage());
+        scrollMain();
+      });
+
+      bindGuideButton('guide-open-zoning', function () {
+        checkRadio('view-design-guide');
+        checkRadio('design-page-zoning');
+        scrollMain();
+      });
+
+      bindGuideButton('guide-open-implementation', function () {
+        var tier = currentTier();
+        var profile = PROFILES[tier];
+        checkRadio('view-implementation-guide');
+        checkRadio(profile.implementationPage);
+        scrollImplementation();
+      });
 
       runGuide();
     })();
