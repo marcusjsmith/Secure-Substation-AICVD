@@ -790,11 +790,53 @@
       align-items: start;
       margin-top: 18px;
     }
+    .overview-jump-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    @media (max-width: 1080px) {
+      .overview-jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 620px) {
+      .overview-jump-grid { grid-template-columns: 1fr; }
+    }
+    .overview-jump-card {
+      display: block;
+      min-height: 74px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--fabric);
+      border-radius: 0 8px 8px 0;
+      background: color-mix(in srgb, var(--fabric) 7%, transparent);
+      color: var(--text2);
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+    .overview-jump-card:hover {
+      border-color: var(--fabric);
+      background: color-mix(in srgb, var(--fabric) 12%, transparent);
+      transform: translateY(-1px);
+    }
+    .overview-jump-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text);
+      font-size: 12.7px;
+      line-height: 1.25;
+    }
+    .overview-jump-card span {
+      display: block;
+      font-size: 10.6px;
+      line-height: 1.35;
+    }
     .overview-panel {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 16px 18px;
+      scroll-margin-top: 18px;
     }
     .overview-panel h3,
     .overview-section-map h3 {
@@ -3415,8 +3457,27 @@
             <p class="lead">A Cisco Validated Design reference for building secure, segmented, and observable utility substations across large transmission, medium distribution, and compact field-site profiles. Version 1.0 includes the updated design-guide digest content and extracted DOCX diagrams.</p>
           </div>
 
+          <nav class="overview-jump-grid" aria-label="Overview page sections">
+            <a class="overview-jump-card" href="#overview-establishes">
+              <strong>What the CVD establishes</strong>
+              <span>Core blueprint, service separation, visibility, and security alignment.</span>
+            </a>
+            <a class="overview-jump-card" href="#overview-outcomes">
+              <strong>Design outcomes</strong>
+              <span>What the guide helps standardize, protect, plan, and deploy.</span>
+            </a>
+            <a class="overview-jump-card" href="#overview-why-read">
+              <strong>Why read this CVD</strong>
+              <span>Why the design matters for modern IP-enabled substations.</span>
+            </a>
+            <a class="overview-jump-card" href="#overview-why-cisco">
+              <strong>Why Cisco</strong>
+              <span>How routing, switching, security, SD-WAN, and OT visibility come together.</span>
+            </a>
+          </nav>
+
           <div class="overview-layout">
-            <div class="overview-panel">
+            <div class="overview-panel" id="overview-establishes">
               <h3>What the CVD establishes</h3>
               <p>The Secure Substation CVD brings together ruggedized routing and switching, Cisco SD-WAN segmentation, Cyber Vision visibility, and policy-driven security controls into a repeatable substation blueprint. It is organized around the network behaviors utilities need to preserve: deterministic SCADA reachability, resilient WAN transport, bounded management access, monitored OT assets, and controlled paths for higher-bandwidth services such as PMU and physical-security video.</p>
               <p>The design uses three deployment tiers so the same principles can be applied without overbuilding smaller sites: dual-router large substations, single-router medium substations, and compact IR1101-based small substations. Each tier is tied back to service VPN separation, WAN sizing, Cyber Vision telemetry, and security policy placement.</p>
@@ -3428,7 +3489,7 @@
               </div>
             </div>
 
-            <div class="overview-panel">
+            <div class="overview-panel" id="overview-outcomes">
               <h3>Design outcomes</h3>
               <div class="overview-outcomes">
                 <div class="overview-outcome">
@@ -3452,7 +3513,7 @@
           </div>
 
           <div class="overview-layout">
-            <div class="overview-panel">
+            <div class="overview-panel" id="overview-why-read">
               <h3>Why read this CVD</h3>
               <p>Substations are no longer isolated serial environments. Modern utility sites carry SCADA, management, telemetry, PMU, video, and remote-support traffic across shared IP infrastructure while still needing deterministic operations, cyber separation, and auditable security controls.</p>
               <p>This CVD gives engineering, OT operations, and security teams a common reference for turning those requirements into a repeatable architecture. It shows how to structure the substation edge, how to separate critical services, where to apply inspection, and how to size the WAN for large, medium, and small sites.</p>
@@ -3464,7 +3525,7 @@
               </div>
             </div>
 
-            <div class="overview-panel">
+            <div class="overview-panel" id="overview-why-cisco">
               <h3>Why Cisco</h3>
               <p>Cisco brings the substation WAN, industrial LAN, security policy, and OT visibility layers into one architecture. That matters because secure substations need more than a router, a switch, or an IPS rule in isolation; they need those controls to work together across the full lifecycle.</p>
               <div class="overview-outcomes">
