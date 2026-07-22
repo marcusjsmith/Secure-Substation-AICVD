@@ -3171,18 +3171,18 @@
           <div class="guided-flow-grid">
             <form class="guided-flow-panel" id="profile-guide-form" aria-label="Substation profile guide questions">
               <fieldset class="guide-question">
-                <legend>1. What is the primary site role?</legend>
+                <legend>1. Which use-case mix must this site support?</legend>
                 <label>
-                  <input type="radio" name="guide-role" value="large" data-large="3" data-reason="Transmission, EHV, or major switching roles point toward the Large profile.">
-                  <span><strong>Transmission, EHV, or major switching site</strong>High consequence site with broad protection, control, and monitoring scope.</span>
+                  <input type="radio" name="guide-role" value="large" data-large="3" data-medium="1" data-reason="A full OT use-case mix with PMU, fault recording, physical security, workforce access, and high availability points toward the Large profile.">
+                  <span><strong>Full OT and multiservice use cases</strong>SCADA, management, Cyber Vision, PMU/fault recording, physical security video, workforce access, voice, and high-availability WAN paths.</span>
                 </label>
                 <label>
-                  <input type="radio" name="guide-role" value="medium" data-medium="3" data-reason="Primary distribution or sub-transmission roles align to the Medium profile.">
-                  <span><strong>Primary distribution or sub-transmission site</strong>Important operational site with moderate device scale and segmented services.</span>
+                  <input type="radio" name="guide-role" value="medium" data-medium="3" data-small="1" data-reason="SCADA plus several multiservice or security operations use cases maps well to the Medium profile.">
+                  <span><strong>SCADA plus multiservice use cases</strong>SCADA, management, Cyber Vision, some physical security, workforce access, voice, or limited PMU services.</span>
                 </label>
                 <label>
-                  <input type="radio" name="guide-role" value="small" data-small="3" data-reason="Distribution automation or compact remote roles align to the Small profile.">
-                  <span><strong>Distribution automation or compact remote site</strong>Focused field site with lower device count and compact WAN edge needs.</span>
+                  <input type="radio" name="guide-role" value="small" data-small="3" data-reason="SCADA with light management and optional telemetry is a Small profile starting point.">
+                  <span><strong>Core SCADA and light operations use cases</strong>SCADA, management, optional Cyber Vision telemetry, and limited physical security or field access.</span>
                 </label>
               </fieldset>
 
