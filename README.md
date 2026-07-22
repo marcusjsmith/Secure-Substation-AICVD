@@ -6,11 +6,12 @@ Interactive HTML reference for the Secure Substation CVD.
 
 View the interactive guide on GitHub Pages:
 
-[Secure Substation AICVD](https://marcusjsmith.github.io/Secure-Substation-AICVD/secure%20substation%20diagram-static-flows.html)
+[Secure Substation AICVD 3.0](https://marcusjsmith.github.io/Secure-Substation-AICVD/secure%20substation%20diagram-static-flows%203.0.html)
 
 ## Contents
 
-- `secure substation diagram-static-flows.html` - main interactive CVD experience with Overview, Architecture, Design Guide, and Implementation Guide sections.
+- `secure substation diagram-static-flows 3.0.html` - current interactive CVD 3.0 experience with updated digest content and DOCX diagrams.
+- `secure substation diagram-static-flows.html` - previous interactive CVD experience with Overview, Architecture, Design Guide, and Implementation Guide sections.
 - `design.md` - reusable CVD structure and design template for creating another guide with the same look and feel.
 - `architecture-diagram-cybervision 1.1.html` - base Cyber Vision architecture diagram reference.
 
