@@ -979,6 +979,92 @@
       font-size: 11.7px;
       line-height: 1.4;
     }
+    .guide-calculator-intro {
+      margin: 8px 0 12px;
+      color: var(--text2);
+      font-size: 11.7px;
+      line-height: 1.45;
+    }
+    .guide-bandwidth-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 720px) {
+      .guide-bandwidth-grid { grid-template-columns: 1fr; }
+    }
+    .guide-bandwidth-grid .calc-field label {
+      display: block;
+      margin: 0 0 4px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--text2);
+      cursor: default;
+      transition: none;
+    }
+    .guide-bandwidth-grid .calc-field label:hover {
+      border-color: transparent;
+      background: transparent;
+    }
+    .guide-bandwidth-result {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+    .guide-bandwidth-tier {
+      display: inline-flex;
+      margin-bottom: 8px;
+      padding: 5px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text);
+      font-size: 10.6px;
+      font-weight: 700;
+    }
+    .guide-bandwidth-result[data-tier="small"] .guide-bandwidth-tier {
+      border-color: var(--profile-small);
+      background: color-mix(in srgb, var(--profile-small) 14%, transparent);
+    }
+    .guide-bandwidth-result[data-tier="medium"] .guide-bandwidth-tier {
+      border-color: var(--multi);
+      background: color-mix(in srgb, var(--multi) 12%, transparent);
+    }
+    .guide-bandwidth-result[data-tier="large"] .guide-bandwidth-tier {
+      border-color: var(--fabric);
+      background: color-mix(in srgb, var(--fabric) 12%, transparent);
+    }
+    .guide-bandwidth-result p {
+      margin: 0 0 8px;
+      color: var(--text2);
+      font-size: 11.7px;
+      line-height: 1.45;
+    }
+    .guide-bandwidth-result p:last-child { margin-bottom: 0; }
+    .guide-bandwidth-breakdown {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      margin: 8px 0;
+      color: var(--text2);
+      font-size: 10.6px;
+    }
+    .guide-bandwidth-breakdown span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      line-height: 1.3;
+    }
+    .guide-bandwidth-breakdown i {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      flex: 0 0 auto;
+    }
     .guided-result-panel {
       position: sticky;
       top: 0;
@@ -3203,7 +3289,42 @@
               </fieldset>
 
               <fieldset class="guide-question">
-                <legend>3. How many IEDs, RTUs, meters, or field devices are in scope?</legend>
+                <legend>3. Bandwidth calculator</legend>
+                <p class="guide-calculator-intro">Estimate the main WAN contributors for the site. The calculator feeds the profile recommendation using SCADA point count, PMU streams, and physical-security video.</p>
+                <div class="guide-bandwidth-grid">
+                  <div class="calc-field">
+                    <label for="guide-band-points">SCADA points <span class="hint">Use estimated mapped points or tags.</span></label>
+                    <input id="guide-band-points" type="number" min="0" max="50000" step="10" placeholder="e.g. 200">
+                  </div>
+                  <div class="calc-field">
+                    <label for="guide-band-pmus">PMU streams <span class="hint">C37.118 or similar streams.</span></label>
+                    <input id="guide-band-pmus" type="number" min="0" max="100" step="1" value="0">
+                  </div>
+                  <div class="calc-field">
+                    <label for="guide-band-cameras">CCTV cameras <span class="hint">Continuous or frequent video paths.</span></label>
+                    <input id="guide-band-cameras" type="number" min="0" max="200" step="1" value="0">
+                  </div>
+                  <div class="calc-field">
+                    <label for="guide-band-video-rate">Video rate per camera <span class="hint">Representative average Mbps.</span></label>
+                    <select id="guide-band-video-rate">
+                      <option value="1">1 Mbps low-resolution/event-driven</option>
+                      <option value="3" selected>3 Mbps 1080p typical</option>
+                      <option value="5">5 Mbps high-quality 1080p</option>
+                      <option value="8">8 Mbps high-resolution/high-motion</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="guide-bandwidth-result" id="guide-bandwidth-result" data-tier="none" aria-live="polite">
+                  <span class="guide-bandwidth-tier" id="guide-bandwidth-tier">Bandwidth signal: awaiting values</span>
+                  <p id="guide-bandwidth-total">Enter SCADA points, PMU streams, or cameras to estimate WAN demand.</p>
+                  <div class="band-chart-track" id="guide-bandwidth-track"></div>
+                  <div class="guide-bandwidth-breakdown" id="guide-bandwidth-breakdown"></div>
+                  <p id="guide-bandwidth-note">Bandwidth scoring is added to the recommendation once at least one calculator value is provided.</p>
+                </div>
+              </fieldset>
+
+              <fieldset class="guide-question">
+                <legend>4. How many IEDs, RTUs, meters, or field devices are in scope?</legend>
                 <label>
                   <input type="radio" name="guide-devices" value="large" data-large="3" data-reason="15 or more IEDs/RTUs typically needs Large profile headroom.">
                   <span><strong>15 or more devices</strong>Multiple bays, protection sets, PMU or fault-recording systems, and broader station LAN scale.</span>
@@ -3215,22 +3336,6 @@
                 <label>
                   <input type="radio" name="guide-devices" value="small" data-small="3" data-reason="Fewer than 10 field devices fits the Small profile starting point.">
                   <span><strong>Fewer than 10 devices</strong>Compact IED or RTU footprint where IR1101 and IE3x00 switching is usually sufficient.</span>
-                </label>
-              </fieldset>
-
-              <fieldset class="guide-question">
-                <legend>4. What SCADA point-count range is expected?</legend>
-                <label>
-                  <input type="radio" name="guide-points" value="large" data-large="3" data-reason="More than 1,000 SCADA points is treated as Large profile scale.">
-                  <span><strong>More than 1,000 points</strong>Large transmission or EHV profile with higher telemetry and event-volume assumptions.</span>
-                </label>
-                <label>
-                  <input type="radio" name="guide-points" value="medium" data-medium="3" data-reason="200 to 1,000 SCADA points generally maps to the Medium profile.">
-                  <span><strong>200 to 1,000 points</strong>Moderate SCADA footprint where WAN and inspection sizing need deliberate planning.</span>
-                </label>
-                <label>
-                  <input type="radio" name="guide-points" value="small" data-small="3" data-reason="Below 200 SCADA points supports the Small profile unless other services dominate.">
-                  <span><strong>Below 200 points</strong>Small or field-site profile with low SCADA bandwidth and fewer control endpoints.</span>
                 </label>
               </fieldset>
 
@@ -6058,6 +6163,10 @@ interface GigabitEthernet0/1/0
         return parseInt(input.getAttribute('data-' + tier), 10) || 0;
       }
 
+      function clamp(n, min, max) {
+        return Math.min(max, Math.max(min, n));
+      }
+
       function setText(id, text) {
         var node = document.getElementById(id);
         if (node) node.textContent = text;
@@ -6069,6 +6178,104 @@ interface GigabitEthernet0/1/0
         var pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
         if (fill) fill.style.width = pct + '%';
         if (label) label.textContent = String(score);
+      }
+
+      function formatMbps(n) {
+        if (n >= 10) return n.toFixed(1);
+        if (n >= 1) return n.toFixed(2);
+        return n.toFixed(2);
+      }
+
+      function guideScadaMbps(points) {
+        if (points <= 0) return 0;
+        points = clamp(points, 10, 50000);
+        if (points <= 50) return 0.01;
+        if (points <= 200) return 0.01 + ((points - 50) / 150) * 0.04;
+        if (points <= 1000) return 0.05 + ((points - 200) / 800) * 0.15;
+        return 0.2 + Math.min((points - 1000) / 3000, 1) * 0.8;
+      }
+
+      function numberInputValue(id) {
+        var input = document.getElementById(id);
+        return input ? parseFloat(input.value) || 0 : 0;
+      }
+
+      function classifyBandwidth(points, pmus, cameras, totalMbps) {
+        if (points > 1000 || cameras >= 10 || (pmus >= 2 && totalMbps >= 30) || totalMbps >= 45) return 'large';
+        if (points >= 200 || pmus >= 1 || cameras >= 4 || totalMbps >= 6) return 'medium';
+        return 'small';
+      }
+
+      function updateBandwidthResult(signal) {
+        var panel = document.getElementById('guide-bandwidth-result');
+        var tier = document.getElementById('guide-bandwidth-tier');
+        var total = document.getElementById('guide-bandwidth-total');
+        var track = document.getElementById('guide-bandwidth-track');
+        var breakdown = document.getElementById('guide-bandwidth-breakdown');
+        var note = document.getElementById('guide-bandwidth-note');
+        if (!panel || !tier || !total || !track || !breakdown || !note) return;
+
+        track.innerHTML = '';
+        breakdown.innerHTML = '';
+
+        if (!signal) {
+          panel.dataset.tier = 'none';
+          tier.textContent = 'Bandwidth signal: awaiting values';
+          total.textContent = 'Enter SCADA points, PMU streams, or cameras to estimate WAN demand.';
+          note.textContent = 'Bandwidth scoring is added to the recommendation once at least one calculator value is provided.';
+          return;
+        }
+
+        panel.dataset.tier = signal.tier;
+        tier.textContent = 'Bandwidth signal: ' + PROFILES[signal.tier].badge;
+        total.innerHTML = '<strong>' + formatMbps(signal.total) + ' Mbps</strong> estimated WAN demand';
+
+        signal.segments.forEach(function (segment) {
+          var span = document.createElement('span');
+          span.className = 'band-chart-seg ' + segment.key;
+          span.style.width = signal.total > 0 ? ((segment.value / signal.total) * 100) + '%' : '0';
+          track.appendChild(span);
+
+          var item = document.createElement('span');
+          item.innerHTML = '<i style="background:var(--' + segment.color + ')"></i><strong>' + segment.label + '</strong> ' + formatMbps(segment.value) + ' Mbps';
+          breakdown.appendChild(item);
+        });
+
+        note.textContent = signal.reason;
+      }
+
+      function readBandwidthSignal() {
+        var points = numberInputValue('guide-band-points');
+        var pmus = numberInputValue('guide-band-pmus');
+        var cameras = numberInputValue('guide-band-cameras');
+        var videoRate = numberInputValue('guide-band-video-rate') || 3;
+        var hasSignal = points > 0 || pmus > 0 || cameras > 0;
+
+        if (!hasSignal) {
+          updateBandwidthResult(null);
+          return null;
+        }
+
+        var scada = guideScadaMbps(points);
+        var pmu = pmus * 5;
+        var video = cameras * videoRate;
+        var total = scada + pmu + video;
+        var tier = classifyBandwidth(points, pmus, cameras, total);
+        var scores = { small: 0, medium: 0, large: 0 };
+        scores[tier] = 3;
+        if (tier === 'large') scores.medium = 1;
+        if (tier === 'medium') scores.small = 1;
+
+        var segments = [
+          { key: 'scada', color: 'scada', label: 'SCADA', value: scada },
+          { key: 'pmu', color: 'ipsec', label: 'PMU', value: pmu },
+          { key: 'video', color: 'multi', label: 'CCTV', value: video }
+        ].filter(function (segment) { return segment.value > 0; });
+
+        var reason = 'Bandwidth calculator estimates ' + formatMbps(total) + ' Mbps and maps this site to the ' + PROFILES[tier].badge + ' based on SCADA points, PMU streams, and camera load.';
+        var signal = { tier: tier, total: total, scores: scores, segments: segments, reason: reason };
+        updateBandwidthResult(signal);
+        return signal;
       }
 
       function renderReasons(reasons) {
@@ -6102,6 +6309,7 @@ interface GigabitEthernet0/1/0
         var checked = Array.prototype.slice.call(form.querySelectorAll('input[type="radio"]:checked'));
         var scores = { small: 0, medium: 0, large: 0 };
         var reasons = [];
+        var bandwidthSignal = readBandwidthSignal();
 
         checked.forEach(function (input) {
           scores.small += scoreValue(input, 'small');
@@ -6110,12 +6318,19 @@ interface GigabitEthernet0/1/0
           if (input.dataset.reason) reasons.push(input.dataset.reason);
         });
 
+        if (bandwidthSignal) {
+          scores.small += bandwidthSignal.scores.small;
+          scores.medium += bandwidthSignal.scores.medium;
+          scores.large += bandwidthSignal.scores.large;
+          reasons.push(bandwidthSignal.reason);
+        }
+
         var maxScore = Math.max(scores.small, scores.medium, scores.large, 1);
         setScore('small', scores.small, maxScore);
         setScore('medium', scores.medium, maxScore);
         setScore('large', scores.large, maxScore);
 
-        if (!checked.length) {
+        if (!checked.length && !bandwidthSignal) {
           resultPanel.dataset.tier = 'none';
           setText('guide-tier-badge', 'Answer questions');
           setText('guide-tier-title', 'Profile guide');
@@ -6149,6 +6364,10 @@ interface GigabitEthernet0/1/0
       }
 
       form.querySelectorAll('input[type="radio"]').forEach(function (input) {
+        input.addEventListener('change', runGuide);
+      });
+      form.querySelectorAll('#guide-band-points, #guide-band-pmus, #guide-band-cameras, #guide-band-video-rate').forEach(function (input) {
+        input.addEventListener('input', runGuide);
         input.addEventListener('change', runGuide);
       });
 
