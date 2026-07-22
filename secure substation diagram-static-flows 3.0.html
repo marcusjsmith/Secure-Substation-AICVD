@@ -2852,6 +2852,42 @@
 
         <div class="overview-layout">
           <div class="overview-panel">
+            <h3>What the CVD establishes</h3>
+            <p>The Secure Substation CVD brings together ruggedized routing and switching, Cisco SD-WAN segmentation, Cyber Vision visibility, and policy-driven security controls into a repeatable substation blueprint. It is organized around the network behaviors utilities need to preserve: deterministic SCADA reachability, resilient WAN transport, bounded management access, monitored OT assets, and controlled paths for higher-bandwidth services such as PMU and physical-security video.</p>
+            <p>The design uses three deployment tiers so the same principles can be applied without overbuilding smaller sites: dual-router large substations, single-router medium substations, and compact IR1101-based small substations. Each tier is tied back to service VPN separation, WAN sizing, Cyber Vision telemetry, and security policy placement.</p>
+            <div class="overview-scope-list">
+              <div class="overview-scope-item"><strong>Service separation</strong> SCADA, MultiService, and Management traffic are treated as distinct service VPNs with different trust, QoS, and inspection requirements.</div>
+              <div class="overview-scope-item"><strong>Substation profiles</strong> Large, medium, and small designs map platform choices to expected device scale, traffic volume, and resiliency needs.</div>
+              <div class="overview-scope-item"><strong>Operational visibility</strong> Cyber Vision sensors and center connectivity provide asset discovery, protocol awareness, and anomaly context across OT zones.</div>
+              <div class="overview-scope-item"><strong>Security alignment</strong> NERC CIP impact categories, NGFW policy, NBAR application recognition, and Snort IPS are positioned against the architecture.</div>
+            </div>
+          </div>
+
+          <div class="overview-panel">
+            <h3>Design outcomes</h3>
+            <div class="overview-outcomes">
+              <div class="overview-outcome">
+                <strong>Standardize the substation edge</strong>
+                <span>Use a common routing, switching, and SD-WAN pattern while still sizing the design for large, medium, and small facilities.</span>
+              </div>
+              <div class="overview-outcome">
+                <strong>Protect critical OT paths</strong>
+                <span>Constrain SCADA, management, and multiservice flows with segmentation, zone-based firewalling, application matching, and IPS inspection where required.</span>
+              </div>
+              <div class="overview-outcome">
+                <strong>Plan WAN capacity</strong>
+                <span>Relate traffic types such as DNP3, PMU, CCTV, enterprise access, and management telemetry to practical bandwidth and QoS assumptions.</span>
+              </div>
+              <div class="overview-outcome">
+                <strong>Connect design to deployment</strong>
+                <span>Carry the same architecture into platform references and configuration examples for routers, switches, and security functions.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="overview-layout">
+          <div class="overview-panel">
             <h3>Why read this CVD</h3>
             <p>Substations are no longer isolated serial environments. Modern utility sites carry SCADA, management, telemetry, PMU, video, and remote-support traffic across shared IP infrastructure while still needing deterministic operations, cyber separation, and auditable security controls.</p>
             <p>This CVD gives engineering, OT operations, and security teams a common reference for turning those requirements into a repeatable architecture. It shows how to structure the substation edge, how to separate critical services, where to apply inspection, and how to size the WAN for large, medium, and small sites.</p>
@@ -2882,42 +2918,6 @@
               <div class="overview-outcome">
                 <strong>OT visibility</strong>
                 <span>Cisco Cyber Vision adds asset, protocol, and anomaly context so policy decisions are informed by what is actually running in the substation.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="overview-layout">
-          <div class="overview-panel">
-            <h3>What the CVD establishes</h3>
-            <p>The Secure Substation CVD brings together ruggedized routing and switching, Cisco SD-WAN segmentation, Cyber Vision visibility, and policy-driven security controls into a repeatable substation blueprint. It is organized around the network behaviors utilities need to preserve: deterministic SCADA reachability, resilient WAN transport, bounded management access, monitored OT assets, and controlled paths for higher-bandwidth services such as PMU and physical-security video.</p>
-            <p>The design uses three deployment tiers so the same principles can be applied without overbuilding smaller sites: dual-router large substations, single-router medium substations, and compact IR1101-based small substations. Each tier is tied back to service VPN separation, WAN sizing, Cyber Vision telemetry, and security policy placement.</p>
-            <div class="overview-scope-list">
-              <div class="overview-scope-item"><strong>Service separation</strong> SCADA, MultiService, and Management traffic are treated as distinct service VPNs with different trust, QoS, and inspection requirements.</div>
-              <div class="overview-scope-item"><strong>Substation profiles</strong> Large, medium, and small designs map platform choices to expected device scale, traffic volume, and resiliency needs.</div>
-              <div class="overview-scope-item"><strong>Operational visibility</strong> Cyber Vision sensors and center connectivity provide asset discovery, protocol awareness, and anomaly context across OT zones.</div>
-              <div class="overview-scope-item"><strong>Security alignment</strong> NERC CIP impact categories, NGFW policy, NBAR application recognition, and Snort IPS are positioned against the architecture.</div>
-            </div>
-          </div>
-
-          <div class="overview-panel">
-            <h3>Design outcomes</h3>
-            <div class="overview-outcomes">
-              <div class="overview-outcome">
-                <strong>Standardize the substation edge</strong>
-                <span>Use a common routing, switching, and SD-WAN pattern while still sizing the design for large, medium, and small facilities.</span>
-              </div>
-              <div class="overview-outcome">
-                <strong>Protect critical OT paths</strong>
-                <span>Constrain SCADA, management, and multiservice flows with segmentation, zone-based firewalling, application matching, and IPS inspection where required.</span>
-              </div>
-              <div class="overview-outcome">
-                <strong>Plan WAN capacity</strong>
-                <span>Relate traffic types such as DNP3, PMU, CCTV, enterprise access, and management telemetry to practical bandwidth and QoS assumptions.</span>
-              </div>
-              <div class="overview-outcome">
-                <strong>Connect design to deployment</strong>
-                <span>Carry the same architecture into platform references and configuration examples for routers, switches, and security functions.</span>
               </div>
             </div>
           </div>
