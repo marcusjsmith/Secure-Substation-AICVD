@@ -213,8 +213,7 @@
     body:has(#view-implementation-guide:checked):has(#impl-page-profiles:checked) .implementation-subnav label[for="impl-page-profiles"],
     body:has(#view-implementation-guide:checked):has(#impl-page-medium:checked) .implementation-subnav label[for="impl-page-medium"],
     body:has(#view-implementation-guide:checked):has(#impl-page-small:checked) .implementation-subnav label[for="impl-page-small"],
-    body:has(#view-implementation-guide:checked):has(#impl-page-service-flows:checked) .implementation-subnav label[for="impl-page-service-flows"],
-    body:has(#view-implementation-guide:checked):has(#impl-page-config:checked) .implementation-subnav label[for="impl-page-config"] {
+    body:has(#view-implementation-guide:checked):has(#impl-page-service-flows:checked) .implementation-subnav label[for="impl-page-service-flows"] {
       border-color: var(--mgmt);
       background: color-mix(in srgb, var(--mgmt) 12%, transparent);
     }
@@ -544,8 +543,7 @@
     body:has(#view-implementation-guide:checked):has(#impl-page-profiles:checked) .impl-page-profiles,
     body:has(#view-implementation-guide:checked):has(#impl-page-medium:checked) .impl-page-medium,
     body:has(#view-implementation-guide:checked):has(#impl-page-small:checked) .impl-page-small,
-    body:has(#view-implementation-guide:checked):has(#impl-page-service-flows:checked) .impl-page-service-flows,
-    body:has(#view-implementation-guide:checked):has(#impl-page-config:checked) .impl-page-config {
+    body:has(#view-implementation-guide:checked):has(#impl-page-service-flows:checked) .impl-page-service-flows {
       display: block;
     }
     body:has(#view-overview:checked) .panel label[for="view-overview"],
@@ -2421,47 +2419,6 @@
       line-height: 1.45;
     }
     .impl-notes li + li { margin-top: 5px; }
-    .impl-reference {
-      width: 100%;
-      max-width: 1180px;
-      margin: 2px auto 0;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
-    }
-    .impl-reference h3 {
-      margin: 0 0 4px;
-      font-size: 14.8px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .impl-reference p {
-      margin: 0 0 10px;
-      color: var(--text2);
-      font-size: 11.7px;
-      line-height: 1.45;
-    }
-    .impl-shortcuts {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .impl-shortcuts label {
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-size: 11.7px;
-      font-weight: 600;
-      cursor: pointer;
-      background: rgba(0, 0, 0, 0.12);
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .impl-shortcuts label:hover {
-      border-color: var(--fabric);
-      background: color-mix(in srgb, var(--fabric) 10%, transparent);
-    }
     .cfg-open {
       position: absolute;
       width: 1px;
@@ -2648,7 +2605,6 @@
       <input type="radio" name="impl-page" id="impl-page-medium">
       <input type="radio" name="impl-page" id="impl-page-small">
       <input type="radio" name="impl-page" id="impl-page-service-flows">
-      <input type="radio" name="impl-page" id="impl-page-config">
       <input type="radio" name="cip" id="cip-medium" checked>
       <input type="radio" name="cip" id="cip-low">
       <input type="radio" name="cip" id="cip-nonbes">
@@ -2779,7 +2735,6 @@
             <label for="impl-page-medium"><span class="name">Medium substation</span><span class="desc">IR8340 and IE9300 design flow</span></label>
             <label for="impl-page-small"><span class="name">Small substation</span><span class="desc">IR1101, IE3100, IE3500, and VLAN service VPN mapping</span></label>
             <label for="impl-page-service-flows"><span class="name">Small service flows</span><span class="desc">Switch management, physical security, workforce, and SCADA diagrams</span></label>
-            <label for="impl-page-config"><span class="name">Config entry points</span><span class="desc">Product configuration dialogs</span></label>
           </div>
         </div>
       </div>
@@ -5095,19 +5050,6 @@
         </div>
       </section>
 
-      <section class="impl-page impl-page-config" aria-label="Implementation configuration entry points">
-      <section class="impl-reference" aria-labelledby="impl-reference-title">
-        <h3 id="impl-reference-title">Configuration entry points</h3>
-        <p>The topology boxes above open the same platform-specific configuration dialogs. Use these quick links when you already know the product you need.</p>
-        <div class="impl-shortcuts" aria-label="Product configuration shortcuts">
-          <label for="cfg-ir8340-open">IR8340</label>
-          <label for="cfg-ir1101-open">IR1101</label>
-          <label for="cfg-ie9300-open">IE9300</label>
-          <label for="cfg-ie3100-open">IE3100</label>
-          <label for="cfg-ie3500-open">IE3500</label>
-        </div>
-      </section>
-      </section>
     </aside>
   </div>
 
