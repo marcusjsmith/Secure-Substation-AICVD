@@ -96,6 +96,7 @@
       box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
       z-index: 60;
     }
+    body:has(#view-overview:checked):not(.menu-closed-overview) .overview-flyout,
     body:has(#view-architecture:checked):not(.menu-closed-architecture) .architecture-flyout,
     body:has(#view-design-guide:checked):not(.menu-closed-design) .design-flyout,
     body:has(#view-implementation-guide:checked):not(.menu-closed-implementation) .implementation-flyout {
@@ -151,6 +152,7 @@
       margin-right: 8px;
       vertical-align: middle;
     }
+    .overview-subnav,
     .architecture-subnav,
     .design-subnav,
     .implementation-subnav {
@@ -164,6 +166,7 @@
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
+    .menu-flyout .overview-subnav,
     .menu-flyout .architecture-subnav,
     .menu-flyout .design-subnav,
     .menu-flyout .implementation-subnav {
@@ -171,6 +174,7 @@
       padding: 0;
       border: 0;
     }
+    .overview-subnav .panel-title,
     .architecture-subnav .panel-title,
     .design-subnav .panel-title,
     .implementation-subnav .panel-title {
@@ -178,6 +182,7 @@
       margin: 0 4px 2px;
       font-size: 10.6px;
     }
+    .overview-subnav label,
     .architecture-subnav label,
     .design-subnav label,
     .implementation-subnav label {
@@ -186,19 +191,24 @@
       padding: 9px 10px;
       border-radius: 6px;
     }
+    .overview-subnav label .name,
     .architecture-subnav label .name,
     .design-subnav label .name,
     .implementation-subnav label .name {
       margin-bottom: 0;
     }
+    .overview-subnav label .desc,
     .architecture-subnav label .desc,
     .design-subnav label .desc,
     .implementation-subnav label .desc {
       display: none;
     }
+    body:has(#view-overview:checked) .overview-subnav { display: flex; }
     body:has(#view-architecture:checked) .architecture-subnav { display: flex; }
     body:has(#view-design-guide:checked) .design-subnav { display: flex; }
     body:has(#view-implementation-guide:checked) .implementation-subnav { display: flex; }
+    body:has(#view-overview:checked):has(#overview-page-summary:checked) .overview-subnav label[for="overview-page-summary"],
+    body:has(#view-overview:checked):has(#overview-page-guided:checked) .overview-subnav label[for="overview-page-guided"],
     body:has(#view-architecture:checked):has(#arch-page-reference:checked) .architecture-subnav label[for="arch-page-reference"],
     body:has(#view-architecture:checked):has(#arch-page-diagram:checked) .architecture-subnav label[for="arch-page-diagram"],
     body:has(#view-architecture:checked):has(#arch-page-segmentation:checked) .architecture-subnav label[for="arch-page-segmentation"],
@@ -755,6 +765,11 @@
     .cip-info-medium { border-left: 3px solid var(--cip-medium); }
     .cip-info-low { border-left: 3px solid var(--cip-low); }
     .cip-info-nonbes { border-left: 3px solid var(--cip-nonbes); }
+    .overview-page { display: none; }
+    body:has(#view-overview:checked):has(#overview-page-summary:checked) .overview-page-summary,
+    body:has(#view-overview:checked):has(#overview-page-guided:checked) .overview-page-guided {
+      display: block;
+    }
     .profiles-hero h2 {
       font-size: 23.3px;
       font-weight: 700;
@@ -896,6 +911,217 @@
       color: var(--text2);
       font-size: 10.6px;
       line-height: 1.45;
+    }
+    .guided-flow-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      gap: 18px;
+      align-items: start;
+      margin-top: 18px;
+    }
+    @media (max-width: 980px) {
+      .guided-flow-grid { grid-template-columns: 1fr; }
+    }
+    .guided-flow-panel,
+    .guided-result-panel,
+    .guided-profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .guided-flow-panel {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+    .guide-question {
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.12);
+    }
+    .guide-question legend {
+      padding: 0 6px;
+      color: var(--mgmt);
+      font-size: 12.7px;
+      font-weight: 700;
+    }
+    .guide-question label {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text2);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .guide-question label:hover {
+      border-color: #44445a;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .guide-question input {
+      margin-top: 3px;
+      accent-color: var(--fabric);
+    }
+    .guide-question strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--text);
+      font-size: 12.7px;
+    }
+    .guide-question span {
+      display: block;
+      font-size: 11.7px;
+      line-height: 1.4;
+    }
+    .guided-result-panel {
+      position: sticky;
+      top: 0;
+      padding: 16px;
+      border-top: 3px solid var(--fabric);
+    }
+    .guided-result-panel[data-tier="small"] { border-top-color: var(--profile-small); }
+    .guided-result-panel[data-tier="medium"] { border-top-color: var(--multi); }
+    .guided-result-panel[data-tier="large"] { border-top-color: var(--fabric); }
+    .guided-result-badge {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 5px 9px;
+      border: 1px solid var(--fabric);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--fabric) 14%, transparent);
+      color: var(--text);
+      font-size: 10.6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .guided-result-panel[data-tier="small"] .guided-result-badge {
+      border-color: var(--profile-small);
+      background: color-mix(in srgb, var(--profile-small) 16%, transparent);
+    }
+    .guided-result-panel[data-tier="medium"] .guided-result-badge {
+      border-color: var(--multi);
+      background: color-mix(in srgb, var(--multi) 14%, transparent);
+    }
+    .guided-result-panel h3 {
+      margin: 0 0 8px;
+      font-size: 19.1px;
+      color: var(--text);
+    }
+    .guided-result-panel p {
+      margin: 0 0 12px;
+      color: var(--text2);
+      font-size: 12.7px;
+      line-height: 1.5;
+    }
+    .guided-score-grid {
+      display: grid;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .guided-score-row {
+      display: grid;
+      grid-template-columns: 74px minmax(0, 1fr) 28px;
+      gap: 8px;
+      align-items: center;
+      color: var(--text2);
+      font-size: 10.6px;
+    }
+    .guided-score-track {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .guided-score-fill {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--fabric);
+      transition: width 0.18s ease;
+    }
+    .guided-score-fill.small { background: var(--profile-small); }
+    .guided-score-fill.medium { background: var(--multi); }
+    .guided-score-fill.large { background: var(--fabric); }
+    .guided-reasons {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .guided-reasons strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 12.7px;
+    }
+    .guided-reasons ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text2);
+      font-size: 11.7px;
+      line-height: 1.45;
+    }
+    .guided-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .guided-actions button {
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-size: 11.7px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .guided-actions button:hover {
+      border-color: var(--fabric);
+      background: color-mix(in srgb, var(--fabric) 10%, transparent);
+    }
+    .guided-profile-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    @media (max-width: 940px) {
+      .guided-profile-grid { grid-template-columns: 1fr; }
+      .guided-actions { grid-template-columns: 1fr; }
+    }
+    .guided-profile-card {
+      padding: 14px;
+      border-top: 3px solid var(--fabric);
+    }
+    .guided-profile-card.small { border-top-color: var(--profile-small); }
+    .guided-profile-card.medium { border-top-color: var(--multi); }
+    .guided-profile-card.large { border-top-color: var(--fabric); }
+    .guided-profile-card h3 {
+      margin: 0 0 8px;
+      font-size: 14.8px;
+      color: var(--text);
+    }
+    .guided-profile-card p,
+    .guided-profile-card li {
+      color: var(--text2);
+      font-size: 11.7px;
+      line-height: 1.45;
+    }
+    .guided-profile-card p { margin: 0 0 8px; }
+    .guided-profile-card ul {
+      margin: 0;
+      padding-left: 18px;
     }
     .src-note {
       font-size: 11.7px;
@@ -2679,14 +2905,16 @@
       }
       .impl-node-row { grid-template-columns: minmax(0, 1fr); }
     }
-  </style>
+</style>
 </head>
-<body>
+<body class="menu-closed-overview">
   <div class="flow-controls" aria-hidden="true">
       <input type="radio" name="view" id="view-overview" checked>
       <input type="radio" name="view" id="view-architecture">
       <input type="radio" name="view" id="view-design-guide">
       <input type="radio" name="view" id="view-implementation-guide">
+      <input type="radio" name="overview-page" id="overview-page-summary" checked>
+      <input type="radio" name="overview-page" id="overview-page-guided">
       <input type="radio" name="arch-page" id="arch-page-reference" checked>
       <input type="radio" name="arch-page" id="arch-page-diagram">
       <input type="radio" name="arch-page" id="arch-page-segmentation">
@@ -2739,7 +2967,16 @@
   <div class="layout">
     <aside class="panel">
       <div class="panel-title">Navigation</div>
-      <label for="view-overview"><span class="name">Overview</span><span class="desc">CVD purpose, scope, and solution structure</span></label>
+      <div class="menu-group">
+        <label for="view-overview"><span class="name">Overview</span><span class="desc">CVD purpose, scope, and solution structure</span></label>
+        <div class="menu-flyout overview-flyout" aria-label="Overview floating menu">
+          <div class="overview-subnav" aria-label="Overview sections">
+            <div class="panel-title">Overview pages</div>
+            <label for="overview-page-summary"><span class="name">Overview</span><span class="desc">CVD purpose, scope, and solution structure</span></label>
+            <label for="overview-page-guided"><span class="name">Guided Interactive Flow</span><span class="desc">Answer sizing questions to identify the best substation profile</span></label>
+          </div>
+        </div>
+      </div>
       <div class="menu-group">
         <label for="view-architecture"><span class="name">Architecture</span><span class="desc">Topology, traffic flows, Cyber Vision telemetry, and bandwidth planning</span></label>
         <div class="menu-flyout architecture-flyout" aria-label="Architecture floating menu">
@@ -2845,83 +3082,242 @@
 
     <main>
       <section class="view-overview" aria-label="Overview">
-        <div class="profiles-hero">
-          <h2>Secure Substation CVD 3.0 overview</h2>
-          <p class="lead">A Cisco Validated Design reference for building secure, segmented, and observable utility substations across large transmission, medium distribution, and compact field-site profiles. Version 3.0 adds the updated design-guide digest content and extracted DOCX diagrams.</p>
-        </div>
+        <section class="overview-page overview-page-summary" aria-label="Overview summary">
+          <div class="profiles-hero">
+            <h2>Secure Substation CVD 3.0 overview</h2>
+            <p class="lead">A Cisco Validated Design reference for building secure, segmented, and observable utility substations across large transmission, medium distribution, and compact field-site profiles. Version 3.0 adds the updated design-guide digest content and extracted DOCX diagrams.</p>
+          </div>
 
-        <div class="overview-layout">
-          <div class="overview-panel">
-            <h3>What the CVD establishes</h3>
-            <p>The Secure Substation CVD brings together ruggedized routing and switching, Cisco SD-WAN segmentation, Cyber Vision visibility, and policy-driven security controls into a repeatable substation blueprint. It is organized around the network behaviors utilities need to preserve: deterministic SCADA reachability, resilient WAN transport, bounded management access, monitored OT assets, and controlled paths for higher-bandwidth services such as PMU and physical-security video.</p>
-            <p>The design uses three deployment tiers so the same principles can be applied without overbuilding smaller sites: dual-router large substations, single-router medium substations, and compact IR1101-based small substations. Each tier is tied back to service VPN separation, WAN sizing, Cyber Vision telemetry, and security policy placement.</p>
-            <div class="overview-scope-list">
-              <div class="overview-scope-item"><strong>Service separation</strong> SCADA, MultiService, and Management traffic are treated as distinct service VPNs with different trust, QoS, and inspection requirements.</div>
-              <div class="overview-scope-item"><strong>Substation profiles</strong> Large, medium, and small designs map platform choices to expected device scale, traffic volume, and resiliency needs.</div>
-              <div class="overview-scope-item"><strong>Operational visibility</strong> Cyber Vision sensors and center connectivity provide asset discovery, protocol awareness, and anomaly context across OT zones.</div>
-              <div class="overview-scope-item"><strong>Security alignment</strong> NERC CIP impact categories, NGFW policy, NBAR application recognition, and Snort IPS are positioned against the architecture.</div>
+          <div class="overview-layout">
+            <div class="overview-panel">
+              <h3>What the CVD establishes</h3>
+              <p>The Secure Substation CVD brings together ruggedized routing and switching, Cisco SD-WAN segmentation, Cyber Vision visibility, and policy-driven security controls into a repeatable substation blueprint. It is organized around the network behaviors utilities need to preserve: deterministic SCADA reachability, resilient WAN transport, bounded management access, monitored OT assets, and controlled paths for higher-bandwidth services such as PMU and physical-security video.</p>
+              <p>The design uses three deployment tiers so the same principles can be applied without overbuilding smaller sites: dual-router large substations, single-router medium substations, and compact IR1101-based small substations. Each tier is tied back to service VPN separation, WAN sizing, Cyber Vision telemetry, and security policy placement.</p>
+              <div class="overview-scope-list">
+                <div class="overview-scope-item"><strong>Service separation</strong> SCADA, MultiService, and Management traffic are treated as distinct service VPNs with different trust, QoS, and inspection requirements.</div>
+                <div class="overview-scope-item"><strong>Substation profiles</strong> Large, medium, and small designs map platform choices to expected device scale, traffic volume, and resiliency needs.</div>
+                <div class="overview-scope-item"><strong>Operational visibility</strong> Cyber Vision sensors and center connectivity provide asset discovery, protocol awareness, and anomaly context across OT zones.</div>
+                <div class="overview-scope-item"><strong>Security alignment</strong> NERC CIP impact categories, NGFW policy, NBAR application recognition, and Snort IPS are positioned against the architecture.</div>
+              </div>
+            </div>
+
+            <div class="overview-panel">
+              <h3>Design outcomes</h3>
+              <div class="overview-outcomes">
+                <div class="overview-outcome">
+                  <strong>Standardize the substation edge</strong>
+                  <span>Use a common routing, switching, and SD-WAN pattern while still sizing the design for large, medium, and small facilities.</span>
+                </div>
+                <div class="overview-outcome">
+                  <strong>Protect critical OT paths</strong>
+                  <span>Constrain SCADA, management, and multiservice flows with segmentation, zone-based firewalling, application matching, and IPS inspection where required.</span>
+                </div>
+                <div class="overview-outcome">
+                  <strong>Plan WAN capacity</strong>
+                  <span>Relate traffic types such as DNP3, PMU, CCTV, enterprise access, and management telemetry to practical bandwidth and QoS assumptions.</span>
+                </div>
+                <div class="overview-outcome">
+                  <strong>Connect design to deployment</strong>
+                  <span>Carry the same architecture into platform references and configuration examples for routers, switches, and security functions.</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="overview-panel">
-            <h3>Design outcomes</h3>
-            <div class="overview-outcomes">
-              <div class="overview-outcome">
-                <strong>Standardize the substation edge</strong>
-                <span>Use a common routing, switching, and SD-WAN pattern while still sizing the design for large, medium, and small facilities.</span>
-              </div>
-              <div class="overview-outcome">
-                <strong>Protect critical OT paths</strong>
-                <span>Constrain SCADA, management, and multiservice flows with segmentation, zone-based firewalling, application matching, and IPS inspection where required.</span>
-              </div>
-              <div class="overview-outcome">
-                <strong>Plan WAN capacity</strong>
-                <span>Relate traffic types such as DNP3, PMU, CCTV, enterprise access, and management telemetry to practical bandwidth and QoS assumptions.</span>
-              </div>
-              <div class="overview-outcome">
-                <strong>Connect design to deployment</strong>
-                <span>Carry the same architecture into platform references and configuration examples for routers, switches, and security functions.</span>
+          <div class="overview-layout">
+            <div class="overview-panel">
+              <h3>Why read this CVD</h3>
+              <p>Substations are no longer isolated serial environments. Modern utility sites carry SCADA, management, telemetry, PMU, video, and remote-support traffic across shared IP infrastructure while still needing deterministic operations, cyber separation, and auditable security controls.</p>
+              <p>This CVD gives engineering, OT operations, and security teams a common reference for turning those requirements into a repeatable architecture. It shows how to structure the substation edge, how to separate critical services, where to apply inspection, and how to size the WAN for large, medium, and small sites.</p>
+              <div class="overview-scope-list">
+                <div class="overview-scope-item"><strong>Reduce design ambiguity</strong> Align network, OT, and security teams around one validated blueprint instead of one-off substation builds.</div>
+                <div class="overview-scope-item"><strong>Protect critical operations</strong> Preserve SCADA reachability while adding segmentation, firewall policy, application recognition, and inspection where it matters.</div>
+                <div class="overview-scope-item"><strong>Plan before deployment</strong> Relate traffic types, bandwidth assumptions, and product choices before configuration begins.</div>
+                <div class="overview-scope-item"><strong>Improve audit readiness</strong> Map architecture decisions to zoning, access control, monitoring, and operational evidence expected in regulated utility environments.</div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="overview-layout">
-          <div class="overview-panel">
-            <h3>Why read this CVD</h3>
-            <p>Substations are no longer isolated serial environments. Modern utility sites carry SCADA, management, telemetry, PMU, video, and remote-support traffic across shared IP infrastructure while still needing deterministic operations, cyber separation, and auditable security controls.</p>
-            <p>This CVD gives engineering, OT operations, and security teams a common reference for turning those requirements into a repeatable architecture. It shows how to structure the substation edge, how to separate critical services, where to apply inspection, and how to size the WAN for large, medium, and small sites.</p>
-            <div class="overview-scope-list">
-              <div class="overview-scope-item"><strong>Reduce design ambiguity</strong> Align network, OT, and security teams around one validated blueprint instead of one-off substation builds.</div>
-              <div class="overview-scope-item"><strong>Protect critical operations</strong> Preserve SCADA reachability while adding segmentation, firewall policy, application recognition, and inspection where it matters.</div>
-              <div class="overview-scope-item"><strong>Plan before deployment</strong> Relate traffic types, bandwidth assumptions, and product choices before configuration begins.</div>
-              <div class="overview-scope-item"><strong>Improve audit readiness</strong> Map architecture decisions to zoning, access control, monitoring, and operational evidence expected in regulated utility environments.</div>
+            <div class="overview-panel">
+              <h3>Why Cisco</h3>
+              <p>Cisco brings the substation WAN, industrial LAN, security policy, and OT visibility layers into one architecture. That matters because secure substations need more than a router, a switch, or an IPS rule in isolation; they need those controls to work together across the full lifecycle.</p>
+              <div class="overview-outcomes">
+                <div class="overview-outcome">
+                  <strong>Rugged OT infrastructure</strong>
+                  <span>Industrial routers and switches such as IR8340, IR1101, IE9300, IE3100, and IE3500 support hardened deployment models for utility environments.</span>
+                </div>
+                <div class="overview-outcome">
+                  <strong>SD-WAN and segmentation</strong>
+                  <span>Cisco SD-WAN provides centralized overlay policy, service VPN separation, encrypted transport, and scalable operations for many substations.</span>
+                </div>
+                <div class="overview-outcome">
+                  <strong>Security policy at the edge</strong>
+                  <span>Zone firewall, application-aware policy, NBAR, and Snort IDS/IPS capabilities can be aligned to the same traffic paths shown in the architecture.</span>
+                </div>
+                <div class="overview-outcome">
+                  <strong>OT visibility</strong>
+                  <span>Cisco Cyber Vision adds asset, protocol, and anomaly context so policy decisions are informed by what is actually running in the substation.</span>
+                </div>
+              </div>
             </div>
+          </div>
+        </section>
+
+        <section class="overview-page overview-page-guided" aria-label="Guided Interactive Flow">
+          <div class="profiles-hero">
+            <h2>Guided Interactive Flow</h2>
+            <p class="lead">Answer the profile questions to narrow the CVD toward a Large, Medium, or Small substation design. The result is a planning recommendation, not a final bill of materials, and should be validated against utility standards, site survey data, and traffic measurements.</p>
           </div>
 
-          <div class="overview-panel">
-            <h3>Why Cisco</h3>
-            <p>Cisco brings the substation WAN, industrial LAN, security policy, and OT visibility layers into one architecture. That matters because secure substations need more than a router, a switch, or an IPS rule in isolation; they need those controls to work together across the full lifecycle.</p>
-            <div class="overview-outcomes">
-              <div class="overview-outcome">
-                <strong>Rugged OT infrastructure</strong>
-                <span>Industrial routers and switches such as IR8340, IR1101, IE9300, IE3100, and IE3500 support hardened deployment models for utility environments.</span>
+          <div class="guided-flow-grid">
+            <form class="guided-flow-panel" id="profile-guide-form" aria-label="Substation profile guide questions">
+              <fieldset class="guide-question">
+                <legend>1. What is the primary site role?</legend>
+                <label>
+                  <input type="radio" name="guide-role" value="large" data-large="3" data-reason="Transmission, EHV, or major switching roles point toward the Large profile.">
+                  <span><strong>Transmission, EHV, or major switching site</strong>High consequence site with broad protection, control, and monitoring scope.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-role" value="medium" data-medium="3" data-reason="Primary distribution or sub-transmission roles align to the Medium profile.">
+                  <span><strong>Primary distribution or sub-transmission site</strong>Important operational site with moderate device scale and segmented services.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-role" value="small" data-small="3" data-reason="Distribution automation or compact remote roles align to the Small profile.">
+                  <span><strong>Distribution automation or compact remote site</strong>Focused field site with lower device count and compact WAN edge needs.</span>
+                </label>
+              </fieldset>
+
+              <fieldset class="guide-question">
+                <legend>2. How many IEDs, RTUs, meters, or field devices are in scope?</legend>
+                <label>
+                  <input type="radio" name="guide-devices" value="large" data-large="3" data-reason="15 or more IEDs/RTUs typically needs Large profile headroom.">
+                  <span><strong>15 or more devices</strong>Multiple bays, protection sets, PMU or fault-recording systems, and broader station LAN scale.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-devices" value="medium" data-medium="3" data-reason="10 to 14 field devices is a common Medium profile range.">
+                  <span><strong>10 to 14 devices</strong>Moderate station LAN scale with a single rugged WAN edge and industrial aggregation.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-devices" value="small" data-small="3" data-reason="Fewer than 10 field devices fits the Small profile starting point.">
+                  <span><strong>Fewer than 10 devices</strong>Compact IED or RTU footprint where IR1101 and IE3x00 switching is usually sufficient.</span>
+                </label>
+              </fieldset>
+
+              <fieldset class="guide-question">
+                <legend>3. What SCADA point-count range is expected?</legend>
+                <label>
+                  <input type="radio" name="guide-points" value="large" data-large="3" data-reason="More than 1,000 SCADA points is treated as Large profile scale.">
+                  <span><strong>More than 1,000 points</strong>Large transmission or EHV profile with higher telemetry and event-volume assumptions.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-points" value="medium" data-medium="3" data-reason="200 to 1,000 SCADA points generally maps to the Medium profile.">
+                  <span><strong>200 to 1,000 points</strong>Moderate SCADA footprint where WAN and inspection sizing need deliberate planning.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-points" value="small" data-small="3" data-reason="Below 200 SCADA points supports the Small profile unless other services dominate.">
+                  <span><strong>Below 200 points</strong>Small or field-site profile with low SCADA bandwidth and fewer control endpoints.</span>
+                </label>
+              </fieldset>
+
+              <fieldset class="guide-question">
+                <legend>4. Which traffic mix best matches the site?</legend>
+                <label>
+                  <input type="radio" name="guide-traffic" value="large" data-large="3" data-medium="1" data-reason="PMU, fault recorder, and heavy video traffic pushes the design toward Large profile headroom.">
+                  <span><strong>PMU or fault recording plus many cameras</strong>Higher bandwidth, QoS, storage, and inspection requirements.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-traffic" value="medium" data-medium="3" data-large="1" data-reason="PMU or several cameras is a Medium profile signal.">
+                  <span><strong>Some PMU, CCTV, voice, or workforce services</strong>Mixed traffic beyond SCADA, but not a large multi-service estate.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-traffic" value="small" data-small="3" data-reason="SCADA plus light management and limited video fits the Small profile.">
+                  <span><strong>SCADA plus light management and optional CCTV</strong>Low-to-moderate WAN use with limited multiservice traffic.</span>
+                </label>
+              </fieldset>
+
+              <fieldset class="guide-question">
+                <legend>5. What resiliency model is expected?</legend>
+                <label>
+                  <input type="radio" name="guide-resiliency" value="large" data-large="3" data-medium="1" data-reason="Dual WAN edge and high availability requirements point to the Large profile.">
+                  <span><strong>Dual WAN edge and high availability</strong>Resilient edge pair, diverse uplinks, and higher availability expectations.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-resiliency" value="medium" data-medium="3" data-small="1" data-reason="A single rugged WAN edge with solid access switching maps to Medium.">
+                  <span><strong>Single rugged WAN edge with robust switching</strong>Moderate resiliency, typically one IR8340 with industrial Ethernet aggregation.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-resiliency" value="small" data-small="3" data-medium="1" data-reason="A compact edge with optional cellular backup maps to Small.">
+                  <span><strong>Compact edge with optional cellular backup</strong>Single IR1101 style deployment for space-constrained or remote sites.</span>
+                </label>
+              </fieldset>
+
+              <fieldset class="guide-question">
+                <legend>6. What security and compliance posture applies?</legend>
+                <label>
+                  <input type="radio" name="guide-security" value="large" data-large="3" data-medium="1" data-reason="Medium Impact BES posture usually needs Large or upper-Medium controls and headroom.">
+                  <span><strong>Medium Impact BES or highest utility criticality</strong>Strong segmentation, access control, logging, monitoring, and recovery evidence.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-security" value="medium" data-medium="3" data-small="1" data-reason="Low Impact BES or major distribution context usually maps to Medium.">
+                  <span><strong>Low Impact BES or major distribution policy</strong>Formal zoning, access control, and monitoring with moderate site scale.</span>
+                </label>
+                <label>
+                  <input type="radio" name="guide-security" value="small" data-small="3" data-reason="Non-BES or distribution automation security posture supports the Small profile.">
+                  <span><strong>Non-BES, distribution automation, or lighter site policy</strong>Still segmented and monitored, but with compact architecture and simpler operations.</span>
+                </label>
+              </fieldset>
+            </form>
+
+            <aside class="guided-result-panel" id="profile-guide-result" data-tier="none" aria-live="polite">
+              <div class="guided-result-badge" id="guide-tier-badge">Answer questions</div>
+              <h3 id="guide-tier-title">Profile guide</h3>
+              <p id="guide-tier-summary">Select answers from the questions to build a profile recommendation. Ties are biased toward the higher profile to avoid undersizing critical substation designs.</p>
+              <p id="guide-platform"><strong>Recommended platform:</strong> Awaiting input</p>
+              <div class="guided-score-grid" aria-label="Profile fit score">
+                <div class="guided-score-row"><span>Small</span><div class="guided-score-track"><span class="guided-score-fill small" id="guide-score-small"></span></div><strong id="guide-score-small-text">0</strong></div>
+                <div class="guided-score-row"><span>Medium</span><div class="guided-score-track"><span class="guided-score-fill medium" id="guide-score-medium"></span></div><strong id="guide-score-medium-text">0</strong></div>
+                <div class="guided-score-row"><span>Large</span><div class="guided-score-track"><span class="guided-score-fill large" id="guide-score-large"></span></div><strong id="guide-score-large-text">0</strong></div>
               </div>
-              <div class="overview-outcome">
-                <strong>SD-WAN and segmentation</strong>
-                <span>Cisco SD-WAN provides centralized overlay policy, service VPN separation, encrypted transport, and scalable operations for many substations.</span>
+              <div class="guided-reasons" id="guide-reasons">
+                <strong>Recommendation rationale</strong>
+                <ul><li>Answer at least one question to start the recommendation.</li></ul>
               </div>
-              <div class="overview-outcome">
-                <strong>Security policy at the edge</strong>
-                <span>Zone firewall, application-aware policy, NBAR, and Snort IDS/IPS capabilities can be aligned to the same traffic paths shown in the architecture.</span>
+              <div class="guided-actions">
+                <button type="button" id="guide-open-traffic">Open traffic profile</button>
+                <button type="button" id="guide-open-implementation">Open implementation</button>
               </div>
-              <div class="overview-outcome">
-                <strong>OT visibility</strong>
-                <span>Cisco Cyber Vision adds asset, protocol, and anomaly context so policy decisions are informed by what is actually running in the substation.</span>
-              </div>
-            </div>
+            </aside>
           </div>
-        </div>
+
+          <div class="guided-profile-grid" aria-label="Profile reference summary">
+            <article class="guided-profile-card large">
+              <h3>Large substation</h3>
+              <p><strong>Platform:</strong> Dual IR8340 + dual IE9300/IE9320 high availability.</p>
+              <ul>
+                <li>Transmission, EHV, or high-consequence BES environments.</li>
+                <li>15+ IEDs/RTUs, PMU, fault recorder, video, and larger SCADA footprint.</li>
+                <li>Best when dual edge, diverse transport, and larger inspection headroom are expected.</li>
+              </ul>
+            </article>
+            <article class="guided-profile-card medium">
+              <h3>Medium substation</h3>
+              <p><strong>Platform:</strong> Single IR8340 + IE9300 or IE9320 aggregation.</p>
+              <ul>
+                <li>Primary distribution, sub-transmission, or smaller transmission sites.</li>
+                <li>10 to 14 field devices, 200 to 1,000 SCADA points, and mixed services.</li>
+                <li>Best when rugged WAN and stronger segmentation are needed without dual-router HA.</li>
+              </ul>
+            </article>
+            <article class="guided-profile-card small">
+              <h3>Small substation</h3>
+              <p><strong>Platform:</strong> IR1101 + IE3100 or IE3500 access switching.</p>
+              <ul>
+                <li>Distribution automation, compact remote substations, or lower-consequence field sites.</li>
+                <li>Fewer than 10 field devices and below 200 SCADA points.</li>
+                <li>Best when space, power, port count, and simple cellular or Ethernet WAN are key constraints.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
 
       </section>
 
@@ -5500,6 +5896,7 @@ interface GigabitEthernet0/1/0
   <script>
     (function () {
       var menus = [
+        { viewId: 'view-overview', flyoutSelector: '.overview-flyout', closedClass: 'menu-closed-overview' },
         { viewId: 'view-architecture', flyoutSelector: '.architecture-flyout', closedClass: 'menu-closed-architecture' },
         { viewId: 'view-design-guide', flyoutSelector: '.design-flyout', closedClass: 'menu-closed-design' },
         { viewId: 'view-implementation-guide', flyoutSelector: '.implementation-flyout', closedClass: 'menu-closed-implementation' }
@@ -5613,6 +6010,156 @@ interface GigabitEthernet0/1/0
           dismissBoxes.forEach(function (box) { box.checked = false; });
         });
       });
+    })();
+
+    (function () {
+      var form = document.getElementById('profile-guide-form');
+      var resultPanel = document.getElementById('profile-guide-result');
+      if (!form || !resultPanel) return;
+
+      var PROFILES = {
+        small: {
+          badge: 'Small substation',
+          title: 'Small substation profile',
+          platform: 'Single IR1101 + IE3100/IE3500',
+          summary: 'Use this profile for compact distribution automation, remote field sites, lower device counts, and lighter SCADA or multiservice traffic.'
+        },
+        medium: {
+          badge: 'Medium substation',
+          title: 'Medium substation profile',
+          platform: 'Single IR8340 + IE9300/IE9320',
+          summary: 'Use this profile for primary distribution, sub-transmission, or smaller transmission sites that need rugged WAN, industrial aggregation, and formal segmentation.'
+        },
+        large: {
+          badge: 'Large substation',
+          title: 'Large substation profile',
+          platform: 'Dual IR8340 + dual IE9300/IE9320',
+          summary: 'Use this profile for transmission, EHV, high-consequence, or high-availability sites with larger device counts, richer traffic mix, and stronger resiliency requirements.'
+        }
+      };
+
+      function scoreValue(input, tier) {
+        return parseInt(input.getAttribute('data-' + tier), 10) || 0;
+      }
+
+      function setText(id, text) {
+        var node = document.getElementById(id);
+        if (node) node.textContent = text;
+      }
+
+      function setScore(tier, score, maxScore) {
+        var fill = document.getElementById('guide-score-' + tier);
+        var label = document.getElementById('guide-score-' + tier + '-text');
+        var pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+        if (fill) fill.style.width = pct + '%';
+        if (label) label.textContent = String(score);
+      }
+
+      function renderReasons(reasons) {
+        var container = document.getElementById('guide-reasons');
+        if (!container) return;
+        container.innerHTML = '<strong>Recommendation rationale</strong>';
+        var list = document.createElement('ul');
+
+        if (!reasons.length) {
+          var empty = document.createElement('li');
+          empty.textContent = 'Answer at least one question to start the recommendation.';
+          list.appendChild(empty);
+        } else {
+          reasons.forEach(function (reason) {
+            var item = document.createElement('li');
+            item.textContent = reason;
+            list.appendChild(item);
+          });
+        }
+
+        container.appendChild(list);
+      }
+
+      function selectRecommendedTier(scores) {
+        return ['small', 'medium', 'large'].reduce(function (best, tier) {
+          return scores[tier] >= scores[best] ? tier : best;
+        }, 'small');
+      }
+
+      function runGuide() {
+        var checked = Array.prototype.slice.call(form.querySelectorAll('input[type="radio"]:checked'));
+        var scores = { small: 0, medium: 0, large: 0 };
+        var reasons = [];
+
+        checked.forEach(function (input) {
+          scores.small += scoreValue(input, 'small');
+          scores.medium += scoreValue(input, 'medium');
+          scores.large += scoreValue(input, 'large');
+          if (input.dataset.reason) reasons.push(input.dataset.reason);
+        });
+
+        var maxScore = Math.max(scores.small, scores.medium, scores.large, 1);
+        setScore('small', scores.small, maxScore);
+        setScore('medium', scores.medium, maxScore);
+        setScore('large', scores.large, maxScore);
+
+        if (!checked.length) {
+          resultPanel.dataset.tier = 'none';
+          setText('guide-tier-badge', 'Answer questions');
+          setText('guide-tier-title', 'Profile guide');
+          setText('guide-tier-summary', 'Select answers from the questions to build a profile recommendation. Ties are biased toward the higher profile to avoid undersizing critical substation designs.');
+          document.getElementById('guide-platform').innerHTML = '<strong>Recommended platform:</strong> Awaiting input';
+          renderReasons(reasons);
+          return;
+        }
+
+        var tier = selectRecommendedTier(scores);
+        var profile = PROFILES[tier];
+        resultPanel.dataset.tier = tier;
+        setText('guide-tier-badge', profile.badge);
+        setText('guide-tier-title', profile.title);
+        setText('guide-tier-summary', profile.summary);
+        document.getElementById('guide-platform').innerHTML = '<strong>Recommended platform:</strong> ' + profile.platform;
+        renderReasons(reasons);
+      }
+
+      function checkRadio(id) {
+        var radio = document.getElementById(id);
+        if (!radio) return;
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function currentTier() {
+        runGuide();
+        var tier = resultPanel.dataset.tier;
+        return tier && tier !== 'none' ? tier : 'medium';
+      }
+
+      form.querySelectorAll('input[type="radio"]').forEach(function (input) {
+        input.addEventListener('change', runGuide);
+      });
+
+      var trafficButton = document.getElementById('guide-open-traffic');
+      if (trafficButton) {
+        trafficButton.addEventListener('click', function () {
+          var tier = currentTier();
+          checkRadio('view-architecture');
+          checkRadio('arch-page-planning');
+          checkRadio('band-tier-' + tier);
+          var main = document.querySelector('main');
+          if (main) main.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      var implementationButton = document.getElementById('guide-open-implementation');
+      if (implementationButton) {
+        implementationButton.addEventListener('click', function () {
+          var tier = currentTier();
+          checkRadio('view-implementation-guide');
+          checkRadio(tier === 'small' ? 'impl-page-small' : tier === 'medium' ? 'impl-page-medium' : 'impl-page-profiles');
+          var panel = document.querySelector('aside.datasheet-panel');
+          if (panel) panel.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      runGuide();
     })();
 
     (function () {
