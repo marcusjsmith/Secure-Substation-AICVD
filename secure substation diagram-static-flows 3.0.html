@@ -96,9 +96,9 @@
       box-shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
       z-index: 60;
     }
-    body:has(#view-architecture:checked) .architecture-flyout,
-    body:has(#view-design-guide:checked) .design-flyout,
-    body:has(#view-implementation-guide:checked) .implementation-flyout {
+    body:has(#view-architecture:checked):not(.menu-closed-architecture) .architecture-flyout,
+    body:has(#view-design-guide:checked):not(.menu-closed-design) .design-flyout,
+    body:has(#view-implementation-guide:checked):not(.menu-closed-implementation) .implementation-flyout {
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -5420,6 +5420,46 @@ interface GigabitEthernet0/1/0
     </div>
   </div>
   <script>
+    (function () {
+      var menus = [
+        { viewId: 'view-architecture', flyoutSelector: '.architecture-flyout', closedClass: 'menu-closed-architecture' },
+        { viewId: 'view-design-guide', flyoutSelector: '.design-flyout', closedClass: 'menu-closed-design' },
+        { viewId: 'view-implementation-guide', flyoutSelector: '.implementation-flyout', closedClass: 'menu-closed-implementation' }
+      ];
+
+      function closeMenu(closedClass) {
+        window.setTimeout(function () {
+          document.body.classList.add(closedClass);
+        }, 0);
+      }
+
+      menus.forEach(function (menu) {
+        var topLevelLabel = document.querySelector('label[for="' + menu.viewId + '"]');
+        var flyout = document.querySelector(menu.flyoutSelector);
+
+        if (topLevelLabel) {
+          topLevelLabel.addEventListener('click', function () {
+            document.body.classList.remove(menu.closedClass);
+          });
+        }
+
+        if (flyout) {
+          flyout.addEventListener('click', function (event) {
+            var label = event.target.closest('label');
+            if (!label || label.classList.contains('anim-toggle-global')) return;
+            closeMenu(menu.closedClass);
+          });
+        }
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape') return;
+        menus.forEach(function (menu) {
+          document.body.classList.add(menu.closedClass);
+        });
+      });
+    })();
+
     (function () {
       var flowRadios = document.querySelectorAll('input[name="flow"]');
       var dismissBoxes = document.querySelectorAll('.flow-info-dismiss');
