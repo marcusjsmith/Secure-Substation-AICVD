@@ -2214,16 +2214,13 @@
       height: auto;
       background: #fff;
     }
-    .docx-figure iframe {
-      display: block;
-      width: 100%;
-      height: auto;
-      border: 0;
-      background: #0d0d12;
+    .diagram-zoom-trigger {
+      cursor: zoom-in;
+      transition: filter 160ms ease, transform 160ms ease;
     }
-    .builder-diagram-frame {
-      aspect-ratio: 1200 / 960;
-      min-height: 620px;
+    .diagram-zoom-trigger:hover,
+    .diagram-zoom-trigger:focus-visible {
+      filter: brightness(1.08);
     }
     .small-topology-figure {
       padding-top: 16px;
@@ -2356,7 +2353,7 @@
     .diagram-lightbox-dialog {
       position: relative;
       z-index: 1;
-      width: min(1280px, calc(100vw - 48px));
+      width: min(1680px, calc(100vw - 48px));
       max-height: calc(100vh - 48px);
       display: flex;
       flex-direction: column;
@@ -2407,7 +2404,7 @@
     }
     .diagram-lightbox-body img {
       display: block;
-      width: clamp(920px, 92vw, 1400px);
+      width: clamp(920px, 94vw, 2200px);
       max-width: none;
       height: auto;
       margin: 0 auto;
@@ -3829,7 +3826,7 @@
         </div>
 
         <figure class="docx-figure">
-          <iframe class="builder-diagram-frame" src="Builder-Images/substation-reference-architecture-builder-export.html" title="Secure Substation reference architecture diagram" loading="lazy"></iframe>
+          <img class="diagram-zoom-trigger" src="Builder-Images/substation-reference-architecture-builder-1-high-quality.png" alt="Secure Substation reference architecture showing enterprise applications, security operations, SD-WAN controllers, Cisco SD-WAN fabric, data centers, WAN IPsec transport, and medium and small substation zones" data-lightbox-title="Secure Substation reference architecture">
           <figcaption><strong>Secure Substation reference architecture</strong>The model separates enterprise applications, security operations, Cisco SD-WAN controllers, data-center hub routers, WAN transport, and medium/small substation spokes with local multiservice and ESP zones.</figcaption>
         </figure>
 
@@ -3880,7 +3877,7 @@
         </div>
 
         <figure class="docx-figure">
-          <iframe class="builder-diagram-frame" src="Builder-Images/substation-reference-architecture-builder-export.html" title="Service segmentation and WAN edge aggregation reference diagram" loading="lazy"></iframe>
+          <img class="diagram-zoom-trigger" src="Builder-Images/substation-reference-architecture-builder-1-high-quality.png" alt="Service segmentation and WAN edge aggregation reference architecture showing data-center hubs, SD-WAN controllers, WAN IPsec transport, and medium and small substation spokes" data-lightbox-title="Service segmentation and WAN edge aggregation">
           <figcaption><strong>Service segmentation and WAN edge aggregation</strong>The reference architecture shows primary and secondary data-center hubs, SD-WAN controllers, WAN transport, and medium/small substation spokes that carry segmented SCADA, multiservice, security operations, and management traffic.</figcaption>
         </figure>
 
@@ -6444,12 +6441,17 @@ interface GigabitEthernet0/1/0
 
       var lastTrigger = null;
       var closeButtons = lightbox.querySelectorAll('[data-lightbox-close]');
-      var triggers = document.querySelectorAll('.impl-page-service-flows .service-flow-card img');
+      var triggers = document.querySelectorAll('.impl-page-service-flows .service-flow-card img, .diagram-zoom-trigger');
 
       function getDiagramTitle(trigger) {
+        if (trigger.dataset.lightboxTitle) return trigger.dataset.lightboxTitle;
         var card = trigger.closest('.service-flow-card');
         var heading = card ? card.querySelector('h3') : null;
-        return heading && heading.textContent.trim() ? heading.textContent.trim() : 'Service flow diagram';
+        var figure = trigger.closest('figure');
+        var figureTitle = figure ? figure.querySelector('figcaption strong') : null;
+        if (heading && heading.textContent.trim()) return heading.textContent.trim();
+        if (figureTitle && figureTitle.textContent.trim()) return figureTitle.textContent.trim();
+        return 'Diagram';
       }
 
       function openLightbox(trigger) {
