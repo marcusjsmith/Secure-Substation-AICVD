@@ -1,0 +1,143 @@
+<svg data-theme="dark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1257 774" font-family="'Segoe UI',Helvetica,Arial,sans-serif" role="img" aria-label="Cisco small substation SD-WAN architecture topology dark version">
+  <defs>
+    <!-- Dark variant generated from small-substation-architecture-topology.svg. -->
+    <style>
+      .title{font-size:24px;font-weight:650;fill:#f4f8fb}
+      .section{font-size:18px;font-weight:650;fill:#dcecff;text-anchor:middle}
+      .label{font-size:18px;fill:#eef5fb}
+      .small{font-size:15px;fill:#d9e8f4;text-anchor:middle}
+      .zoneLabel{font-size:18px;font-weight:650;fill:#f3f7fb;text-anchor:middle}
+      .caption{font-size:16px;fill:#dcecff;text-anchor:middle}
+    </style>
+
+    <symbol id="router" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="27" fill="#0f5f78" stroke="#6fb6c9" stroke-width="1.5"/>
+      <g stroke="#ffffff" stroke-width="2.6" fill="#ffffff" stroke-linejoin="round" stroke-linecap="round">
+        <line x1="13" y1="23" x2="47" y2="23"/><path d="M17 18 L11 23 L17 28 Z"/><path d="M43 18 L49 23 L43 28 Z"/>
+        <line x1="13" y1="37" x2="47" y2="37"/><path d="M17 32 L11 37 L17 42 Z"/><path d="M43 32 L49 37 L43 42 Z"/>
+        <line x1="30" y1="13" x2="30" y2="47"/><path d="M25 17 L30 11 L35 17 Z"/><path d="M25 43 L30 49 L35 43 Z"/>
+      </g>
+    </symbol>
+
+    <symbol id="switch" viewBox="0 0 74 34">
+      <rect x="2" y="2" width="70" height="30" rx="4" fill="#0f7d8e" stroke="#7dd3e8" stroke-width="1.2"/>
+      <g stroke="#eafcff" stroke-width="2.2" fill="#eafcff" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="16" y1="12" x2="58" y2="12"/><path d="M22 8 L14 12 L22 16 Z"/><path d="M52 8 L60 12 L52 16 Z"/>
+        <line x1="16" y1="22" x2="58" y2="22"/><path d="M52 18 L60 22 L52 26 Z"/><path d="M22 18 L14 22 L22 26 Z"/>
+      </g>
+    </symbol>
+
+    <symbol id="ied" viewBox="0 0 40 40">
+      <rect x="5" y="6" width="30" height="24" rx="2" fill="#1c6fb5" stroke="#0f4a7c" stroke-width="1.3"/>
+      <g fill="#cfe6fb"><rect x="9" y="10" width="7" height="7"/><rect x="18" y="10" width="7" height="7"/><rect x="27" y="10" width="4" height="7"/><rect x="9" y="20" width="22" height="5"/></g>
+      <g stroke="#0f4a7c" stroke-width="1.6"><line x1="12" y1="30" x2="12" y2="35"/><line x1="20" y1="30" x2="20" y2="35"/><line x1="28" y1="30" x2="28" y2="35"/></g>
+    </symbol>
+
+    <symbol id="laptop" viewBox="0 0 48 36">
+      <rect x="9" y="4" width="30" height="20" rx="2" fill="#324a5c" stroke="#1d2e3b" stroke-width="1.2"/>
+      <rect x="12" y="7" width="24" height="14" fill="#8fb8d6"/>
+      <path d="M4 30 L44 30 L48 34 L0 34 Z" fill="#4a5f70" stroke="#1d2e3b" stroke-width="1"/>
+    </symbol>
+
+    <symbol id="phone" viewBox="0 0 40 40">
+      <rect x="9" y="3" width="22" height="28" rx="3" fill="#324a5c" stroke="#1d2e3b" stroke-width="1.2"/>
+      <rect x="12" y="7" width="16" height="10" rx="1" fill="#8fb8d6"/>
+      <g fill="#8aa1b3"><circle cx="15" cy="21" r="1.8"/><circle cx="20" cy="21" r="1.8"/><circle cx="25" cy="21" r="1.8"/><circle cx="15" cy="26" r="1.8"/><circle cx="20" cy="26" r="1.8"/><circle cx="25" cy="26" r="1.8"/></g>
+      <path d="M4 31 Q4 37 10 37 L30 37 Q36 37 36 31" fill="none" stroke="#324a5c" stroke-width="3"/>
+    </symbol>
+
+    <symbol id="ap" viewBox="0 0 46 40">
+      <rect x="10" y="24" width="26" height="12" rx="3" fill="#3b566b" stroke="#22333f" stroke-width="1.2"/>
+      <circle cx="23" cy="30" r="2.2" fill="#7ed957"/>
+      <g fill="none" stroke="#5fb2ff" stroke-width="2.4" stroke-linecap="round">
+        <path d="M15 18 Q23 10 31 18"/><path d="M11 13 Q23 1 35 13"/>
+      </g>
+    </symbol>
+
+    <symbol id="cctv" viewBox="0 0 50 40">
+      <rect x="30" y="6" width="6" height="10" rx="2" fill="#3b566b"/>
+      <rect x="22" y="3" width="20" height="5" rx="2.5" fill="#3b566b"/>
+      <rect x="7" y="15" width="30" height="15" rx="6" fill="#556b7d" stroke="#22333f" stroke-width="1.3"/>
+      <rect x="3" y="17" width="9" height="11" rx="3.5" fill="#3b4f5e" stroke="#22333f" stroke-width="1.1"/>
+      <circle cx="7" cy="22" r="3.3" fill="#22333f"/>
+      <circle cx="7" cy="22" r="1.4" fill="#9fc4e0"/>
+      <circle cx="31" cy="21" r="1.7" fill="#7ed957"/>
+    </symbol>
+
+    <symbol id="rtu" viewBox="0 0 60 40">
+      <rect x="2" y="2" width="56" height="36" rx="4" fill="#0f1117" stroke="#6b7280" stroke-width="1.2"/>
+      <text x="30" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#f2f2f2">Legacy</text>
+      <text x="30" y="31" text-anchor="middle" font-size="12" font-weight="700" fill="#f2f2f2">RTU</text>
+    </symbol>
+  </defs>
+
+  <rect width="1257" height="774" fill="#0d0d12"/>
+
+  <!-- WAN and hub routers -->
+  <g>
+    <path d="M145 156 Q116 122 174 116 Q190 92 260 100 Q352 78 448 98 Q538 70 630 96 Q725 68 815 96 Q902 72 980 96 Q1078 94 1048 136 Q1112 146 1066 184 Q1038 217 932 212 Q840 238 744 212 Q638 248 520 214 Q426 238 302 216 Q204 220 170 194 Q110 190 145 156 Z" fill="#2b3138" stroke="#59636e" stroke-width="1.8"/>
+    <text x="630" y="171" class="title" text-anchor="middle" font-size="32">WAN</text>
+  </g>
+
+  <g stroke-linecap="round" fill="none">
+    <path d="M238 77 C390 136 524 206 656 292" stroke="#00bce7" stroke-width="5.5"/>
+    <path d="M1012 77 C880 136 766 206 680 292" stroke="#9fb0e0" stroke-width="5.5"/>
+  </g>
+
+  <text x="16" y="82" class="label">DC1 Hub Router</text>
+  <use href="#router" x="198" y="41" width="72" height="72"/>
+  <text x="1050" y="82" class="label">DC2 Hub Router</text>
+  <use href="#router" x="976" y="41" width="72" height="72"/>
+
+  <!-- Small substation boundary -->
+  <rect x="245" y="250" width="820" height="480" rx="78" fill="#12314f" stroke="#6f8ea8" stroke-width="3"/>
+  <text x="302" y="286" class="title">Small Substation Router</text>
+  <text x="302" y="331" class="title">and Integrated Firewall</text>
+
+  <!-- Multi Service Zone -->
+  <rect x="275" y="440" width="310" height="245" rx="34" fill="#173149" stroke="#3b6687" stroke-width="1.5"/>
+  <text x="430" y="468" class="section">Multi Service Zone</text>
+  <g fill="none" stroke-linecap="round">
+    <path d="M650 321 L508 501" stroke="#5fb2ff" stroke-width="4"/>
+    <path d="M656 321 L512 501" stroke="#9cc2ff" stroke-width="2.2"/>
+  </g>
+  <g fill="none" stroke="#8dc2ff" stroke-width="2.4" stroke-linecap="round">
+    <line x1="353" y1="526" x2="459" y2="526"/>
+    <line x1="338" y1="534" x2="326" y2="590"/>
+    <line x1="338" y1="534" x2="392" y2="590"/>
+    <line x1="502" y1="535" x2="482" y2="600"/>
+    <line x1="505" y1="535" x2="548" y2="603"/>
+  </g>
+  <use href="#ap" x="310" y="489" width="56" height="50"/>
+  <use href="#switch" x="455" y="489" width="100" height="46"/>
+  <use href="#laptop" x="295" y="588" width="58" height="44"/>
+  <use href="#laptop" x="367" y="588" width="58" height="44"/>
+  <use href="#phone" x="459" y="595" width="45" height="45"/>
+  <text x="482" y="662" class="small">IP Telephony</text>
+  <use href="#cctv" x="523" y="598" width="56" height="45"/>
+  <text x="552" y="676" class="small">CCTV</text>
+
+  <!-- Electronic Security Perimeter Zone -->
+  <rect x="708" y="393" width="334" height="326" rx="58" fill="#242b33" stroke="#67727a" stroke-width="1.5"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M692 316 L790 456" stroke="#f5a524" stroke-width="4"/>
+    <path d="M704 318 L858 466 L879 508" stroke="#5fb2ff" stroke-width="3"/>
+  </g>
+  <use href="#router" x="626" y="247" width="84" height="84"/>
+  <use href="#rtu" x="753" y="436" width="74" height="50"/>
+  <text x="790" y="514" class="small">Serial</text>
+  <text x="790" y="535" class="small">RS232</text>
+  <use href="#switch" x="879" y="488" width="126" height="58"/>
+  <text x="936" y="456" class="label" text-anchor="middle">Switch +</text>
+  <text x="936" y="480" class="label" text-anchor="middle">CV Sensor</text>
+  <g fill="none" stroke="#8dc2ff" stroke-width="2.4" stroke-linecap="round">
+    <line x1="920" y1="546" x2="920" y2="590"/>
+    <line x1="978" y1="546" x2="978" y2="590"/>
+  </g>
+  <use href="#ied" x="895" y="586" width="58" height="58"/>
+  <text x="924" y="658" class="caption">IED</text>
+  <use href="#ied" x="954" y="586" width="58" height="58"/>
+  <text x="983" y="658" class="caption">IED</text>
+  <text x="875" y="686" class="zoneLabel">Electronic Security</text>
+  <text x="875" y="711" class="zoneLabel">Perimeter Zone</text>
+</svg>

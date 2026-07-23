@@ -2214,6 +2214,17 @@
       height: auto;
       background: #fff;
     }
+    .docx-figure iframe {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 0;
+      background: #0d0d12;
+    }
+    .builder-diagram-frame {
+      aspect-ratio: 1200 / 960;
+      min-height: 620px;
+    }
     .small-topology-figure {
       padding-top: 16px;
     }
@@ -3818,7 +3829,7 @@
         </div>
 
         <figure class="docx-figure">
-          <img src="assets/files/substation-reference-architecture.png" alt="Secure Substation reference architecture showing enterprise applications, security operations, SD-WAN controllers, data centers, WAN hub routers, and medium and small substation zones">
+          <iframe class="builder-diagram-frame" src="Builder-Images/substation-reference-architecture-builder-export.html" title="Secure Substation reference architecture diagram" loading="lazy"></iframe>
           <figcaption><strong>Secure Substation reference architecture</strong>The model separates enterprise applications, security operations, Cisco SD-WAN controllers, data-center hub routers, WAN transport, and medium/small substation spokes with local multiservice and ESP zones.</figcaption>
         </figure>
 
@@ -3869,7 +3880,7 @@
         </div>
 
         <figure class="docx-figure">
-          <img src="assets/files/substation-reference-architecture.png" alt="Secure Substation reference architecture showing enterprise applications, security operations, SD-WAN controllers, data centers, WAN hub routers, and medium and small substation zones">
+          <iframe class="builder-diagram-frame" src="Builder-Images/substation-reference-architecture-builder-export.html" title="Service segmentation and WAN edge aggregation reference diagram" loading="lazy"></iframe>
           <figcaption><strong>Service segmentation and WAN edge aggregation</strong>The reference architecture shows primary and secondary data-center hubs, SD-WAN controllers, WAN transport, and medium/small substation spokes that carry segmented SCADA, multiservice, security operations, and management traffic.</figcaption>
         </figure>
 
